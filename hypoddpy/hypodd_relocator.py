@@ -95,7 +95,7 @@ class HypoDDRelocator(object):
         # Fill the phase weighting dict if necessary.
         cc_p_phase_weighting = copy.copy(cc_p_phase_weighting)
         cc_s_phase_weighting = copy.copy(cc_s_phase_weighting)
-        for phase in ["Z", "E", "N"]:
+        for phase in ["Z", "E", "N", "1", "2"]:
             cc_p_phase_weighting[phase] = float(
                 cc_p_phase_weighting.get(phase, 0.0)
             )
@@ -168,7 +168,7 @@ class HypoDDRelocator(object):
         self._write_ph2dt_inp_file()
         self._create_event_id_map()
         self._write_catalog_input_file()
-        self._compile_hypodd()
+        #self._compile_hypodd()
         self._run_ph2dt()
         self._parse_waveform_files()
         self._cross_correlate_picks(outfile=output_cross_correlation_file)
@@ -451,15 +451,16 @@ class HypoDDRelocator(object):
             # Now loop over every pick and add station traveltimes.
             for pick in event["picks"]:
                 # Only P and S phases currently supported by HypoDD.
-                if (
-                    pick["phase"].upper() != "P"
-                    and pick["phase"].upper() != "S"
-                ):
-                    continue
-                string = (
-                    "{station_id:7s} {travel_time:7.3f} {weight:5.2f} {phase}"
-                )
-                travel_time = pick["pick_time"] - event["origin_time"]
+                if pick["phase"] is not None:
+                    if (
+                        pick["phase"].upper() != "P"
+                        and pick["phase"].upper() != "S"
+                    ):
+                        continue
+                    string = (
+                        "{station_id:7s} {travel_time:7.3f} {weight:5.2f} {phase}"
+                    )
+                    travel_time = pick["pick_time"] - event["origin_time"]
                 # Simple check to assure no negative travel times are used.
                 if travel_time < 0:
                     msg = (
@@ -480,13 +481,14 @@ class HypoDDRelocator(object):
                     pick["pick_time"],
                     pick["pick_time_error"],
                 )
-                pick_string = string.format(
-                    station_id=pick["station_id"],
-                    travel_time=travel_time,
-                    weight=weight,
-                    phase=pick["phase"].upper(),
-                )
-                event_strings.append(pick_string)
+                if pick["phase"] is not None:
+                    pick_string = string.format(
+                        station_id=pick["station_id"],
+                        travel_time=travel_time,
+                        weight=weight,
+                        phase=pick["phase"].upper(),
+                    )
+                    event_strings.append(pick_string)
         event_string = "\n".join(event_strings)
         # Write the phase.dat file.
         with open(phase_dat_file, "w") as open_file:
@@ -1381,20 +1383,23 @@ class HypoDDRelocator(object):
                 ):
                     continue
                 # Otherwise calculate the corrected differential travel time.
-                diff_travel_time = (
-                    (pick_1["pick_time"]
-                    - event_1_dict["origin_time"]) -
-                    (pick_2["pick_time"]
-                    + pick2_corr
-                    - event_2_dict["origin_time"]))
-                string = "{station_id} {travel_time:.6f} {weight:.4f} {phase}"
-                string = string.format(
-                    station_id=pick_1["station_id"],
-                    travel_time=diff_travel_time,
-                    weight=cross_corr_coeff,
-                    phase=pick_1["phase"],
-                )
-                current_pair_strings.append(string)
+                try:    
+                    diff_travel_time = (
+                        (pick_1["pick_time"]
+                        - event_1_dict["origin_time"]) -
+                        (pick_2["pick_time"]
+                        + pick2_corr
+                        - event_2_dict["origin_time"]))
+                    string = "{station_id} {travel_time:.6f} {weight:.4f} {phase}"
+                    string = string.format(
+                        station_id=pick_1["station_id"],
+                        travel_time=diff_travel_time,
+                        weight=cross_corr_coeff,
+                        phase=pick_1["phase"],
+                    )
+                    current_pair_strings.append(string)
+                except:
+                    pass
             # Write the file.
             with open(event_pair_file, "w") as open_file:
                 open_file.write("\n".join(current_pair_strings))
