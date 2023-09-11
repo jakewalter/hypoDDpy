@@ -1114,6 +1114,8 @@ class HypoDDRelocator(object):
                 pick_1_station_id = pick_1["station_id"]
                 pick_1_phase = pick_1["phase"]
                 # Try to find the corresponding pick for the second event.
+                if pick_1_phase == 'IAML':
+                    continue
                 pick_2 = None
                 for pick in event_2_dict["picks"]:
                     if (
