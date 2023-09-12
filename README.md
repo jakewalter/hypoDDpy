@@ -2,6 +2,9 @@
 
 ---
 
+**This is a fork of the original one to simplify use**
+
+
 **This is largely unmaintained and I personally have not been using it for many
 years. But people keep using it and I am happy to accept pull requests. If
 anyone wants to take over maintenance please send me an email!**
