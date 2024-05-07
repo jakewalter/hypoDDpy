@@ -1353,9 +1353,12 @@ class HypoDDRelocator(object):
                                         pick_1["id"], {}
                                     )[pick_2["id"]] = msg
                                     continue
-                        all_cross_correlations.append(
-                            (pick2_corr, cross_corr_coeff, channel_weight)
-                        )
+                        try:
+                            all_cross_correlations.append(
+                                (pick2_corr, cross_corr_coeff, channel_weight)
+                            )
+                        except:
+                            pass
                     if len(all_cross_correlations) == 0:
                         self.cc_results.setdefault(pick_1["id"], {})[
                             pick_2["id"]
