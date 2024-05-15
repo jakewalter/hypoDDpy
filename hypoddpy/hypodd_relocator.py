@@ -450,6 +450,10 @@ class HypoDDRelocator(object):
             event_strings.append(event_string)
             # Now loop over every pick and add station traveltimes.
             for pick in event["picks"]:
+		if pick["phase"] == 'Pg':
+			pick["phase"] = 'P'
+		if pick["phase"] == 'Sg':
+                        pick["phase"] = 'S'
                 # Only P and S phases currently supported by HypoDD.
                 if pick["phase"] is not None:
                     if (
