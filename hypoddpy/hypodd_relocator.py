@@ -456,6 +456,8 @@ class HypoDDRelocator(object):
                     pick["phase"] = 'S'
                 # Only P and S phases currently supported by HypoDD.
                 if pick["phase"] is not None:
+                    if pick["phase"] is None:
+                        pick["phase"] = 'null'
                     if (
                         pick["phase"].upper() != "P"
                         and pick["phase"].upper() != "S"
