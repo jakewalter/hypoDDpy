@@ -450,10 +450,10 @@ class HypoDDRelocator(object):
             event_strings.append(event_string)
             # Now loop over every pick and add station traveltimes.
             for pick in event["picks"]:
-		if pick["phase"] == 'Pg':
-			pick["phase"] = 'P'
-		if pick["phase"] == 'Sg':
-                        pick["phase"] = 'S'
+                if pick["phase"] == 'Pg':
+                    pick["phase"] = 'P'
+                if pick["phase"] == 'Sg':
+                    pick["phase"] = 'S'
                 # Only P and S phases currently supported by HypoDD.
                 if pick["phase"] is not None:
                     if (
@@ -1120,6 +1120,8 @@ class HypoDDRelocator(object):
                 # Try to find the corresponding pick for the second event.
                 if pick_1_phase == 'IAML':
                     continue
+                if pick_1_phase == 'IAmb':
+                    continue
                 pick_2 = None
                 for pick in event_2_dict["picks"]:
                     if (
@@ -1197,6 +1199,7 @@ class HypoDDRelocator(object):
                     for waveform_file in data_files_2:
                         stream_2 += read(waveform_file)
                     # Get the corresponing pick weighting dictionary.
+                    print(pick_1_phase)
                     if pick_1_phase == "P":
                         pick_weight_dict = self.cc_param[
                             "cc_p_phase_weighting"
