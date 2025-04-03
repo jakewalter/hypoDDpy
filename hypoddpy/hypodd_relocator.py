@@ -1196,6 +1196,14 @@ class HypoDDRelocator(object):
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
                 continue
+        if phase == "P":
+            pick_weight_dict = self.cc_param[
+                "cc_p_phase_weighting"
+            ]
+        elif phase == "S":
+            pick_weight_dict = self.cc_param[
+                "cc_s_phase_weighting"
+            ]
         for channel, channel_weight in pick_weight_dict.items():
             if channel_weight == 0.0:
                 continue
