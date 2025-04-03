@@ -1168,38 +1168,152 @@ class HypoDDRelocator(object):
         phase = pick_1["phase"]
 
         # Find waveform data for the station
-        starttime = min(pick_1["pick_time"], pick_2["pick_time"]) - self.cc_param["cc_time_before"]
-        duration = abs(pick_1["pick_time"] - pick_2["pick_time"]) + self.cc_param["cc_time_after"]
-        waveform_files = self._find_data(station_id, starttime, duration)
+        starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
+        duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
+        waveform_files1 = self._find_data(station_id, starttime, duration)
 
-        if not waveform_files:
-            msg = f"No waveform data found for station {station_id}."
+        starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
+        duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
+        waveform_files2 = self._find_data(station_id, starttime2, duration2)
+
+        if not waveform_files1 or not waveform_files2:
+            msg = f"No waveform data found for both events for station {station_id}."
             self.log(msg, level="warning")
             raise HypoDDException(msg)
 
         # Read waveform data
-        st = Stream()
-        for waveform_file in waveform_files:
+        st1 = Stream()
+        st2 = Stream()
+        for waveform_file in waveform_files1:
             try:
-                st += read(waveform_file)
+                st1 += read(waveform_file)
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
                 continue
+        for waveform_file in waveform_files2:
+            try:
+                st2 += read(waveform_file)
+            except Exception as exc:
+                self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
+                continue
+        for channel, channel_weight in pick_weight_dict.items():
+            if channel_weight == 0.0:
+                continue
+            # Filter the files to obtain the correct trace.
+            if "." in station_id:
+                network, station = station_id.split(".")
+            else:
+                network = "*"
+                station = station_id
+            st_1 = st1.select(
+                network=network,
+                station=station,
+                channel="*%s" % channel,
+            )
+            st_2 = st2.select(
+                network=network,
+                station=station,
+                channel="*%s" % channel,
+            )
+            max_starttime_st_1 = (
+                pick_1["pick_time"]
+                - self.cc_param["cc_time_before"]
+            )
+            min_endtime_st_1 = (
+                pick_1["pick_time"]
+                + self.cc_param["cc_time_after"]
+            )
+            max_starttime_st_2 = (
+                pick_2["pick_time"]
+                - self.cc_param["cc_time_before"]
+            )
+            min_endtime_st_2 = (
+                pick_2["pick_time"]
+                + self.cc_param["cc_time_after"]
+            )
+            # Attempt to find the correct trace.
+            for trace in st1:
+                if (
+                    trace.stats.starttime > max_starttime_st_1
+                    or trace.stats.endtime < min_endtime_st_1
+                ):
+                    st1.remove(trace)
+            for trace in st2:
+                if (
+                    trace.stats.starttime > max_starttime_st_2
+                    or trace.stats.endtime < min_endtime_st_2
+                ):
+                    st_2.remove(trace)
 
-        # Filter the waveform data
-        st.filter(
-            "bandpass",
-            freqmin=self.cc_param["cc_filter_min_freq"],
-            freqmax=self.cc_param["cc_filter_max_freq"],
-        )
+            # cleanup merges, in case the event is included in
+            # multiple traces (happens for events with very close
+            # origin times)
+            st1.merge(-1)
+            st2.merge(-1)
 
+            if len(st1) > 1:
+                msg = "More than one {channel} matching trace found for {str(pick_1)}"
+                self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
+            elif len(st1) == 0:
+                msg = f"No matching {channel} trace found for {str(pick_1)}"
+                if not self.supress_warnings["no_matching_trace"]:
+                    self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
+            trace_1 = st1[0]
+
+            if len(st2) > 1:
+                msg = "More than one matching {channel} trace found for{str(pick_2)}"
+                self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
+            elif len(st2) == 0:
+                msg = f"No matching {channel} trace found for {channel}  {str(pick_2)}"
+                if not self.supress_warnings["no_matching_trace"]:
+                    self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
+            trace_2 = st2[0]
+
+            if trace_1.id != trace_2.id:
+                msg = "Non matching ids during cross correlation. "
+                msg += "(%s and %s)" % (trace_1.id, trace_2.id)
+                self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
+            if (
+                trace_1.stats.sampling_rate
+                != trace_2.stats.sampling_rate
+            ):
+                msg = (
+                    "Non matching sampling rates during cross "
+                    "correlation. "
+                )
+                msg += "(%s and %s)" % (trace_1.id, trace_2.id)
+                self.log(msg, level="warning")
+                self.cc_results.setdefault(pick_1["id"], {})[
+                    pick_2["id"]
+                ] = msg
+                continue
         # Perform cross-correlation
         try:
             pick2_corr, cross_corr_coeff = xcorr_pick_correction(
                 pick_1["pick_time"],
-                st,
+                trace_1,
                 pick_2["pick_time"],
-                st,
+                trace_2,
                 self.cc_param["cc_maxlag"],
                 phase=phase,
             )
