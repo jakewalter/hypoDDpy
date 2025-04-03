@@ -1205,6 +1205,7 @@ class HypoDDRelocator(object):
                 "cc_s_phase_weighting"
             ]
         for channel, channel_weight in pick_weight_dict.items():
+            #print(channel)
             if channel_weight == 0.0:
                 continue
             # Filter the files to obtain the correct trace.
@@ -1213,12 +1214,12 @@ class HypoDDRelocator(object):
             else:
                 network = "*"
                 station = station_id
-            st_1 = st1.select(
+            st1 = st1.select(
                 network=network,
                 station=station,
                 channel="*%s" % channel,
             )
-            st_2 = st2.select(
+            st2 = st2.select(
                 network=network,
                 station=station,
                 channel="*%s" % channel,
@@ -1240,6 +1241,7 @@ class HypoDDRelocator(object):
                 + self.cc_param["cc_time_after"]
             )
             # Attempt to find the correct trace.
+            
             for trace in st1:
                 if (
                     trace.stats.starttime > max_starttime_st_1
@@ -1251,14 +1253,14 @@ class HypoDDRelocator(object):
                     trace.stats.starttime > max_starttime_st_2
                     or trace.stats.endtime < min_endtime_st_2
                 ):
-                    st_2.remove(trace)
+                    st2.remove(trace)
 
             # cleanup merges, in case the event is included in
             # multiple traces (happens for events with very close
             # origin times)
             st1.merge(-1)
             st2.merge(-1)
-
+            
             if len(st1) > 1:
                 msg = "More than one {channel} matching trace found for {str(pick_1)}"
                 self.log(msg, level="warning")
@@ -1322,8 +1324,19 @@ class HypoDDRelocator(object):
                 trace_1,
                 pick_2["pick_time"],
                 trace_2,
-                self.cc_param["cc_maxlag"],
-                phase=phase,
+                t_before=self.cc_param["cc_time_before"],
+                t_after=self.cc_param["cc_time_after"],
+                cc_maxlag=self.cc_param["cc_maxlag"],
+                filter="bandpass",
+                filter_options={
+                    "freqmin": self.cc_param[
+                        "cc_filter_min_freq"
+                    ],
+                    "freqmax": self.cc_param[
+                        "cc_filter_max_freq"
+                    ],
+                },
+                plot=False,
             )
         except Exception as exc:
             msg = f"Error during cross-correlation for station {station_id}: {exc}"
