@@ -683,7 +683,7 @@ class HypoDDRelocator(object):
         values["MINWGHT"] = 0.0
         values["MAXNGH"] = 10
         values["MINLNK"] = 8
-        values["MINOBS"] = 8
+        values["MINOBS"] = 6
         values["MAXOBS"] = 50
         if "MAXSEP" not in self.forced_configuration_values:
             # Set MAXSEP to the 10-percentile of all inter-event distances.
@@ -1444,9 +1444,9 @@ class HypoDDRelocator(object):
         endtime = starttime + duration
         # Find all possible keys for the station_id.
         if "." in station_id:
-            id_pattern = f"{station_id}.*.*[E,N,Z,1,2,3]"
+            id_pattern = f"{station_id}*.*[E,N,Z,1,2,3]"
         else:
-            id_pattern = f"*.{station_id}.*.*[E,N,Z,1,2,3]"
+            id_pattern = f"*.{station_id}*.*[E,N,Z,1,2,3]"
         station_keys = [
             _i
             for _i in list(self.waveform_information.keys())
