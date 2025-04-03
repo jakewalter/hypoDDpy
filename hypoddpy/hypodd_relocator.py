@@ -1170,7 +1170,7 @@ class HypoDDRelocator(object):
         # Find waveform data for the station
         starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
         duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
-        waveform_files1 = self._find_data(station_id, starttime, duration)
+        waveform_files1 = self._find_data(station_id, starttime1, duration1)
 
         starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
         duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
