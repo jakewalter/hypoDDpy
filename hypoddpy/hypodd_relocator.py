@@ -1155,6 +1155,61 @@ class HypoDDRelocator(object):
         with open(event_pair_file, "w") as open_file:
             open_file.write("\n".join(current_pair_strings))
 
+    def _perform_cross_correlation(self, pick_1, pick_2):
+        """
+        Perform cross-correlation between two picks.
+
+        :param pick_1: Dictionary containing information about the first pick.
+        :param pick_2: Dictionary containing information about the second pick.
+        :return: Tuple containing the time correction and cross-correlation coefficient.
+        """
+        # Extract station ID and phase type
+        station_id = pick_1["station_id"]
+        phase = pick_1["phase"]
+
+        # Find waveform data for the station
+        starttime = min(pick_1["pick_time"], pick_2["pick_time"]) - self.cc_param["cc_time_before"]
+        duration = abs(pick_1["pick_time"] - pick_2["pick_time"]) + self.cc_param["cc_time_after"]
+        waveform_files = self._find_data(station_id, starttime, duration)
+
+        if not waveform_files:
+            msg = f"No waveform data found for station {station_id}."
+            self.log(msg, level="warning")
+            raise HypoDDException(msg)
+
+        # Read waveform data
+        st = Stream()
+        for waveform_file in waveform_files:
+            try:
+                st += read(waveform_file)
+            except Exception as exc:
+                self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
+                continue
+
+        # Filter the waveform data
+        st.filter(
+            "bandpass",
+            freqmin=self.cc_param["cc_filter_min_freq"],
+            freqmax=self.cc_param["cc_filter_max_freq"],
+        )
+
+        # Perform cross-correlation
+        try:
+            pick2_corr, cross_corr_coeff = xcorr_pick_correction(
+                pick_1["pick_time"],
+                st,
+                pick_2["pick_time"],
+                st,
+                self.cc_param["cc_maxlag"],
+                phase=phase,
+            )
+        except Exception as exc:
+            msg = f"Error during cross-correlation for station {station_id}: {exc}"
+            self.log(msg, level="warning")
+            raise HypoDDException(msg)
+
+        return pick2_corr, cross_corr_coeff
+    
     def _find_data(self, station_id, starttime, duration):
         """"
         Parses the self.waveform_information dictionary and returns a list of
