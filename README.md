@@ -4,10 +4,8 @@
 
 **This is a fork of the original one to simplify use**
 
+I have parallelized the cross-correlation to run faster for larger datasets and data that have higher sample rates. It seems to work best on python 3.8 or greater and you need to manually set how many threads you would like it to run on within hypodd_relocator.py 
 
-**This is largely unmaintained and I personally have not been using it for many
-years. But people keep using it and I am happy to accept pull requests. If
-anyone wants to take over maintenance please send me an email!**
 
 ---
 
