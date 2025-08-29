@@ -38,7 +38,10 @@ relocator = HypoDDRelocator(
         "MAXSEP": 5.0,    # Maximum inter-event distance in km (tightened)
         "MINLNK": 12,     # Minimum links per event (increased)
         "MAXNGH": 4,      # Maximum neighbors (reduced for speed)
-    }
+    },
+    
+    # NEW: Disable parallel loading if you encounter corrupted MSEED files
+    # disable_parallel_loading=True,  # Uncomment if you get segmentation faults
 )
 
 # Add the necessary files. Call a function multiple times if necessary.

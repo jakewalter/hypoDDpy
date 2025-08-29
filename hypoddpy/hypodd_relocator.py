@@ -74,6 +74,7 @@ from obspy.core.event import (
 )
 from obspy.signal.cross_correlation import xcorr_pick_correction
 from obspy.io.xseed import Parser
+import numpy as np
 import os
 import progressbar
 import shutil
@@ -133,6 +134,7 @@ class HypoDDRelocator(object):
         shift_stations=False,
         custom_channel_equivalencies=None,
         ph2dt_parameters=None,
+        disable_parallel_loading=False,
     ):
         """
         :param working_dir: The working directory where all temporary and final
@@ -237,6 +239,9 @@ class HypoDDRelocator(object):
         
         # ph2dt parameter overrides
         self.ph2dt_parameters = ph2dt_parameters or {}
+        
+        # Parallel loading control
+        self.disable_parallel_loading = disable_parallel_loading
         
         # Configure the paths.
         self._configure_paths()
@@ -1603,7 +1608,30 @@ class HypoDDRelocator(object):
         for filename in waveform_files:
             try:
                 st = read(filename, starttime=starttime, endtime=starttime + duration)
-                streams.append(st)
+                
+                # Validate the loaded stream
+                if len(st) == 0:
+                    self.log(f"Warning: Empty stream from {filename}, skipping", level="warning")
+                    continue
+                    
+                # Check for corrupted traces
+                valid_traces = []
+                for trace in st:
+                    if len(trace.data) == 0:
+                        self.log(f"Warning: Empty trace data in {filename}, channel {trace.stats.channel}", level="warning")
+                        continue
+                    # Check for NaN or infinite values
+                    if hasattr(trace.data, 'mask') and trace.data.mask.any():
+                        self.log(f"Warning: Masked data in {filename}, channel {trace.stats.channel}", level="warning")
+                        continue
+                    if not np.isfinite(trace.data).all():
+                        self.log(f"Warning: Invalid data (NaN/inf) in {filename}, channel {trace.stats.channel}", level="warning")
+                        continue
+                    valid_traces.append(trace)
+                
+                if valid_traces:
+                    streams.append(Stream(valid_traces))
+                    
             except Exception as exc:
                 self.log(f"Error reading {filename}: {exc}", level="warning")
                 continue
@@ -1639,6 +1667,30 @@ class HypoDDRelocator(object):
         # Load and process waveform
         try:
             st = read(filename, starttime=starttime, endtime=endtime)
+            
+            # Validate the stream - check for empty or corrupted data
+            if len(st) == 0:
+                self.log(f"Warning: Empty stream loaded from {filename}", level="warning")
+                return Stream()
+            
+            # Check for corrupted traces
+            valid_traces = []
+            for trace in st:
+                if len(trace.data) == 0:
+                    self.log(f"Warning: Empty trace data in {filename}, channel {trace.stats.channel}", level="warning")
+                    continue
+                # Check for NaN or infinite values
+                if not np.isfinite(trace.data).all():
+                    self.log(f"Warning: Invalid data (NaN/inf) in {filename}, channel {trace.stats.channel}", level="warning")
+                    continue
+                valid_traces.append(trace)
+            
+            if not valid_traces:
+                self.log(f"Warning: No valid traces found in {filename}", level="warning")
+                return Stream()
+            
+            # Create new stream with only valid traces
+            st = Stream(valid_traces)
             
             # Apply filtering if requested
             if freqmin is not None and freqmax is not None:
@@ -1677,17 +1729,36 @@ class HypoDDRelocator(object):
         def load_and_process(files, starttime, duration):
             combined_stream = Stream()
             for filename in files:
-                st = self._get_cached_waveform(filename, starttime, starttime + duration, 
-                                             freqmin, freqmax, target_sampling_rate)
-                combined_stream += st
+                try:
+                    st = self._get_cached_waveform(filename, starttime, starttime + duration, 
+                                                 freqmin, freqmax, target_sampling_rate)
+                    if len(st) > 0:  # Only add non-empty streams
+                        combined_stream += st
+                except Exception as exc:
+                    self.log(f"Error loading waveform {filename}: {exc}", level="warning")
+                    continue
             return combined_stream
         
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            future1 = executor.submit(load_and_process, waveform_files1, starttime1, duration1)
-            future2 = executor.submit(load_and_process, waveform_files2, starttime2, duration2)
-            
-            st1 = future1.result()
-            st2 = future2.result()
+        # Use timeout to prevent hanging on corrupted files
+        try:
+            if self.disable_parallel_loading:
+                # Fall back to sequential loading
+                self.log("Parallel loading disabled, using sequential loading", level="info")
+                st1 = load_and_process(waveform_files1, starttime1, duration1)
+                st2 = load_and_process(waveform_files2, starttime2, duration2)
+            else:
+                with ThreadPoolExecutor(max_workers=2) as executor:
+                    future1 = executor.submit(load_and_process, waveform_files1, starttime1, duration1)
+                    future2 = executor.submit(load_and_process, waveform_files2, starttime2, duration2)
+                    
+                    # Add timeout to prevent hanging
+                    st1 = future1.result(timeout=30)  # 30 second timeout
+                    st2 = future2.result(timeout=30)  # 30 second timeout
+                
+        except Exception as exc:
+            self.log(f"Error in waveform loading: {exc}", level="warning")
+            # Return empty streams on error
+            st1, st2 = Stream(), Stream()
             
         return st1, st2
 
