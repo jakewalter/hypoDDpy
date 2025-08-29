@@ -96,8 +96,8 @@ def segmentation_fault_handler(signum, frame):
     """Handle segmentation faults by raising an exception."""
     raise RuntimeError("Segmentation fault detected - likely corrupted MSEED file")
 
-# Register the signal handler
-signal.signal(signal.SIGSEGV, segmentation_fault_handler)
+# Register signal handlers for critical errors (will be configured in constructor)
+# This is a placeholder - actual registration happens in __init__
 
 
 class LRUCache:
@@ -145,6 +145,7 @@ class HypoDDRelocator(object):
         custom_channel_equivalencies=None,
         ph2dt_parameters=None,
         disable_parallel_loading=False,
+        disable_signal_handlers=False,
     ):
         """
         :param working_dir: The working directory where all temporary and final
@@ -186,6 +187,10 @@ class HypoDDRelocator(object):
         :param ph2dt_parameters: Dict of ph2dt parameters to override defaults.
             Common parameters: MINOBS, MAXSEP, MINLNK, MAXNGH, etc.
             Example: {"MINOBS": 8, "MAXSEP": 10.0}
+        :param disable_parallel_loading: Disable parallel waveform loading to avoid
+            issues with corrupted MSEED files. Defaults to False.
+        :param disable_signal_handlers: Disable signal handlers for segmentation faults.
+            Use only if you experience issues with signal handling. Defaults to False.
         """
         self.working_dir = working_dir
         if not os.path.exists(working_dir):
@@ -252,6 +257,16 @@ class HypoDDRelocator(object):
         
         # Parallel loading control
         self.disable_parallel_loading = disable_parallel_loading
+        
+        # Signal handler control
+        self.disable_signal_handlers = disable_signal_handlers
+        
+        # Register signal handlers if not disabled
+        if not self.disable_signal_handlers:
+            signal.signal(signal.SIGSEGV, segmentation_fault_handler)
+            signal.signal(signal.SIGBUS, segmentation_fault_handler)
+            signal.signal(signal.SIGILL, segmentation_fault_handler)
+            signal.signal(signal.SIGFPE, segmentation_fault_handler)
         
         # Configure the paths.
         self._configure_paths()
@@ -1392,9 +1407,20 @@ class HypoDDRelocator(object):
         def process_single_waveform_file(waveform_file):
             """Process a single waveform file and return trace information."""
             try:
-                st = read(waveform_file)
+                # Use safe reading to prevent segmentation faults
+                st = self._safe_read_mseed(waveform_file)
+                if st is None:
+                    self.log(f"Failed to safely read waveform file {waveform_file}, skipping", level="warning")
+                    return []
+                
                 trace_info = []
                 for trace in st:
+                    # Additional validation for each trace
+                    if len(trace.data) == 0:
+                        continue
+                    if not np.isfinite(trace.data).all():
+                        continue
+                        
                     trace_info.append({
                         "trace_id": trace.id,
                         "starttime": trace.stats.starttime,
@@ -1428,16 +1454,22 @@ class HypoDDRelocator(object):
                 
                 # Collect results as they complete
                 for future in as_completed(future_to_file):
-                    trace_info_list = future.result()
-                    for trace_info in trace_info_list:
-                        trace_id = trace_info["trace_id"]
-                        if trace_id not in self.waveform_information:
-                            self.waveform_information[trace_id] = []
-                        self.waveform_information[trace_id].append({
-                            "starttime": trace_info["starttime"],
-                            "endtime": trace_info["endtime"], 
-                            "filename": trace_info["filename"],
-                        })
+                    try:
+                        trace_info_list = future.result()
+                        for trace_info in trace_info_list:
+                            trace_id = trace_info["trace_id"]
+                            if trace_id not in self.waveform_information:
+                                self.waveform_information[trace_id] = []
+                            self.waveform_information[trace_id].append({
+                                "starttime": trace_info["starttime"],
+                                "endtime": trace_info["endtime"], 
+                                "filename": trace_info["filename"],
+                            })
+                    except Exception as exc:
+                        wf_file = future_to_file[future]
+                        self.log(f"Failed to process waveform file {wf_file}: {exc}", level="warning")
+                        # Continue processing other files
+                    
                     update_progress()
         
         pbar.finish()

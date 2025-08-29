@@ -45,6 +45,9 @@ relocator = HypoDDRelocator(
     
     # NEW: Disable parallel loading if you encounter corrupted MSEED files
     # disable_parallel_loading=True,  # Uncomment if you get segmentation faults
+    
+    # NEW: Disable signal handlers if you have issues with signal handling
+    # disable_signal_handlers=True,  # Uncomment if signal handlers cause problems
 )
 
 # Add the necessary files. Call a function multiple times if necessary.
