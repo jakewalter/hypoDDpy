@@ -682,12 +682,12 @@ class HypoDDRelocator(object):
         # set_forced_configuration_value method for the reasoning.
         values = {}
         values["MINWGHT"] = 0.0
-        values["MAXNGH"] = 10
-        values["MINLNK"] = 8
-        values["MINOBS"] = 6
-        values["MAXOBS"] = 50
+        values["MAXNGH"] = 5  # Reduced for tighter window
+        values["MINLNK"] = 10  # Increased for tighter window
+        values["MINOBS"] = 6  # Increased for tighter window
+        values["MAXOBS"] = 30  # Reduced for tighter window
         if "MAXSEP" not in self.forced_configuration_values:
-            # Set MAXSEP to the 10-percentile of all inter-event distances.
+            # Set MAXSEP to the 5-percentile of all inter-event distances for tighter window.
             distances = []
             for event_1 in self.events:
                 # Will produce one 0 distance pair but that should not matter.
@@ -717,7 +717,7 @@ class HypoDDRelocator(object):
                     )
             # Get the percentile value.
             distances.sort()
-            maxsep = distances[int(math.floor(len(distances) * 0.10))]
+            maxsep = distances[int(math.floor(len(distances) * 0.05))]
             values["MAXSEP"] = maxsep
             self.log(
                 "MAXSEP for ph2dt.inp calculated to %f." % values["MAXSEP"]
@@ -1026,7 +1026,7 @@ class HypoDDRelocator(object):
             "%s." % filename
         )
 
-    def _cross_correlate_picks(self, outfile=None, max_threads=20):
+    def _cross_correlate_picks(self, outfile=None, max_threads=40):
         """
         Reads the event pairs matched in dt.ct which are selected by ph2dt and
         calculate cross correlated differential travel_times for every pair.
@@ -1416,8 +1416,9 @@ class HypoDDRelocator(object):
         # IPHA also
         values["IPHA"] = 3
         # Max distance between centroid of event cluster and stations.
+        # Reduce DIST for tighter performance (e.g., set forced_configuration_values["DIST"] = 100.0)
         values["DIST"] = self.forced_configuration_values["MAXDIST"]
-        # Always set it to 8.
+        # Always set it to 8. Increase for more stringent requirements.
         values["OBSCC"] = 8
         # If IDAT=3, the sum of OBSCC and OBSCT is taken for both.
         values["OBSCT"] = 0
@@ -1433,9 +1434,10 @@ class HypoDDRelocator(object):
         # Create the data_weighting and reweightig scheme. Currently static.
         # Iterative 10 times for only cross correlated travel time data and
         # then 10 times also including catalog data.
+        # Optimized for performance: reduced iterations, adjusted damping and weights
         iterations = [
-            "100 1 0.5 -999 -999 0.1 0.05 -999 -999 30",
-            "100 1 0.5 6 -999 0.1 0.05 6 -999 30",
+            "50 1.0 0.5 0.1 0.05 -999 -999 -999 -999 10",  # Cross only, tighter residuals and damping
+            "50 1.0 0.5 0.1 0.05 0.5 0.25 0.5 0.25 10",   # Both, with catalog and tighter settings
         ]
         values["NSET"] = len(iterations)
         values["DATA_WEIGHTING_AND_REWEIGHTING"] = "\n".join(iterations)
