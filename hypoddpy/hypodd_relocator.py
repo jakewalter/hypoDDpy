@@ -10,31 +10,37 @@ Performance optimizations include:
    - Parallel event file reading with Catalog combination
    - Memory-efficient batch processing to avoid memory issues
 
-2. WAVEFORM CACHING SYSTEM:
+2. SMART CHANNEL MAPPING:
+   - Automatic detection of E/N vs 1/2 naming conventions
+   - Intelligent fallback between different channel systems
+   - Station-specific channel mapping with caching
+   - Comprehensive channel availability analysis
+
+3. WAVEFORM CACHING SYSTEM:
    - LRU cache for loaded waveforms to avoid disk I/O
    - Pre-filtered and downsampled waveform storage
    - Memory-aware cache size management
 
-3. PARALLEL PROCESSING:
+4. PARALLEL PROCESSING:
    - Parallel waveform loading for both events
    - ThreadPoolExecutor for cross-correlation tasks
    - Optimized batch processing
 
-4. PRE-FILTERING:
+5. PRE-FILTERING:
    - Apply bandpass filters once and cache results
    - Reduce computational overhead in cross-correlation
 
-5. SMART PARAMETER TUNING:
+6. SMART PARAMETER TUNING:
    - Optimized frequency bands and time windows
    - Higher correlation thresholds for quality
    - Reduced search spaces for speed
 
-6. MEMORY OPTIMIZATION:
+7. MEMORY OPTIMIZATION:
    - Dynamic cache sizing based on available memory
    - Waveform preloading for common time windows
    - Optional downsampling for speed
 
-7. PERFORMANCE MONITORING:
+8. PERFORMANCE MONITORING:
    - Cache hit rate tracking
    - Execution time monitoring
    - Estimated speedup calculations
@@ -42,6 +48,9 @@ Performance optimizations include:
 USAGE:
     relocator = HypoDDRelocator(...)
     relocator.start_optimized_relocation("output.xml", max_threads=8)
+
+    # Get channel mapping report
+    report = relocator.get_channel_mapping_report()
 
 Expected speedup: 15-25x compared to unoptimized version
 """
@@ -122,6 +131,8 @@ class HypoDDRelocator(object):
         cc_min_allowed_cross_corr_coeff,
         supress_warning_traces=False,
         shift_stations=False,
+        custom_channel_equivalencies=None,
+        ph2dt_parameters=None,
     ):
         """
         :param working_dir: The working directory where all temporary and final
@@ -157,6 +168,12 @@ class HypoDDRelocator(object):
         :param shift_stations: Shift station (and model) depths so that
             the deepest station is at elev=0 (useful for networks with negative
             elevations (HypoDD can't handle them)
+        :param custom_channel_equivalencies: Dict mapping channel names to their
+            equivalent channels. Useful for networks where "1" corresponds to
+            East and "2" to North. Example: {"1": "E", "2": "N"}
+        :param ph2dt_parameters: Dict of ph2dt parameters to override defaults.
+            Common parameters: MINOBS, MAXSEP, MINLNK, MAXNGH, etc.
+            Example: {"MINOBS": 8, "MAXSEP": 10.0}
         """
         self.working_dir = working_dir
         if not os.path.exists(working_dir):
@@ -211,6 +228,16 @@ class HypoDDRelocator(object):
         # Initialize waveform cache for performance optimization
         self.waveform_cache = LRUCache(200)  # Adjust based on available memory
 
+        # Initialize smart channel mapping system
+        self.channel_mapping_cache = {}
+        self.station_channel_inventory = {}
+        
+        # Custom channel equivalencies (user can override)
+        self.custom_channel_equivalencies = custom_channel_equivalencies or {}
+        
+        # ph2dt parameter overrides
+        self.ph2dt_parameters = ph2dt_parameters or {}
+        
         # Configure the paths.
         self._configure_paths()
 
@@ -796,6 +823,172 @@ class HypoDDRelocator(object):
         
         return combined_catalog
 
+    def _get_smart_channel_mapping(self, station_id, available_channels):
+        """
+        Intelligently map channel requests to available channels.
+        
+        :param station_id: Station identifier
+        :param available_channels: List of available channel codes
+        :return: Dictionary mapping requested channels to actual channels
+        """
+        # Cache key for this station
+        cache_key = station_id
+        
+        if cache_key in self.channel_mapping_cache:
+            return self.channel_mapping_cache[cache_key]
+        
+        # Define channel mapping priorities with custom equivalencies
+        channel_priorities = {
+            'Z': ['Z'],  # Vertical: only Z channel
+            'E': ['E', '1', '2'],  # East: prefer E, fallback to 1 or 2
+            'N': ['N', '2', '1'],  # North: prefer N, fallback to 2 or 1
+            '1': ['1', 'E', '2'],  # Horizontal 1: prefer 1, fallback to E or 2
+            '2': ['2', 'N', '1'],  # Horizontal 2: prefer 2, fallback to N or 1
+        }
+        
+        # Apply custom channel equivalencies if provided
+        if self.custom_channel_equivalencies:
+            for requested, actual in self.custom_channel_equivalencies.items():
+                if requested in channel_priorities:
+                    # If user specifies that "1" = "E", then prioritize "1" for East requests
+                    if actual in ['E', 'N', '1', '2']:
+                        # Move the equivalent channel to the front of the priority list
+                        priority_list = channel_priorities[requested]
+                        if actual in priority_list:
+                            priority_list.remove(actual)
+                        priority_list.insert(0, actual)
+                        channel_priorities[requested] = priority_list
+        
+        mapping = {}
+        available_set = set(available_channels)
+        
+        # Try to map each requested channel to best available option
+        for requested_channel, priority_list in channel_priorities.items():
+            for preferred_channel in priority_list:
+                if preferred_channel in available_set:
+                    mapping[requested_channel] = preferred_channel
+                    break
+        
+        # Cache the mapping
+        self.channel_mapping_cache[cache_key] = mapping
+        
+        # Log the mapping for debugging
+        if mapping:
+            self.log(f"Channel mapping for {station_id}: {mapping}", level="debug")
+        
+        return mapping
+
+    def _analyze_station_channels(self, station_id, stream):
+        """
+        Analyze available channels for a station and provide recommendations.
+        
+        :param station_id: Station identifier
+        :param stream: ObsPy Stream with station data
+        :return: Analysis of channel availability
+        """
+        channels = set()
+        for trace in stream:
+            if trace.stats.station == station_id.split('.')[-1]:
+                channels.add(trace.stats.channel)
+        
+        analysis = {
+            'available_channels': sorted(list(channels)),
+            'has_vertical': any('Z' in ch for ch in channels),
+            'has_horizontal_EN': any('E' in ch for ch in channels) and any('N' in ch for ch in channels),
+            'has_horizontal_12': any('1' in ch for ch in channels) and any('2' in ch for ch in channels),
+            'recommended_config': {}
+        }
+        
+        # Recommend best configuration
+        if analysis['has_vertical']:
+            analysis['recommended_config']['Z'] = 1.0
+        
+        if analysis['has_horizontal_EN']:
+            analysis['recommended_config']['E'] = 1.0
+            analysis['recommended_config']['N'] = 1.0
+        elif analysis['has_horizontal_12']:
+            analysis['recommended_config']['1'] = 1.0
+            analysis['recommended_config']['2'] = 1.0
+        
+        return analysis
+
+    def _log_channel_analysis(self, station_id):
+        """
+        Log channel analysis for debugging purposes.
+        
+        :param station_id: Station to analyze
+        """
+        # This would require access to waveform data, so we'll skip for now
+        # but the framework is here for future enhancement
+        pass
+
+    def get_channel_mapping_report(self):
+        """
+        Generate a report of all channel mappings that have been determined.
+        
+        :return: Dictionary with mapping information
+        """
+        report = {
+            'total_stations_mapped': len(self.channel_mapping_cache),
+            'mappings': dict(self.channel_mapping_cache),
+            'summary': {}
+        }
+        
+        # Generate summary statistics
+        en_to_12 = 0
+        twelve_to_en = 0
+        
+        for station, mapping in self.channel_mapping_cache.items():
+            if 'E' in mapping and mapping['E'] in ['1', '2']:
+                en_to_12 += 1
+            if 'N' in mapping and mapping['N'] in ['1', '2']:
+                en_to_12 += 1
+            if '1' in mapping and mapping['1'] in ['E', 'N']:
+                twelve_to_en += 1
+            if '2' in mapping and mapping['2'] in ['E', 'N']:
+                twelve_to_en += 1
+        
+        report['summary'] = {
+            'stations_using_EN_convention': en_to_12,
+            'stations_using_12_convention': twelve_to_en,
+            'stations_with_mixed_mapping': len([m for m in self.channel_mapping_cache.values() 
+                                              if len(set(m.values())) > 1])
+        }
+        
+        return report
+
+    def _select_traces_smart(self, stream, network, station, requested_channel):
+        """
+        Select traces using smart channel mapping.
+        
+        :param stream: ObsPy Stream object
+        :param network: Network code
+        :param station: Station code  
+        :param requested_channel: Requested channel (Z, E, N, 1, 2)
+        :return: Filtered stream
+        """
+        # Get available channels for this station
+        station_id = f"{network}.{station}" if network != "*" else station
+        available_channels = []
+        
+        for trace in stream:
+            if trace.stats.station == station or station == "*":
+                if trace.stats.network == network or network == "*":
+                    available_channels.append(trace.stats.channel)
+        
+        # Get smart mapping
+        mapping = self._get_smart_channel_mapping(station_id, available_channels)
+        
+        # Use mapped channel if available
+        actual_channel = mapping.get(requested_channel, requested_channel)
+        
+        # Select traces with the actual channel
+        return stream.select(
+            network=network,
+            station=station,
+            channel=f"*{actual_channel}"
+        )
+
     def _create_event_id_map(self):
         """
         HypoDD can only deal with numeric event ids. Map all events to a number
@@ -911,6 +1104,14 @@ class HypoDDRelocator(object):
         for key in keys:
             if key in self.forced_configuration_values:
                 values[key] = self.forced_configuration_values[key]
+        
+        # Apply user-provided ph2dt parameter overrides
+        for key, value in self.ph2dt_parameters.items():
+            if key in keys:
+                values[key] = value
+                self.log(f"Overriding ph2dt parameter {key} with value {value}")
+            else:
+                self.log(f"Warning: Unknown ph2dt parameter {key}, ignoring", level="warning")
         # Use this construction to get rid of leading whitespaces.
         ph2dt_string = [
             "station.dat",
@@ -1694,16 +1895,9 @@ class HypoDDRelocator(object):
             else:
                 network = "*"
                 station = station_id
-            st1 = st1.select(
-                network=network,
-                station=station,
-                channel="*%s" % channel,
-            )
-            st2 = st2.select(
-                network=network,
-                station=station,
-                channel="*%s" % channel,
-            )
+            # Use smart channel selection that handles E/N vs 1/2 mapping
+            st1 = self._select_traces_smart(st1, network, station, channel)
+            st2 = self._select_traces_smart(st2, network, station, channel)
             max_starttime_st_1 = (
                 pick_1["pick_time"]
                 - self.cc_param["cc_time_before"]
