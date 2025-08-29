@@ -6,10 +6,13 @@ This example demonstrates the optimized HypoDD relocator with:
 2. Smart channel mapping for different seismic data conventions
 3. Custom channel equivalencies for networks with specific naming schemes
 4. Manual ph2dt parameter control for fine-tuned data selection
+5. Robust error handling for corrupted MSEED files with segmentation fault protection
 
 NEW FEATURES:
 - custom_channel_equivalencies: Map channel names (e.g., {"1": "E", "2": "N"})
 - ph2dt_parameters: Override default ph2dt parameters (MINOBS, MAXSEP, etc.)
+- disable_parallel_loading: Prevent segmentation faults from corrupted files
+- Safe MSEED reading with subprocess isolation
 """
 
 import glob

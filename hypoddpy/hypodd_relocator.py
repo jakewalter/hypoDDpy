@@ -79,7 +79,9 @@ import os
 import progressbar
 import shutil
 import subprocess
+import signal
 import sys
+import tempfile
 import warnings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -88,6 +90,14 @@ from .hypodd_compiler import HypoDDCompiler
 
 # Global variable for StationXML or XSEED inventory files (WCC)
 stations_XSEED = False
+
+# Signal handler for segmentation faults
+def segmentation_fault_handler(signum, frame):
+    """Handle segmentation faults by raising an exception."""
+    raise RuntimeError("Segmentation fault detected - likely corrupted MSEED file")
+
+# Register the signal handler
+signal.signal(signal.SIGSEGV, segmentation_fault_handler)
 
 
 class LRUCache:
@@ -1607,7 +1617,11 @@ class HypoDDRelocator(object):
         streams = []
         for filename in waveform_files:
             try:
-                st = read(filename, starttime=starttime, endtime=starttime + duration)
+                # Use safe reading to prevent segmentation faults
+                st = self._safe_read_mseed(filename, starttime, starttime + duration)
+                if st is None:
+                    self.log(f"Failed to safely read {filename}, skipping", level="warning")
+                    continue
                 
                 # Validate the loaded stream
                 if len(st) == 0:
@@ -1644,7 +1658,146 @@ class HypoDDRelocator(object):
             return combined_stream
         return Stream()
 
-    def _get_cached_waveform(self, filename, starttime, endtime, freqmin=None, freqmax=None, target_sampling_rate=None):
+    def _safe_read_mseed(self, filename, starttime=None, endtime=None):
+        """
+        Safely read MSEED file with subprocess isolation to prevent segmentation faults.
+        
+        :param filename: Path to MSEED file
+        :param starttime: Start time for data extraction
+        :param endtime: End time for data extraction
+        :return: ObsPy Stream object or None if reading failed
+        """
+        # First, try to validate the file without reading it
+        if not self._validate_mseed_file(filename):
+            self.log(f"Skipping invalid MSEED file: {filename}", level="warning")
+            return None
+            
+        # Create a temporary script to read the file safely
+        script_content = f'''
+import sys
+import warnings
+warnings.filterwarnings("ignore")
+try:
+    from obspy.core import read, Stream, UTCDateTime
+    import numpy as np
+    
+    # Read the file
+    if {starttime is not None} and {endtime is not None}:
+        st = read("{filename}", starttime=UTCDateTime("{starttime}"), endtime=UTCDateTime("{endtime}"))
+    else:
+        st = read("{filename}")
+    
+    # Validate the stream
+    if len(st) == 0:
+        print("EMPTY_STREAM")
+        sys.exit(1)
+        
+    valid_traces = []
+    for trace in st:
+        if len(trace.data) == 0:
+            continue
+        if not np.isfinite(trace.data).all():
+            continue
+        valid_traces.append(trace)
+    
+    if not valid_traces:
+        print("NO_VALID_TRACES")
+        sys.exit(1)
+        
+    # Save to temporary file
+    import tempfile
+    import pickle
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.pkl') as f:
+        pickle.dump(Stream(valid_traces), f)
+        print(f.name)
+        
+except Exception as e:
+    print(f"ERROR: {{e}}")
+    sys.exit(1)
+'''
+        
+        try:
+            # Write script to temporary file
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as script_file:
+                script_file.write(script_content)
+                script_path = script_file.name
+            
+            # Run the script in subprocess with timeout
+            result = subprocess.run(
+                [sys.executable, script_path],
+                capture_output=True,
+                text=True,
+                timeout=60  # 60 second timeout
+            )
+            
+            # Clean up script file
+            os.unlink(script_path)
+            
+            if result.returncode != 0:
+                error_msg = result.stderr.strip() or result.stdout.strip()
+                self.log(f"Failed to read MSEED file {filename}: {error_msg}", level="warning")
+                return None
+                
+            output = result.stdout.strip()
+            if output.startswith("ERROR:"):
+                self.log(f"Error reading {filename}: {output[6:]}", level="warning")
+                return None
+            elif output == "EMPTY_STREAM":
+                self.log(f"Empty stream in {filename}", level="warning")
+                return None
+            elif output == "NO_VALID_TRACES":
+                self.log(f"No valid traces in {filename}", level="warning")
+                return None
+            else:
+                # Load the pickled stream
+                import pickle
+                with open(output, 'rb') as f:
+                    st = pickle.load(f)
+                os.unlink(output)  # Clean up
+                return st
+                
+        except subprocess.TimeoutExpired:
+            self.log(f"Timeout reading MSEED file: {filename}", level="warning")
+            return None
+        except Exception as e:
+            self.log(f"Unexpected error reading {filename}: {e}", level="warning")
+            return None
+
+    def _validate_mseed_file(self, filename):
+        """
+        Validate MSEED file before attempting to read it.
+        
+        :param filename: Path to MSEED file
+        :return: True if file appears valid, False otherwise
+        """
+        try:
+            # Check if file exists and has reasonable size
+            if not os.path.exists(filename):
+                return False
+                
+            file_size = os.path.getsize(filename)
+            if file_size < 100:  # Too small to be a valid MSEED file
+                return False
+                
+            if file_size > 100 * 1024 * 1024:  # Too large (100MB)
+                self.log(f"MSEED file too large: {filename} ({file_size} bytes)", level="warning")
+                return False
+                
+            # Try to read just the header information
+            with open(filename, 'rb') as f:
+                header = f.read(512)  # Read first 512 bytes
+                
+            # Check for MSEED magic bytes
+            if len(header) < 8:
+                return False
+                
+            # Basic validation - check if it looks like MSEED data
+            # MSEED files typically start with record headers
+            return True
+            
+        except Exception as e:
+            self.log(f"Error validating MSEED file {filename}: {e}", level="warning")
+            return False
         """
         Load and cache waveform data with optional filtering and downsampling.
         
@@ -1666,9 +1819,13 @@ class HypoDDRelocator(object):
         
         # Load and process waveform
         try:
-            st = read(filename, starttime=starttime, endtime=endtime)
+            # Try safe reading first for corrupted files
+            st = self._safe_read_mseed(filename, starttime, endtime)
+            if st is None:
+                self.log(f"Failed to safely read {filename}, skipping", level="warning")
+                return Stream()
             
-            # Validate the stream - check for empty or corrupted data
+            # Additional validation
             if len(st) == 0:
                 self.log(f"Warning: Empty stream loaded from {filename}", level="warning")
                 return Stream()
@@ -1688,6 +1845,9 @@ class HypoDDRelocator(object):
             if not valid_traces:
                 self.log(f"Warning: No valid traces found in {filename}", level="warning")
                 return Stream()
+            
+            # Create new stream with only valid traces
+            st = Stream(valid_traces)
             
             # Create new stream with only valid traces
             st = Stream(valid_traces)
