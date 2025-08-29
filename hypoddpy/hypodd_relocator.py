@@ -1775,46 +1775,35 @@ class HypoDDRelocator(object):
                 continue
             trace_2 = st2[0]
 
-            if trace_1.id != trace_2.id:
-                msg = "Non matching ids during cross correlation. "
-                msg += "(%s and %s)" % (trace_1.id, trace_2.id)
-                self.log(msg, level="warning")
-                self.cc_results.setdefault(pick_1["id"], {})[
-                    pick_2["id"]
-                ] = msg
-                continue
-            if (
-                trace_1.stats.sampling_rate
-                != trace_2.stats.sampling_rate
-            ):
-                msg = (
-                    "Non matching sampling rates during cross "
-                    "correlation. "
+            # Perform cross-correlation for this channel
+            try:
+                pick2_corr, cross_corr_coeff = xcorr_pick_correction(
+                    pick_1["pick_time"],
+                    trace_1,
+                    pick_2["pick_time"],
+                    trace_2,
+                    t_before=self.cc_param["cc_time_before"],
+                    t_after=self.cc_param["cc_time_after"],
+                    cc_maxlag=self.cc_param["cc_maxlag"],
+                    plot=False,
                 )
-                msg += "(%s and %s)" % (trace_1.id, trace_2.id)
+                
+                # Check correlation coefficient threshold
+                if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
+                    continue  # Try next channel
+                
+                # Found good correlation, return result
+                return pick2_corr, cross_corr_coeff
+                
+            except Exception as exc:
+                msg = f"Error during cross-correlation for station {station_id}, channel {channel}: {exc}"
                 self.log(msg, level="warning")
-                self.cc_results.setdefault(pick_1["id"], {})[
-                    pick_2["id"]
-                ] = msg
-                continue
-        # Perform cross-correlation (no additional filtering needed since we pre-filtered)
-        try:
-            pick2_corr, cross_corr_coeff = xcorr_pick_correction(
-                pick_1["pick_time"],
-                trace_1,
-                pick_2["pick_time"],
-                trace_2,
-                t_before=self.cc_param["cc_time_before"],
-                t_after=self.cc_param["cc_time_after"],
-                cc_maxlag=self.cc_param["cc_maxlag"],
-                plot=False,
-            )
-        except Exception as exc:
-            msg = f"Error during cross-correlation for station {station_id}: {exc}"
-            self.log(msg, level="warning")
-            raise HypoDDException(msg)
-
-        return pick2_corr, cross_corr_coeff
+                continue  # Try next channel
+        
+        # If we get here, no channels produced valid cross-correlations
+        msg = f"No valid cross-correlation found for station {station_id} with any channel"
+        self.log(msg, level="warning")
+        raise HypoDDException(msg)
     
     def _find_data(self, station_id, starttime, duration):
         """"
