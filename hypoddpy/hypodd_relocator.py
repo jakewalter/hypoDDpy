@@ -1790,6 +1790,10 @@ class HypoDDRelocator(object):
         import time
         
         start_time = time.time()
+        
+        # Store max_threads for use in cross-correlation
+        self.max_threads = max_threads
+        
         self.log("Starting optimized relocation with performance enhancements...")
         
         # Optimize cache size based on available memory
@@ -1816,7 +1820,7 @@ class HypoDDRelocator(object):
                 self.log(f"Warning: Could not preload waveforms: {exc}", level="warning")
         
         # Run the standard relocation
-        self.start_relocation(output_event_file, max_threads=max_threads)
+        self.start_relocation(output_event_file)
         
         # Performance monitoring
         if monitor_performance:

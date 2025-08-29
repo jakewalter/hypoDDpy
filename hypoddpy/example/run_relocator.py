@@ -63,7 +63,7 @@ relocator.add_waveform_files(
 # Use the optimized version with optimized parameters for maximum performance
 relocator.start_optimized_relocation(
     output_event_file="relocated_events.xml",
-    max_threads=8,  # Use more threads for parallel processing
+    max_threads=8,  # Now properly handled - used for cross-correlation threading
     preload_waveforms=True,  # Preload common waveforms
     monitor_performance=True  # Monitor performance and log speedup
 )
