@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quakeml xmlns="http://quakeml.org/xmlns/quakeml/1.2" xmlns:qml="http://quakeml.org/xmlns/quakeml/1.2">
+  <eventParameters publicID="smi:local/EventParameters">
+    <event publicID="smi:local/Event/1">
+      <origin publicID="smi:local/Origin/1">
+        <time><value>2012-01-01T12:00:00.000000Z</value></time>
+        <latitude><value>35.0</value></latitude>
+        <longitude><value>-120.0</value></longitude>
+        <depth><value>5000.0</value></depth>
+      </origin>
+      <pick publicID="smi:local/Pick/1">
+        <time><value>2012-01-01T12:00:02.500000Z</value></time>
+        <waveformID networkCode="NM" stationCode="PENM" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>P</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/2">
+        <time><value>2012-01-01T12:00:04.500000Z</value></time>
+        <waveformID networkCode="NM" stationCode="PENM" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>S</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/3">
+        <time><value>2012-01-01T12:00:01.800000Z</value></time>
+        <waveformID networkCode="TA" stationCode="U44A" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>P</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/4">
+        <time><value>2012-01-01T12:00:03.800000Z</value></time>
+        <waveformID networkCode="TA" stationCode="U44A" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>S</phaseHint>
+      </pick>
+    </event>
+    <event publicID="smi:local/Event/2">
+      <origin publicID="smi:local/Origin/2">
+        <time><value>2012-01-01T12:01:00.000000Z</value></time>
+        <latitude><value>35.01</value></latitude>
+        <longitude><value>-120.01</value></longitude>
+        <depth><value>5100.0</value></depth>
+      </origin>
+      <pick publicID="smi:local/Pick/5">
+        <time><value>2012-01-01T12:01:02.480000Z</value></time>
+        <waveformID networkCode="NM" stationCode="PENM" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>P</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/6">
+        <time><value>2012-01-01T12:01:04.520000Z</value></time>
+        <waveformID networkCode="NM" stationCode="PENM" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>S</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/7">
+        <time><value>2012-01-01T12:01:01.750000Z</value></time>
+        <waveformID networkCode="TA" stationCode="U44A" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>P</phaseHint>
+      </pick>
+      <pick publicID="smi:local/Pick/8">
+        <time><value>2012-01-01T12:01:03.850000Z</value></time>
+        <waveformID networkCode="TA" stationCode="U44A" locationCode="00" channelCode="HHZ"/>
+        <phaseHint>S</phaseHint>
+      </pick>
+    </event>
+  </eventParameters>
+</quakeml>

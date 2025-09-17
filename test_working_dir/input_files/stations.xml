@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<FDSNStationXML xmlns="http://www.fdsn.org/xml/station/1" schemaVersion="1.2">
+  <Source>synthetic</Source>
+  <Module>ObsPy 1.4.2</Module>
+  <ModuleURI>https://www.obspy.org</ModuleURI>
+  <Created>2025-09-17T20:31:01.008572Z</Created>
+  <Network code="NM">
+    <Station code="PENM">
+      <Latitude unit="DEGREES">35.0</Latitude>
+      <Longitude unit="DEGREES">-120.0</Longitude>
+      <Elevation unit="METERS">500.0</Elevation>
+      <Site>
+        <Name></Name>
+      </Site>
+      <Channel code="HHZ" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+      <Channel code="HHE" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+      <Channel code="HHN" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+    </Station>
+  </Network>
+  <Network code="TA">
+    <Station code="U44A">
+      <Latitude unit="DEGREES">35.0</Latitude>
+      <Longitude unit="DEGREES">-120.0</Longitude>
+      <Elevation unit="METERS">500.0</Elevation>
+      <Site>
+        <Name></Name>
+      </Site>
+      <Channel code="HHZ" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+      <Channel code="HHE" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+      <Channel code="HHN" locationCode="00">
+        <Latitude unit="DEGREES">35.0</Latitude>
+        <Longitude unit="DEGREES">-120.0</Longitude>
+        <Elevation unit="METERS">500.0</Elevation>
+        <Depth unit="METERS">0.0</Depth>
+      </Channel>
+    </Station>
+  </Network>
+</FDSNStationXML>

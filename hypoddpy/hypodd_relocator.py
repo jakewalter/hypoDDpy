@@ -940,11 +940,26 @@ class HypoDDRelocator(object):
         mapping = {}
         available_set = set(available_channels)
         
+        # Create component-to-channel mapping from available channels
+        component_to_channels = {}
+        for channel in available_channels:
+            if len(channel) >= 1:
+                component = channel[-1]  # Last character indicates component (Z, E, N, 1, 2)
+                if component not in component_to_channels:
+                    component_to_channels[component] = []
+                component_to_channels[component].append(channel)
+        
         # Try to map each requested channel to best available option
         for requested_channel, priority_list in channel_priorities.items():
             for preferred_channel in priority_list:
+                # First try exact match (for cases where channel codes are already component names)
                 if preferred_channel in available_set:
                     mapping[requested_channel] = preferred_channel
+                    break
+                # Then try component match (extract component from channel codes)
+                elif preferred_channel in component_to_channels:
+                    # Choose the first available channel for this component
+                    mapping[requested_channel] = component_to_channels[preferred_channel][0]
                     break
         
         # Cache the mapping
@@ -2202,14 +2217,19 @@ except Exception as e:
         starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
         duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
         self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
-        waveform_files1 = self._find_data(station_id, starttime1, duration1)
-        self.log(f"Found {len(waveform_files1) if waveform_files1 else 0} waveform files for event 1: {waveform_files1}", level="debug")
-
+        # Use location-aware lookup: group candidate files by location code
         starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
         duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
+
+        self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
+        wf_map1 = self._find_data_grouped_by_location(station_id, starttime1, duration1)
         self.log(f"Looking for waveform files for event 2: station={station_id}, time={starttime2}, duration={duration2}", level="debug")
-        waveform_files2 = self._find_data(station_id, starttime2, duration2)
-        self.log(f"Found {len(waveform_files2) if waveform_files2 else 0} waveform files for event 2: {waveform_files2}", level="debug")
+        wf_map2 = self._find_data_grouped_by_location(station_id, starttime2, duration2)
+
+        # Choose files that prefer the same location code for both events
+        waveform_files1, waveform_files2 = self._select_matching_files_by_location(wf_map1, wf_map2)
+
+        self.log(f"Selected {len(waveform_files1) if waveform_files1 else 0} files for event1 and {len(waveform_files2) if waveform_files2 else 0} files for event2 (preferred same-location if possible)", level="debug")
 
         if not waveform_files1 or not waveform_files2:
             msg = f"No waveform data found for both events for station {station_id}."

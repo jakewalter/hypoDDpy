@@ -1,0 +1,27 @@
+[2025-09-17 15:08:35,887] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 15:08:35,887] Channel mapping for TA.U44A: {'Z': 'BHZ', 'E': 'BHE', 'N': 'BHN', '1': 'BHE', '2': 'BHN'}
+[2025-09-17 15:09:05,775] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 15:09:05,776] Channel mapping for TA.U44A: {'Z': 'BHZ', 'E': 'BHE', 'N': 'BHN', '1': 'BHE', '2': 'BHN'}
+[2025-09-17 15:09:20,145] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 15:09:20,146] Channel mapping for TA.U44A: {'Z': 'BHZ', 'E': 'BHE', 'N': 'BHN', '1': 'BHE', '2': 'BHN'}
+[2025-09-17 15:31:02,716] Adding 4 waveform files to processing queue
+[2025-09-17 15:31:02,716] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 15:31:02,716] Successfully added 4 waveform files total
+[2025-09-17 15:31:02,716] Starting optimized relocation with performance enhancements...
+[2025-09-17 15:31:02,716] Cache size adjusted from 200 to 50 items
+[2025-09-17 15:31:02,716] Starting relocator...
+[2025-09-17 15:31:02,716] Parsing stations...
+[2025-09-17 15:31:02,716] Starting parallel station parsing with 1 threads...
+[2025-09-17 15:31:02,722] Parallel station parsing completed in 0.01 seconds
+[2025-09-17 15:31:02,722] Average speed: 183.3 files/second
+[2025-09-17 15:31:02,722] Total stations parsed: 2
+[2025-09-17 15:31:02,723] Done parsing stations.
+[2025-09-17 15:31:02,723] Created station.dat input file.
+[2025-09-17 15:31:02,723] Reading all events...
+[2025-09-17 15:31:02,723] Starting parallel event file reading with 1 threads...
+[2025-09-17 15:31:02,735] Parallel event file reading completed in 0.01 seconds
+[2025-09-17 15:31:02,735] Average speed: 88.0 files/second
+[2025-09-17 15:31:02,735] Total events loaded: 2
+[2025-09-17 15:32:23,296] Cross-correlating station NM.PENM, phase P
+[2025-09-17 15:32:23,296] Looking for waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.450000Z, duration=0.25
+[2025-09-17 15:32:23,296] Looking for waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.450000Z, duration=0.25
