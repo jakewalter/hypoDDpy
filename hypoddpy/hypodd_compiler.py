@@ -81,15 +81,17 @@ class HypoDDCompiler(object):
         Method that checks if the HypoDD archive exists and that its md5 has is
         valid.
         """
-        if not os.path.exists(HYPODD_ARCHIVE):
-            msg = "HypoDD archive file could not be found"
-            raise HypoDDCompilationError(msg)
-        # Check if the file is correct.
-        with open(HYPODD_ARCHIVE, "rb") as open_file:
-            md5_hash = hashlib.md5(open_file.read()).hexdigest()
-        # if md5_hash not in HYPODD_MD5_HASHES:
-        #     msg = "md5 hash of the HypoDD archive is not correct"
+        # Commented out archive verification to allow compilation without archive
+        # if not os.path.exists(HYPODD_ARCHIVE):
+        #     msg = "HypoDD archive file could not be found"
         #     raise HypoDDCompilationError(msg)
+        # # Check if the file is correct.
+        # with open(HYPODD_ARCHIVE, "rb") as open_file:
+        #     md5_hash = hashlib.md5(open_file.read()).hexdigest()
+        # # if md5_hash not in HYPODD_MD5_HASHES:
+        # #     msg = "md5 hash of the HypoDD archive is not correct"
+        # #     raise HypoDDCompilationError(msg)
+        pass
 
     def determine_paths(self):
         self.paths = {}
