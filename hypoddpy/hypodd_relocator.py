@@ -2241,13 +2241,19 @@ class HypoDDRelocator(object):
             # Attempt to find the correct trace by time filtering
             self.log(f"Time filtering: st1 has {len(st1)} traces before time filter", level="debug")
 
-            # Remove traces that don't overlap with the expected time window
+            # Remove traces that don't sufficiently overlap with the expected time window
             traces_to_remove = []
             for i, trace in enumerate(st1):
-                if (trace.stats.starttime > max_starttime_st_1 or
-                    trace.stats.endtime < min_endtime_st_1):
+                # Allow for small timing differences (up to 1% of the time window or 0.01 seconds, whichever is larger)
+                time_tolerance = max(0.01, (min_endtime_st_1 - max_starttime_st_1) * 0.01)
+                effective_start = max_starttime_st_1 - time_tolerance
+                effective_end = min_endtime_st_1 + time_tolerance
+
+                # Remove traces that don't overlap with the effective time window
+                if (trace.stats.endtime <= effective_start or
+                    trace.stats.starttime >= effective_end):
                     traces_to_remove.append(i)
-                    self.log(f"Removing st1 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_1} to {min_endtime_st_1})", level="debug")
+                    self.log(f"Removing st1 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_1} to {min_endtime_st_1}, tolerance: {time_tolerance})", level="debug")
 
             # Remove traces in reverse order to maintain indices
             for i in reversed(traces_to_remove):
@@ -2255,10 +2261,16 @@ class HypoDDRelocator(object):
 
             traces_to_remove = []
             for i, trace in enumerate(st2):
-                if (trace.stats.starttime > max_starttime_st_2 or
-                    trace.stats.endtime < min_endtime_st_2):
+                # Allow for small timing differences (up to 1% of the time window or 0.01 seconds, whichever is larger)
+                time_tolerance = max(0.01, (min_endtime_st_2 - max_starttime_st_2) * 0.01)
+                effective_start = max_starttime_st_2 - time_tolerance
+                effective_end = min_endtime_st_2 + time_tolerance
+
+                # Remove traces that don't overlap with the effective time window
+                if (trace.stats.endtime <= effective_start or
+                    trace.stats.starttime >= effective_end):
                     traces_to_remove.append(i)
-                    self.log(f"Removing st2 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_2} to {min_endtime_st_2})", level="debug")
+                    self.log(f"Removing st2 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_2} to {min_endtime_st_2}, tolerance: {time_tolerance})", level="debug")
 
             for i in reversed(traces_to_remove):
                 st2.remove(st2[i])
