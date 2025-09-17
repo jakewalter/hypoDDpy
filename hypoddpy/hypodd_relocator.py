@@ -2320,23 +2320,58 @@ except Exception as e:
         """
         endtime = starttime + duration
         # Find all possible keys for the station_id.
+        # Handle different station_id formats: "NET.STA", "STA", or full trace IDs
         if "." in station_id:
-            id_pattern = f"{station_id}*.*[E,N,Z,1,2,3]"
+            # station_id has network.station format
+            network, station = station_id.split(".", 1)
+            # Match patterns like: NET.STA*, NET.STA.*.*, *.STA.*.*
+            id_patterns = [
+                f"{network}.{station}*.*[E,N,Z,1,2,3]",  # Exact network.station match
+                f"*.{station}*.*[E,N,Z,1,2,3]",           # Match any network with this station
+                f"{station_id}*.*[E,N,Z,1,2,3]",          # Full station_id match
+            ]
         else:
-            id_pattern = f"*.{station_id}*.*[E,N,Z,1,2,3]"
-        station_keys = [
-            _i
-            for _i in list(self.waveform_information.keys())
-            if fnmatch.fnmatch(_i, id_pattern)
-        ]
+            # station_id is just station code
+            id_patterns = [
+                f"*.{station_id}*.*[E,N,Z,1,2,3]",       # Match any network with this station
+                f"{station_id}*.*[E,N,Z,1,2,3]",          # Direct station match
+            ]
+        
+        station_keys = []
+        for pattern in id_patterns:
+            matching_keys = [
+                _i for _i in list(self.waveform_information.keys())
+                if fnmatch.fnmatch(_i, pattern)
+            ]
+            station_keys.extend(matching_keys)
+        
+        # Remove duplicates
+        station_keys = list(set(station_keys))
+        
+        # Debug logging
+        if len(station_keys) == 0:
+            self.log(f"No waveform keys found matching patterns {id_patterns} for station {station_id}", level="warning")
+            self.log(f"Available waveform keys: {list(self.waveform_information.keys())[:10]}...", level="debug")
+        
         filenames = []
         for key in station_keys:
             for waveform in self.waveform_information[key]:
-                if waveform["starttime"] > starttime:
-                    continue
-                if waveform["endtime"] < endtime:
-                    continue
+                # Check if waveform covers the required time range
+                # Waveform should start before or at the required end time
+                # and end after or at the required start time
+                if waveform["endtime"] < starttime:
+                    continue  # Waveform ends before we need data
+                if waveform["starttime"] > endtime:
+                    continue  # Waveform starts after we need data
                 filenames.append(waveform["filename"])
+        
+        # Debug logging for time filtering
+        if len(filenames) == 0 and len(station_keys) > 0:
+            self.log(f"No waveforms found for station {station_id} in time range {starttime} to {endtime}", level="warning")
+            for key in station_keys[:3]:  # Show first 3 matching keys
+                for waveform in self.waveform_information[key][:2]:  # Show first 2 waveforms per key
+                    self.log(f"  Available: {key} -> {waveform['starttime']} to {waveform['endtime']}", level="debug")
+        
         if len(filenames) == 0:
             return False
         return list(set(filenames))
