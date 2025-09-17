@@ -767,8 +767,34 @@ class HypoDDRelocator(object):
             # Also append all picks.
             current_event["picks"] = []
             for pick in event.picks:
+                # Skip picks that are None or don't have required attributes
+                if pick is None:
+                    discarded_picks += 1
+                    continue
+                    
+                # Skip picks that don't have required waveform_id
+                if not hasattr(pick, 'waveform_id') or pick.waveform_id is None:
+                    discarded_picks += 1
+                    continue
+                    
+                # Skip picks that don't have network_code or station_code
+                if (not hasattr(pick.waveform_id, 'network_code') or 
+                    not hasattr(pick.waveform_id, 'station_code') or
+                    pick.waveform_id.network_code is None or 
+                    pick.waveform_id.station_code is None):
+                    discarded_picks += 1
+                    continue
+                    
                 current_pick = {}
-                current_pick["id"] = str(pick.resource_id)
+                
+                # Handle cases where resource_id might be None
+                if pick.resource_id is not None:
+                    current_pick["id"] = str(pick.resource_id)
+                else:
+                    # Generate a unique ID based on pick properties
+                    pick_id = f"{pick.waveform_id.network_code}.{pick.waveform_id.station_code}.{pick.phase_hint}.{pick.time}"
+                    current_pick["id"] = pick_id
+                
                 current_pick["pick_time"] = pick.time
                 if hasattr(pick.time_errors, "uncertainty"):
                     current_pick[
@@ -782,7 +808,13 @@ class HypoDDRelocator(object):
                 )
                 if len(current_pick["station_id"]) > 7:
                     current_pick["station_id"] = pick.waveform_id.station_code
-                current_pick["phase"] = pick.phase_hint
+                    
+                # Handle cases where phase_hint might be None
+                if hasattr(pick, 'phase_hint') and pick.phase_hint is not None:
+                    current_pick["phase"] = pick.phase_hint
+                else:
+                    current_pick["phase"] = "P"  # Default to P phase
+                    
                 # Assert that information for the station of the pick is
                 # available.
                 if not current_pick["station_id"] in list(
@@ -1083,7 +1115,7 @@ class HypoDDRelocator(object):
         values["MAXNGH"] = 5  # Reduced for tighter window
         values["MINLNK"] = 10  # Increased for tighter window
         values["MINOBS"] = 6  # Increased for tighter window
-        values["MAXOBS"] = 30  # Reduced for tighter window
+        values["MAXOBS"] = 50  # Reduced for tighter window
         if "MAXSEP" not in self.forced_configuration_values:
             # Set MAXSEP to the 5-percentile of all inter-event distances for tighter window.
             distances = []

@@ -7,12 +7,16 @@ This example demonstrates the optimized HypoDD relocator with:
 3. Custom channel equivalencies for networks with specific naming schemes
 4. Manual ph2dt parameter control for fine-tuned data selection
 5. Robust error handling for corrupted MSEED files with segmentation fault protection
+6. Safe MSEED reading with subprocess isolation and signal handling
+7. Robust event data processing with null pick handling
 
 NEW FEATURES:
 - custom_channel_equivalencies: Map channel names (e.g., {"1": "E", "2": "N"})
 - ph2dt_parameters: Override default ph2dt parameters (MINOBS, MAXSEP, etc.)
 - disable_parallel_loading: Prevent segmentation faults from corrupted files
+- disable_signal_handlers: Disable signal handlers if they cause issues
 - Safe MSEED reading with subprocess isolation
+- Robust pick processing with null checks and fallbacks
 """
 
 import glob
