@@ -357,6 +357,10 @@ class HypoDDRelocator(object):
         """
         if isinstance(waveform_files, str):
             waveform_files = [waveform_files]
+        
+        self.log(f"Adding {len(waveform_files)} waveform files to processing queue", level="info")
+        self.log(f"Sample files: {waveform_files[:3]}{'...' if len(waveform_files) > 3 else ''}", level="debug")
+        
         for waveform_file in waveform_files:
             if not isinstance(waveform_file, str):
                 msg = "%s is not a filename." % waveform_file
@@ -367,6 +371,8 @@ class HypoDDRelocator(object):
                 warnings.warn(msg)
                 continue
             self.waveform_files.append(waveform_file)
+            
+        self.log(f"Successfully added {len(self.waveform_files)} waveform files total", level="info")
 
     def set_forced_configuration_value(self, key, value):
         """
@@ -1405,6 +1411,7 @@ class HypoDDRelocator(object):
                 return
         file_count = len(self.waveform_files)
         self.log("Parsing %i waveform files..." % file_count)
+        self.log(f"Waveform files to parse: {self.waveform_files[:5]}{'...' if len(self.waveform_files) > 5 else ''}", level="debug")
         self.waveform_information = {}
         
         # Use parallel processing for waveform parsing
@@ -1429,6 +1436,7 @@ class HypoDDRelocator(object):
         
         start_time = time.time()
         self.log(f"Starting parallel waveform parsing with {min(8, file_count)} threads...")
+        self.log(f"Processing {len(self.waveform_files)} waveform files: {self.waveform_files[:5]}{'...' if len(self.waveform_files) > 5 else ''}")
         
         # Use progress bar
         pbar = progressbar.ProgressBar(
@@ -1449,6 +1457,7 @@ class HypoDDRelocator(object):
         def process_single_waveform_file(waveform_file):
             """Process a single waveform file and return trace information."""
             try:
+                self.log(f"Processing waveform file: {waveform_file}", level="debug")
                 # Use safe reading to prevent segmentation faults
                 st = self._safe_read_mseed(waveform_file)
                 if st is None:
@@ -1459,8 +1468,10 @@ class HypoDDRelocator(object):
                 for trace in st:
                     # Additional validation for each trace
                     if len(trace.data) == 0:
+                        self.log(f"Skipping empty trace {trace.id} in {waveform_file}", level="debug")
                         continue
                     if not np.isfinite(trace.data).all():
+                        self.log(f"Skipping trace with invalid data {trace.id} in {waveform_file}", level="debug")
                         continue
                         
                     trace_info.append({
@@ -1469,6 +1480,9 @@ class HypoDDRelocator(object):
                         "endtime": trace.stats.endtime,
                         "filename": os.path.abspath(waveform_file),
                     })
+                    self.log(f"Found valid trace: {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
+                
+                self.log(f"Successfully processed {len(trace_info)} traces from {waveform_file}", level="debug")
                 return trace_info
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
@@ -1507,6 +1521,7 @@ class HypoDDRelocator(object):
                                 "endtime": trace_info["endtime"], 
                                 "filename": trace_info["filename"],
                             })
+                            self.log(f"Added trace {trace_id} from {trace_info['filename']} ({trace_info['starttime']} to {trace_info['endtime']})", level="debug")
                     except Exception as exc:
                         wf_file = future_to_file[future]
                         self.log(f"Failed to process waveform file {wf_file}: {exc}", level="warning")
@@ -1521,6 +1536,11 @@ class HypoDDRelocator(object):
         parsing_time = end_time - start_time
         self.log(f"Parallel waveform parsing completed in {parsing_time:.2f} seconds")
         self.log(f"Average speed: {file_count/parsing_time:.1f} files/second")
+        
+        # Log summary of parsed data
+        total_traces = sum(len(traces) for traces in self.waveform_information.values())
+        self.log(f"Parsed {len(self.waveform_information)} unique trace IDs with {total_traces} total waveforms")
+        self.log(f"Sample trace IDs: {list(self.waveform_information.keys())[:5]}", level="debug")
 
     def save_cross_correlation_results(self, filename):
         with open(filename, "w") as open_file:
@@ -1887,11 +1907,15 @@ except Exception as e:
         """
         # Create cache key
         cache_key = f"{filename}_{starttime}_{endtime}_{freqmin}_{freqmax}_{target_sampling_rate}"
+        self.log(f"Loading waveform: {filename} from {starttime} to {endtime} (cache key: {cache_key})", level="debug")
         
         # Check cache first
         cached_data = self.waveform_cache.get(cache_key)
         if cached_data is not None:
+            self.log(f"Cache hit for {filename}", level="debug")
             return cached_data
+        
+        self.log(f"Cache miss for {filename}, loading from disk", level="debug")
         
         # Load and process waveform
         try:
@@ -1905,6 +1929,8 @@ except Exception as e:
             if len(st) == 0:
                 self.log(f"Warning: Empty stream loaded from {filename}", level="warning")
                 return Stream()
+            
+            self.log(f"Successfully loaded {len(st)} traces from {filename}", level="debug")
             
             # Check for corrupted traces
             valid_traces = []
@@ -1937,6 +1963,7 @@ except Exception as e:
             
             # Cache the result
             self.waveform_cache.put(cache_key, st.copy())
+            self.log(f"Cached and returning {len(st)} traces from {filename}", level="debug")
             return st
             
         except Exception as exc:
@@ -1961,15 +1988,21 @@ except Exception as e:
         """
         def load_and_process(files, starttime, duration):
             combined_stream = Stream()
+            self.log(f"Loading {len(files)} files for time range {starttime} to {starttime + duration}", level="debug")
             for filename in files:
                 try:
+                    self.log(f"Loading file: {filename}", level="debug")
                     st = self._get_cached_waveform(filename, starttime, starttime + duration, 
                                                  freqmin, freqmax, target_sampling_rate)
                     if len(st) > 0:  # Only add non-empty streams
                         combined_stream += st
+                        self.log(f"Added {len(st)} traces from {filename}", level="debug")
+                    else:
+                        self.log(f"No valid traces found in {filename}", level="debug")
                 except Exception as exc:
                     self.log(f"Error loading waveform {filename}: {exc}", level="warning")
                     continue
+            self.log(f"Combined stream has {len(combined_stream)} total traces", level="debug")
             return combined_stream
         
         # Use timeout to prevent hanging on corrupted files
@@ -1993,6 +2026,7 @@ except Exception as e:
             # Return empty streams on error
             st1, st2 = Stream(), Stream()
             
+        self.log(f"Parallel loading complete: st1 has {len(st1)} traces, st2 has {len(st2)} traces", level="debug")
         return st1, st2
 
     def clear_waveform_cache(self):
@@ -2161,15 +2195,20 @@ except Exception as e:
         # Extract station ID and phase type
         station_id = pick_1["station_id"]
         phase = pick_1["phase"]
+        self.log(f"Cross-correlating station {station_id}, phase {phase}", level="debug")
 
         # Find waveform data for the station
         starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
         duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
+        self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
         waveform_files1 = self._find_data(station_id, starttime1, duration1)
+        self.log(f"Found {len(waveform_files1) if waveform_files1 else 0} waveform files for event 1: {waveform_files1}", level="debug")
 
         starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
         duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
+        self.log(f"Looking for waveform files for event 2: station={station_id}, time={starttime2}, duration={duration2}", level="debug")
         waveform_files2 = self._find_data(station_id, starttime2, duration2)
+        self.log(f"Found {len(waveform_files2) if waveform_files2 else 0} waveform files for event 2: {waveform_files2}", level="debug")
 
         if not waveform_files1 or not waveform_files2:
             msg = f"No waveform data found for both events for station {station_id}."
@@ -2373,7 +2412,10 @@ except Exception as e:
                     self.log(f"  Available: {key} -> {waveform['starttime']} to {waveform['endtime']}", level="debug")
         
         if len(filenames) == 0:
+            self.log(f"_find_data: No filenames found for station {station_id}", level="warning")
             return False
+        
+        self.log(f"_find_data: Found {len(filenames)} files for station {station_id}: {filenames[:3]}...", level="debug")
         return list(set(filenames))
 
     def _write_hypoDD_inp_file(self):
