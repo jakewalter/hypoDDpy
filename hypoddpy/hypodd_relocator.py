@@ -304,7 +304,7 @@ class HypoDDRelocator(object):
         self._write_ph2dt_inp_file()
         self._create_event_id_map()
         self._write_catalog_input_file()
-        #self._compile_hypodd()
+        self._compile_hypodd()
         self._run_ph2dt()
         self._parse_waveform_files()
         self._cross_correlate_picks(outfile=output_cross_correlation_file)
@@ -742,6 +742,12 @@ class HypoDDRelocator(object):
                 current_event["magnitude"] = 0.0
             # Always take the preferred origin.
             origin = event.preferred_origin()
+            if origin is None and len(event.origins) > 0:
+                # Fallback to first available origin if no preferred origin
+                origin = event.origins[0]
+                self.log(f"Warning: Using first available origin for event {event.resource_id} (no preferred origin)", level="warning")
+            elif origin is None:
+                raise HypoDDException(f"No origin found for event {event.resource_id}")
             current_event["origin_time"] = origin.time
             # Origin time error.
             if origin.time_errors.uncertainty is not None:
@@ -2217,19 +2223,14 @@ except Exception as e:
         starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
         duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
         self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
-        # Use location-aware lookup: group candidate files by location code
+        waveform_files1 = self._find_data(station_id, starttime1, duration1)
+        self.log(f"Found {len(waveform_files1) if waveform_files1 else 0} waveform files for event 1: {waveform_files1}", level="debug")
+        
         starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
         duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
-
-        self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
-        wf_map1 = self._find_data_grouped_by_location(station_id, starttime1, duration1)
         self.log(f"Looking for waveform files for event 2: station={station_id}, time={starttime2}, duration={duration2}", level="debug")
-        wf_map2 = self._find_data_grouped_by_location(station_id, starttime2, duration2)
-
-        # Choose files that prefer the same location code for both events
-        waveform_files1, waveform_files2 = self._select_matching_files_by_location(wf_map1, wf_map2)
-
-        self.log(f"Selected {len(waveform_files1) if waveform_files1 else 0} files for event1 and {len(waveform_files2) if waveform_files2 else 0} files for event2 (preferred same-location if possible)", level="debug")
+        waveform_files2 = self._find_data(station_id, starttime2, duration2)
+        self.log(f"Found {len(waveform_files2) if waveform_files2 else 0} waveform files for event 2: {waveform_files2}", level="debug")
 
         if not waveform_files1 or not waveform_files2:
             msg = f"No waveform data found for both events for station {station_id}."
