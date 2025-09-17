@@ -1872,6 +1872,8 @@ except Exception as e:
         except Exception as e:
             self.log(f"Error validating MSEED file {filename}: {e}", level="warning")
             return False
+
+    def _get_cached_waveform(self, filename, starttime, endtime, freqmin=None, freqmax=None, target_sampling_rate=None):
         """
         Load and cache waveform data with optional filtering and downsampling.
         
@@ -1919,9 +1921,6 @@ except Exception as e:
             if not valid_traces:
                 self.log(f"Warning: No valid traces found in {filename}", level="warning")
                 return Stream()
-            
-            # Create new stream with only valid traces
-            st = Stream(valid_traces)
             
             # Create new stream with only valid traces
             st = Stream(valid_traces)
