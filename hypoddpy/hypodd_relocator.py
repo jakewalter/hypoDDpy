@@ -304,7 +304,7 @@ class HypoDDRelocator(object):
         self._write_ph2dt_inp_file()
         self._create_event_id_map()
         self._write_catalog_input_file()
-        self._compile_hypodd()
+        # self._compile_hypodd()  # Commented out - HypoDD already compiled
         self._run_ph2dt()
         self._parse_waveform_files()
         self._cross_correlate_picks(outfile=output_cross_correlation_file)

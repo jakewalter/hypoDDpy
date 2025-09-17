@@ -198,9 +198,10 @@ class HypoDDCompiler(object):
             shutil.rmtree(unpack_dir)
         os.makedirs(unpack_dir)
 
-        tar = tarfile.open(HYPODD_ARCHIVE, "r:gz")
-        tar.extractall(unpack_dir)
-        self.log("Unpacking HypoDD archive done.")
+        # Commented out archive unpacking since archive file doesn't exist
+        # tar = tarfile.open(HYPODD_ARCHIVE, "r:gz")
+        # tar.extractall(unpack_dir)
+        self.log("Unpacking HypoDD archive done (skipped - no archive available).")
 
     def make(self):
         if self.is_configured is not True:
