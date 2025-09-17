@@ -276,6 +276,7 @@ class HypoDDRelocator(object):
         output_event_file,
         output_cross_correlation_file=None,
         create_plots=True,
+        max_threads=None,
     ):
         """
         Start the relocation with HypoDD and write the output to
@@ -288,6 +289,7 @@ class HypoDDRelocator(object):
         :type output_cross_correlation_file: str
         :param create_plots: If true, some plots will be created in
             working_dir/output_files. Defaults to True.
+        :param max_threads: Maximum number of threads for parallel processing
         """
         self.output_event_file = output_event_file
         if os.path.exists(self.output_event_file):
@@ -298,7 +300,7 @@ class HypoDDRelocator(object):
         self.log("Starting relocator...")
         self._parse_station_files()
         self._write_station_input_file()
-        self._read_event_information()
+        self._read_event_information(max_threads)
         self._write_ph2dt_inp_file()
         self._create_event_id_map()
         self._write_catalog_input_file()
@@ -688,12 +690,14 @@ class HypoDDRelocator(object):
             open_file.write(event_string)
         self.log("Created phase.dat input file.")
 
-    def _read_event_information(self):
+    def _read_event_information(self, max_threads=None):
         """
         Read all event files and extract the needed information and serialize
         it as a JSON object. This is not necessarily needed but eases
         development as the JSON file is just much faster to read then the full
         event files.
+        
+        :param max_threads: Maximum number of threads for parallel event file reading
         """
         serialized_event_file = os.path.join(
             self.paths["working_files"], "events.json"
@@ -716,7 +720,7 @@ class HypoDDRelocator(object):
         catalog = Catalog()
         
         # Use parallel event file reading for better performance
-        catalog = self._read_event_files_parallel()
+        catalog = self._read_event_files_parallel(max_threads)
         self.events = []
         # Keep track of the number of discarded picks.
         discarded_picks = 0
@@ -840,17 +844,25 @@ class HypoDDRelocator(object):
             + "unavailable station information."
         )
 
-    def _read_event_files_parallel(self):
+    def _read_event_files_parallel(self, max_threads=None):
         """
         Read event files in parallel for improved performance.
         
+        :param max_threads: Maximum number of threads to use. If None, uses min(4, file_count)
         :return: Combined Catalog object
         """
         import time
         
         start_time = time.time()
         file_count = len(self.event_files)
-        self.log(f"Starting parallel event file reading with {min(4, file_count)} threads...")
+        
+        # Use provided max_threads or default to min(4, file_count) for backward compatibility
+        if max_threads is None:
+            actual_max_threads = min(4, file_count)
+        else:
+            actual_max_threads = min(max_threads, file_count)
+            
+        self.log(f"Starting parallel event file reading with {actual_max_threads} threads...")
         
         def read_single_event_file(event_file):
             """Read a single event file and return catalog."""
@@ -861,9 +873,7 @@ class HypoDDRelocator(object):
                 return Catalog()
         
         # Read all event files in parallel
-        max_workers = min(4, file_count)  # Event files are usually small, use fewer threads
-        
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        with ThreadPoolExecutor(max_workers=actual_max_threads) as executor:
             # Submit all tasks
             futures = [
                 executor.submit(read_single_event_file, event_file) 
@@ -2115,7 +2125,7 @@ except Exception as e:
                 self.log(f"Warning: Could not preload waveforms: {exc}", level="warning")
         
         # Run the standard relocation
-        self.start_relocation(output_event_file)
+        self.start_relocation(output_event_file, max_threads=max_threads)
         
         # Performance monitoring
         if monitor_performance:
