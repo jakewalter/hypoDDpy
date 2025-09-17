@@ -1474,6 +1474,7 @@ class HypoDDRelocator(object):
                         self.log(f"Skipping trace with invalid data {trace.id} in {waveform_file}", level="debug")
                         continue
                         
+                    self.log(f"Found trace {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
                     trace_info.append({
                         "trace_id": trace.id,
                         "starttime": trace.stats.starttime,
@@ -2357,6 +2358,8 @@ except Exception as e:
         :param starttime: The minimum starttime of the data.
         :param duration: The minimum duration of the data.
         """
+        self.log(f"_find_data called with station_id='{station_id}', starttime={starttime}, duration={duration}", level="debug")
+        
         endtime = starttime + duration
         # Find all possible keys for the station_id.
         # Handle different station_id formats: "NET.STA", "STA", or full trace IDs
@@ -2364,16 +2367,22 @@ except Exception as e:
             # station_id has network.station format
             network, station = station_id.split(".", 1)
             # Match patterns like: NET.STA*, NET.STA.*.*, *.STA.*.*
+            # Updated to handle location codes (e.g., NET.STA.00.CHAN)
             id_patterns = [
-                f"{network}.{station}*.*[E,N,Z,1,2,3]",  # Exact network.station match
-                f"*.{station}*.*[E,N,Z,1,2,3]",           # Match any network with this station
-                f"{station_id}*.*[E,N,Z,1,2,3]",          # Full station_id match
+                f"{network}.{station}*.*[E,N,Z,1,2,3,B,H]",  # Exact network.station match (BHZ, BHN, BHE, etc.)
+                f"{network}.{station}.*.*[E,N,Z,1,2,3,B,H]",   # With location code
+                f"*.{station}*.*[E,N,Z,1,2,3,B,H]",           # Match any network with this station
+                f"*.{station}.*.*[E,N,Z,1,2,3,B,H]",          # With location code
+                f"{station_id}*.*[E,N,Z,1,2,3,B,H]",          # Full station_id match
+                f"{station_id}.*.*[E,N,Z,1,2,3,B,H]",         # With location code
             ]
         else:
             # station_id is just station code
             id_patterns = [
-                f"*.{station_id}*.*[E,N,Z,1,2,3]",       # Match any network with this station
-                f"{station_id}*.*[E,N,Z,1,2,3]",          # Direct station match
+                f"*.{station_id}*.*[E,N,Z,1,2,3,B,H]",       # Match any network with this station
+                f"*.{station_id}.*.*[E,N,Z,1,2,3,B,H]",      # With location code
+                f"{station_id}*.*[E,N,Z,1,2,3,B,H]",          # Direct station match
+                f"{station_id}.*.*[E,N,Z,1,2,3,B,H]",        # With location code
             ]
         
         station_keys = []
@@ -2382,6 +2391,8 @@ except Exception as e:
                 _i for _i in list(self.waveform_information.keys())
                 if fnmatch.fnmatch(_i, pattern)
             ]
+            if matching_keys:
+                self.log(f"Pattern '{pattern}' matched {len(matching_keys)} keys: {matching_keys[:3]}", level="debug")
             station_keys.extend(matching_keys)
         
         # Remove duplicates
@@ -2390,7 +2401,12 @@ except Exception as e:
         # Debug logging
         if len(station_keys) == 0:
             self.log(f"No waveform keys found matching patterns {id_patterns} for station {station_id}", level="warning")
-            self.log(f"Available waveform keys: {list(self.waveform_information.keys())[:10]}...", level="debug")
+            self.log(f"Available waveform keys (first 10): {list(self.waveform_information.keys())[:10]}", level="debug")
+            # Show some examples of what we're looking for vs what's available
+            if self.waveform_information:
+                sample_key = list(self.waveform_information.keys())[0]
+                self.log(f"Sample available key: {sample_key}", level="debug")
+                self.log(f"Expected patterns would match keys like: {id_patterns[0]}", level="debug")
         
         filenames = []
         for key in station_keys:
