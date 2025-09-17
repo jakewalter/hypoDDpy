@@ -1825,27 +1825,6 @@ class HypoDDRelocator(object):
             return Stream()
 
     def _validate_mseed_file(self, filename):
-            
-            if result.returncode != 0:
-                error_msg = result.stderr.strip() or result.stdout.strip()
-                self.log(f"Failed to read MSEED file {filename}: {error_msg}", level="warning")
-                return None
-                
-            output = result.stdout.strip()
-            if output.startswith("ERROR:"):
-                self.log(f"Error reading {filename}: {output[6:]}", level="warning")
-                return None
-            elif output == "EMPTY_STREAM":
-                self.log(f"Empty stream in {filename}", level="warning")
-                return None
-            elif output == "NO_VALID_TRACES":
-                self.log(f"No valid traces in {filename}", level="warning")
-                return None
-        except Exception as e:
-            self.log(f"Error reading MSEED file {filename}: {e}", level="warning")
-            return Stream()
-
-    def _validate_mseed_file(self, filename):
         """
         Validate MSEED file before attempting to read it.
         
