@@ -1081,12 +1081,17 @@ class HypoDDRelocator(object):
         # Use mapped channel if available
         actual_channel = mapping.get(requested_channel, requested_channel)
         
+        self.log(f"Channel mapping for {station_id}: requested={requested_channel}, mapped={actual_channel}, available={available_channels}", level="debug")
+        
         # Select traces with the actual channel
-        return stream.select(
+        result_stream = stream.select(
             network=network,
             station=station,
             channel=f"*{actual_channel}"
         )
+        
+        self.log(f"Selected {len(result_stream)} traces for channel {actual_channel}", level="debug")
+        return result_stream
 
     def _create_event_id_map(self):
         """
@@ -1776,78 +1781,50 @@ class HypoDDRelocator(object):
 
     def _safe_read_mseed(self, filename, starttime=None, endtime=None):
         """
-        Safely read MSEED file with subprocess isolation to prevent segmentation faults.
-        
+        Safely read MSEED file with proper error handling.
+
         :param filename: Path to MSEED file
         :param starttime: Start time for data extraction
         :param endtime: End time for data extraction
         :return: ObsPy Stream object or None if reading failed
         """
-        # First, try to validate the file without reading it
-        if not self._validate_mseed_file(filename):
-            self.log(f"Skipping invalid MSEED file: {filename}", level="warning")
-            return None
-            
-        # Create a temporary script to read the file safely
-        script_content = f'''
-import sys
-import warnings
-warnings.filterwarnings("ignore")
-try:
-    from obspy.core import read, Stream, UTCDateTime
-    import numpy as np
-    
-    # Read the file
-    if {starttime is not None} and {endtime is not None}:
-        st = read("{filename}", starttime=UTCDateTime("{starttime}"), endtime=UTCDateTime("{endtime}"))
-    else:
-        st = read("{filename}")
-    
-    # Validate the stream
-    if len(st) == 0:
-        print("EMPTY_STREAM")
-        sys.exit(1)
-        
-    valid_traces = []
-    for trace in st:
-        if len(trace.data) == 0:
-            continue
-        if not np.isfinite(trace.data).all():
-            continue
-        valid_traces.append(trace)
-    
-    if not valid_traces:
-        print("NO_VALID_TRACES")
-        sys.exit(1)
-        
-    # Save to temporary file
-    import tempfile
-    import pickle
-    with tempfile.NamedTemporaryFile(delete=False, suffix='.pkl') as f:
-        pickle.dump(Stream(valid_traces), f)
-        print(f.name)
-        
-except Exception as e:
-    print(f"ERROR: {{e}}")
-    sys.exit(1)
-'''
-        
         try:
-            # Write script to temporary file
-            with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as script_file:
-                script_file.write(script_content)
-                script_path = script_file.name
-            
-            # Run the script in subprocess with timeout
-            result = subprocess.run(
-                [sys.executable, script_path],
-                capture_output=True,
-                text=True,
-                timeout=60  # 60 second timeout
-            )
-            
-            # Clean up script file
-            os.unlink(script_path)
+            # Try to read the file directly with ObsPy
+            if starttime is not None and endtime is not None:
+                st = read(filename, starttime=starttime, endtime=endtime)
+            else:
+                st = read(filename)
+
+            # Validate the stream
+            if len(st) == 0:
+                self.log(f"Empty stream in {filename}", level="warning")
+                return Stream()
+
+            # Filter out invalid traces
+            valid_traces = []
+            for trace in st:
+                if len(trace.data) == 0:
+                    continue
+                if not hasattr(trace.data, 'shape') or trace.data.shape[0] == 0:
+                    continue
+                # Check for NaN or infinite values
+                import numpy as np
+                if not np.isfinite(trace.data).all():
+                    continue
+                valid_traces.append(trace)
+
+            if not valid_traces:
+                self.log(f"No valid traces in {filename}", level="warning")
+                return Stream()
+
+            # Return stream with only valid traces
+            return Stream(valid_traces)
+
+        except Exception as e:
+            self.log(f"Error reading MSEED file {filename}: {e}", level="warning")
+            return Stream()
+
+    def _validate_mseed_file(self, filename):
             
             if result.returncode != 0:
                 error_msg = result.stderr.strip() or result.stdout.strip()
@@ -1864,20 +1841,9 @@ except Exception as e:
             elif output == "NO_VALID_TRACES":
                 self.log(f"No valid traces in {filename}", level="warning")
                 return None
-            else:
-                # Load the pickled stream
-                import pickle
-                with open(output, 'rb') as f:
-                    st = pickle.load(f)
-                os.unlink(output)  # Clean up
-                return st
-                
-        except subprocess.TimeoutExpired:
-            self.log(f"Timeout reading MSEED file: {filename}", level="warning")
-            return None
         except Exception as e:
-            self.log(f"Unexpected error reading {filename}: {e}", level="warning")
-            return None
+            self.log(f"Error reading MSEED file {filename}: {e}", level="warning")
+            return Stream()
 
     def _validate_mseed_file(self, filename):
         """
@@ -1929,14 +1895,13 @@ except Exception as e:
         """
         # Create cache key
         cache_key = f"{filename}_{starttime}_{endtime}_{freqmin}_{freqmax}_{target_sampling_rate}"
-        self.log(f"Loading waveform: {filename} from {starttime} to {endtime} (cache key: {cache_key})", level="debug")
-        
+
         # Check cache first
         cached_data = self.waveform_cache.get(cache_key)
         if cached_data is not None:
             self.log(f"Cache hit for {filename}", level="debug")
             return cached_data
-        
+
         self.log(f"Cache miss for {filename}, loading from disk", level="debug")
         
         # Load and process waveform
@@ -2014,7 +1979,7 @@ except Exception as e:
             for filename in files:
                 try:
                     self.log(f"Loading file: {filename}", level="debug")
-                    st = self._get_cached_waveform(filename, starttime, starttime + duration, 
+                    st = self._get_cached_waveform(filename, starttime, starttime + duration,
                                                  freqmin, freqmax, target_sampling_rate)
                     if len(st) > 0:  # Only add non-empty streams
                         combined_stream += st
@@ -2265,8 +2230,19 @@ except Exception as e:
                 network = "*"
                 station = station_id
             # Use smart channel selection that handles E/N vs 1/2 mapping
-            st1 = self._select_traces_smart(st1, network, station, channel)
-            st2 = self._select_traces_smart(st2, network, station, channel)
+            st1_filtered = self._select_traces_smart(st1, network, station, channel)
+            st2_filtered = self._select_traces_smart(st2, network, station, channel)
+
+            self.log(f"After channel selection for {channel}: st1 has {len(st1_filtered)} traces, st2 has {len(st2_filtered)} traces", level="debug")
+
+            if len(st1_filtered) == 0 or len(st2_filtered) == 0:
+                msg = f"No traces found for channel {channel} after filtering"
+                self.log(msg, level="debug")
+                continue
+
+            # Create copies for time filtering
+            st1 = st1_filtered.copy()
+            st2 = st2_filtered.copy()
             max_starttime_st_1 = (
                 pick_1["pick_time"]
                 - self.cc_param["cc_time_before"]
@@ -2283,20 +2259,32 @@ except Exception as e:
                 pick_2["pick_time"]
                 + self.cc_param["cc_time_after"]
             )
-            # Attempt to find the correct trace.
-            
-            for trace in st1:
-                if (
-                    trace.stats.starttime > max_starttime_st_1
-                    or trace.stats.endtime < min_endtime_st_1
-                ):
-                    st1.remove(trace)
-            for trace in st2:
-                if (
-                    trace.stats.starttime > max_starttime_st_2
-                    or trace.stats.endtime < min_endtime_st_2
-                ):
-                    st2.remove(trace)
+            # Attempt to find the correct trace by time filtering
+            self.log(f"Time filtering: st1 has {len(st1)} traces before time filter", level="debug")
+
+            # Remove traces that don't overlap with the expected time window
+            traces_to_remove = []
+            for i, trace in enumerate(st1):
+                if (trace.stats.starttime > max_starttime_st_1 or
+                    trace.stats.endtime < min_endtime_st_1):
+                    traces_to_remove.append(i)
+                    self.log(f"Removing st1 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_1} to {min_endtime_st_1})", level="debug")
+
+            # Remove traces in reverse order to maintain indices
+            for i in reversed(traces_to_remove):
+                st1.remove(st1[i])
+
+            traces_to_remove = []
+            for i, trace in enumerate(st2):
+                if (trace.stats.starttime > max_starttime_st_2 or
+                    trace.stats.endtime < min_endtime_st_2):
+                    traces_to_remove.append(i)
+                    self.log(f"Removing st2 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_2} to {min_endtime_st_2})", level="debug")
+
+            for i in reversed(traces_to_remove):
+                st2.remove(st2[i])
+
+            self.log(f"After time filtering: st1 has {len(st1)} traces, st2 has {len(st2)} traces", level="debug")
 
             # cleanup merges, in case the event is included in
             # multiple traces (happens for events with very close
