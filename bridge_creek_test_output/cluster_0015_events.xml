@@ -1,0 +1,498 @@
+<?xml version='1.0' encoding='utf-8'?>
+<q:quakeml xmlns="http://quakeml.org/xmlns/bed/1.2" xmlns:q="http://quakeml.org/xmlns/quakeml/1.2" xmlns:ns0="http://geofon.gfz-potsdam.de/ns/seiscomp3-schema/0.11">
+  <eventParameters publicID="smi:local/85d2f83f-ff0a-4e47-ab99-168ef9e62cf6">
+    <event publicID="smi:local/48bb0be5-47a4-4073-b7a0-99ccceaa3fb3">
+      <preferredOriginID>smi:org.gfz-potsdam.de/geofon/Origin/20250225190132.549416.52943</preferredOriginID>
+      <preferredMagnitudeID>smi:org.gfz-potsdam.de/geofon/Magnitude/20250225190136.617317.52959</preferredMagnitudeID>
+      <origin publicID="smi:org.gfz-potsdam.de/geofon/Origin/20250225190132.549416.52943">
+        <time>
+          <value>2025-02-22T00:15:49.640000Z</value>
+        </time>
+        <latitude>
+          <value>35.23883333</value>
+          <uncertainty>0.2828427125</uncertainty>
+        </latitude>
+        <longitude>
+          <value>-97.76966667</value>
+          <uncertainty>0.2828427125</uncertainty>
+        </longitude>
+        <depth>
+          <value>6230.0</value>
+          <uncertainty>400.0</uncertainty>
+        </depth>
+        <methodID>smi:org.gfz-potsdam.de/geofon/Hypo71</methodID>
+        <earthModelID>smi:org.gfz-potsdam.de/geofon/ogs</earthModelID>
+        <quality>
+          <associatedPhaseCount>15</associatedPhaseCount>
+          <usedPhaseCount>15</usedPhaseCount>
+          <usedStationCount>14</usedStationCount>
+          <depthPhaseCount>0</depthPhaseCount>
+          <standardError>0.07</standardError>
+          <azimuthalGap>124.0</azimuthalGap>
+          <groundTruthLevel>B</groundTruthLevel>
+          <minimumDistance>0.01169770451</minimumDistance>
+          <maximumDistance>0.06838658022</maximumDistance>
+          <medianDistance>4.7</medianDistance>
+        </quality>
+        <evaluationMode>manual</evaluationMode>
+        <evaluationStatus>confirmed</evaluationStatus>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:32.549985Z</creationTime>
+          <ns0:modificationTime>2025-02-25T19:02:00.444599Z</ns0:modificationTime>
+        </creationInfo>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332577.52912_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332577.52912</pickID>
+          <phase>P</phase>
+          <azimuth>94.0</azimuth>
+          <distance>0.01169770451</distance>
+          <takeoffAngle>
+            <value>167.0</value>
+          </takeoffAngle>
+          <timeResidual>0.0</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549562Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549566Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33268.52913_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33268.52913</pickID>
+          <phase>S</phase>
+          <azimuth>94.0</azimuth>
+          <distance>0.01169770451</distance>
+          <takeoffAngle>
+            <value>167.0</value>
+          </takeoffAngle>
+          <timeResidual>0.02</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549562Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549566Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332716.52914_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332716.52914</pickID>
+          <phase>P</phase>
+          <azimuth>310.0</azimuth>
+          <distance>0.03059399641</distance>
+          <takeoffAngle>
+            <value>149.0</value>
+          </takeoffAngle>
+          <timeResidual>-0.11</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549609Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549611Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332738.52915_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332738.52915</pickID>
+          <phase>S</phase>
+          <azimuth>310.0</azimuth>
+          <distance>0.03059399641</distance>
+          <takeoffAngle>
+            <value>149.0</value>
+          </takeoffAngle>
+          <timeResidual>-0.17</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549609Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549611Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332759.52916_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332759.52916</pickID>
+          <phase>P</phase>
+          <azimuth>330.0</azimuth>
+          <distance>0.03779258381</distance>
+          <takeoffAngle>
+            <value>143.0</value>
+          </takeoffAngle>
+          <timeResidual>0.01</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549634Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549636Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332778.52917_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332778.52917</pickID>
+          <phase>S</phase>
+          <azimuth>330.0</azimuth>
+          <distance>0.03779258381</distance>
+          <takeoffAngle>
+            <value>143.0</value>
+          </takeoffAngle>
+          <timeResidual>0.02</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549634Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549636Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.3328.52918_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.3328.52918</pickID>
+          <phase>P</phase>
+          <azimuth>336.0</azimuth>
+          <distance>0.04229170093</distance>
+          <takeoffAngle>
+            <value>140.0</value>
+          </takeoffAngle>
+          <timeResidual>0.03</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549696Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549698Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33282.52919_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33282.52919</pickID>
+          <phase>S</phase>
+          <azimuth>336.0</azimuth>
+          <distance>0.04229170093</distance>
+          <takeoffAngle>
+            <value>140.0</value>
+          </takeoffAngle>
+          <timeResidual>0.11</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549696Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549698Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33285.52920_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33285.52920</pickID>
+          <phase>P</phase>
+          <azimuth>320.0</azimuth>
+          <distance>0.04409134777</distance>
+          <takeoffAngle>
+            <value>138.0</value>
+          </takeoffAngle>
+          <timeResidual>-0.02</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549656Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549658Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33287.52921_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33287.52921</pickID>
+          <phase>S</phase>
+          <azimuth>320.0</azimuth>
+          <distance>0.04409134777</distance>
+          <takeoffAngle>
+            <value>138.0</value>
+          </takeoffAngle>
+          <timeResidual>0.05</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549656Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549658Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332899.52922_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332899.52922</pickID>
+          <phase>P</phase>
+          <azimuth>309.0</azimuth>
+          <distance>0.04769064147</distance>
+          <takeoffAngle>
+            <value>137.0</value>
+          </takeoffAngle>
+          <timeResidual>-0.01</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549675Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549677Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332934.52923_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332934.52923</pickID>
+          <phase>S</phase>
+          <azimuth>309.0</azimuth>
+          <distance>0.04769064147</distance>
+          <takeoffAngle>
+            <value>137.0</value>
+          </takeoffAngle>
+          <timeResidual>0.01</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549675Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549677Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33296.52924_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33296.52924</pickID>
+          <phase>P</phase>
+          <azimuth>217.0</azimuth>
+          <distance>0.06838658022</distance>
+          <takeoffAngle>
+            <value>125.0</value>
+          </takeoffAngle>
+          <timeResidual>0.02</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549713Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549715Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+        <arrival publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33298.52925_Origin/20250225190132.549416.52943">
+          <pickID>smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33298.52925</pickID>
+          <phase>S</phase>
+          <azimuth>217.0</azimuth>
+          <distance>0.06838658022</distance>
+          <takeoffAngle>
+            <value>125.0</value>
+          </takeoffAngle>
+          <timeResidual>0.04</timeResidual>
+          <timeWeight>1.0</timeWeight>
+          <creationInfo>
+            <author>Hypo71</author>
+            <creationTime>2025-02-25T19:01:32.549713Z</creationTime>
+            <ns0:modificationTime>2025-02-25T19:01:32.549715Z</ns0:modificationTime>
+          </creationInfo>
+        </arrival>
+      </origin>
+      <magnitude publicID="smi:org.gfz-potsdam.de/geofon/Magnitude/20250225190136.617317.52959">
+        <mag>
+          <value>0.6347882631</value>
+          <uncertainty>0.2975731811</uncertainty>
+        </mag>
+        <type>ML</type>
+        <originID>smi:org.gfz-potsdam.de/geofon/Origin/20250225190132.549416.52943</originID>
+        <methodID>smi:org.gfz-potsdam.de/geofon/median</methodID>
+        <stationCount>7</stationCount>
+        <evaluationStatus>confirmed</evaluationStatus>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.49732.52993</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497418.52994</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497482.52995</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497538.52996</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497592.52997</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497644.52998</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <stationMagnitudeContribution>
+          <stationMagnitudeID>smi:org.gfz-potsdam.de/geofon/StationMagnitude/20250225190153.497701.52999</stationMagnitudeID>
+          <weight>1.0</weight>
+        </stationMagnitudeContribution>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:53.497154Z</creationTime>
+        </creationInfo>
+      </magnitude>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332577.52912">
+        <time>
+          <value>2025-02-22T00:15:51.098327Z</value>
+        </time>
+        <waveformID networkCode="O2" stationCode="TUTT" channelCode="HHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332655Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332716.52914">
+        <time>
+          <value>2025-02-22T00:15:51.122472Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG09" channelCode="EHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332730Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332759.52916">
+        <time>
+          <value>2025-02-22T00:15:51.315146Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG08" channelCode="EHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332772Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.3328.52918">
+        <time>
+          <value>2025-02-22T00:15:51.404999Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG07" channelCode="EHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332814Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33285.52920">
+        <time>
+          <value>2025-02-22T00:15:51.374398Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG02" channelCode="EHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332862Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332899.52922">
+        <time>
+          <value>2025-02-22T00:15:51.417422Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG11" channelCode="EHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332925Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33296.52924">
+        <time>
+          <value>2025-02-22T00:15:51.745118Z</value>
+        </time>
+        <waveformID networkCode="O2" stationCode="SC01" channelCode="HHZ"></waveformID>
+        <phaseHint>P</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332972Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33268.52913">
+        <time>
+          <value>2025-02-22T00:15:52.187036Z</value>
+        </time>
+        <waveformID networkCode="O2" stationCode="TUTT" channelCode="HHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332697Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332738.52915">
+        <time>
+          <value>2025-02-22T00:15:52.220032Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG09" channelCode="EHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332750Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332778.52917">
+        <time>
+          <value>2025-02-22T00:15:52.549901Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG08" channelCode="EHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332790Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33282.52919">
+        <time>
+          <value>2025-02-22T00:15:52.737119Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG07" channelCode="EHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332832Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33287.52921">
+        <time>
+          <value>2025-02-22T00:15:52.715369Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG02" channelCode="EHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332880Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.332934.52923">
+        <time>
+          <value>2025-02-22T00:15:52.745116Z</value>
+        </time>
+        <waveformID networkCode="2V" stationCode="TG11" channelCode="EHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332946Z</creationTime>
+        </creationInfo>
+      </pick>
+      <pick publicID="smi:org.gfz-potsdam.de/geofon/Pick/20250225190107.33298.52925">
+        <time>
+          <value>2025-02-22T00:15:53.289668Z</value>
+        </time>
+        <waveformID networkCode="O2" stationCode="SC01" channelCode="HHE"></waveformID>
+        <phaseHint>S</phaseHint>
+        <evaluationMode>manual</evaluationMode>
+        <creationInfo>
+          <agencyID>ogs</agencyID>
+          <author>scolv@SeisComP3-Processing.net.ou.edu</author>
+          <creationTime>2025-02-25T19:01:07.332990Z</creationTime>
+        </creationInfo>
+      </pick>
+    </event>
+  </eventParameters>
+</q:quakeml>

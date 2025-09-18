@@ -1,4 +1,4 @@
-starting hypoDD (v2.1beta - 06/15/2016)...   Wed Sep 17 19:16:56 2025π
+starting hypoDD (v2.1beta - 06/15/2016)...   Wed Sep 17 20:11:52 2025Å
 Input parameters: hypoDD.inp (hypoDD2.0 format)
 INPUT FILES:
  cross dtime data: dt.cc
@@ -33,7 +33,7 @@ Relocate all clusters
 Relocate all events
 Remove air quakes.
 
-~ Reading data ...   Wed Sep 17 19:16:56 2025 
+~ Reading data ...   Wed Sep 17 20:11:52 2025 
 # stations total =      2
 # stations < maxdist =      2
 # stations w/ neg. elevation (set to 0) =    0

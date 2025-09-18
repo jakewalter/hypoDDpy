@@ -1235,3 +1235,1151 @@ hypoddpy.hypodd_relocator.HypoDDException: No valid cross-correlation found for 
 [2025-09-17 19:15:50,624] hypoDD.inp input file already exists.
 [2025-09-17 19:15:50,625] Running HypoDD...
 [2025-09-17 19:15:50,625] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 19:54:20,071] Adding 4 waveform files to processing queue
+[2025-09-17 19:54:20,071] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 19:54:20,071] Successfully added 4 waveform files total
+[2025-09-17 19:54:20,071] Starting optimized relocation with performance enhancements...
+[2025-09-17 19:54:20,071] Cache size adjusted from 200 to 50 items
+[2025-09-17 19:54:20,072] Starting relocator...
+[2025-09-17 19:54:20,072] Stations already parsed. Will load the serialized information.
+[2025-09-17 19:54:20,072] station.dat input file already exists.
+[2025-09-17 19:54:20,072] Events already parsed. Will load the serialized information.
+[2025-09-17 19:54:20,074] Reading serialized event file successful.
+[2025-09-17 19:54:20,074] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 19:54:20,074] ph2dt.inp input file already exists.
+[2025-09-17 19:54:20,074] phase.dat input file already exists.
+[2025-09-17 19:54:20,074] ph2dt output files already existant.
+[2025-09-17 19:54:20,074] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 19:54:20,104] Cross correlating arrival times for 1 event pairs using up to 40 threads...
+[2025-09-17 19:54:20,104] Cross-correlating station NM.PENM, phase P
+[2025-09-17 19:54:20,104] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 19:54:20,104] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 19:54:20,104] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,104] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,104] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 19:54:20,105] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 19:54:20,105] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 19:54:20,105] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,105] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 19:54:20,105] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 19:54:20,105] Loading 1 files for time range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.500000Z
+[2025-09-17 19:54:20,105] Loading 1 files for time range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.480000Z
+[2025-09-17 19:54:20,105] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,105] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,105] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 19:54:20,105] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 19:54:20,192] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,192] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,212] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,212] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,212] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,212] Combined stream has 3 total traces
+[2025-09-17 19:54:20,212] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,212] Combined stream has 3 total traces
+[2025-09-17 19:54:20,212] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 19:54:20,213] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 19:54:20,213] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,213] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,213] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,213] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,213] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,213] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 19:54:20,213] Keeping st1 trace 0: pick time 2012-01-01T12:00:02.500000Z is within trace range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z
+[2025-09-17 19:54:20,213] Keeping st2 trace 0: pick time 2012-01-01T12:01:02.480000Z is within trace range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z
+[2025-09-17 19:54:20,213] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,213] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z, 200 samples), trace_2 (2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z, 200 samples)
+[2025-09-17 19:54:20,213] Pick times: pick_1=2012-01-01T12:00:02.500000Z, pick_2=2012-01-01T12:01:02.480000Z
+[2025-09-17 19:54:20,213] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 19:54:20,251] Error during cross-correlation for station NM.PENM, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 19:54:20,251] No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 19:54:20,251] Error cross-correlating picks for event pair (1, 2), station NM.PENM: No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 19:54:20,251] Cross-correlating station NM.PENM, phase S
+[2025-09-17 19:54:20,252] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 19:54:20,252] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 19:54:20,252] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,252] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,252] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,252] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,252] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,252] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,254] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 19:54:20,257] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 19:54:20,258] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 19:54:20,259] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 19:54:20,259] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,259] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,259] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,259] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,259] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,263] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 19:54:20,264] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 19:54:20,264] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 19:54:20,273] Loading 1 files for time range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.500000Z
+[2025-09-17 19:54:20,273] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,273] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 19:54:20,282] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,297] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,300] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,300] Combined stream has 3 total traces
+[2025-09-17 19:54:20,300] Loading 1 files for time range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.520000Z
+[2025-09-17 19:54:20,300] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,300] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 19:54:20,309] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,329] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,330] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,330] Combined stream has 3 total traces
+[2025-09-17 19:54:20,335] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 19:54:20,335] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,336] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,336] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,336] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,336] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,337] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 19:54:20,337] Keeping st1 trace 0: pick time 2012-01-01T12:00:04.500000Z is within trace range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z
+[2025-09-17 19:54:20,338] Keeping st2 trace 0: pick time 2012-01-01T12:01:04.520000Z is within trace range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z
+[2025-09-17 19:54:20,338] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,338] Cross-correlating traces: trace_1 (2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z, 200 samples), trace_2 (2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z, 200 samples)
+[2025-09-17 19:54:20,338] Pick times: pick_1=2012-01-01T12:00:04.500000Z, pick_2=2012-01-01T12:01:04.520000Z
+[2025-09-17 19:54:20,338] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 19:54:20,340] Cross-correlation successful: time_correction=-0.019903655372244727, correlation_coeff=0.9777964868198943
+[2025-09-17 19:54:20,341] Cross-correlating station TA.U44A, phase P
+[2025-09-17 19:54:20,341] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 19:54:20,343] _find_data called with station_id='TA.U44A', starttime=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 19:54:20,344] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,344] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,345] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,345] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,345] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,345] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,345] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 19:54:20,345] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 19:54:20,349] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 19:54:20,349] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 19:54:20,349] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,349] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 19:54:20,349] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 19:54:20,349] Loading 1 files for time range 2012-01-01T11:59:59.800000Z to 2012-01-01T12:00:03.800000Z
+[2025-09-17 19:54:20,349] Loading 1 files for time range 2012-01-01T12:00:59.750000Z to 2012-01-01T12:01:03.750000Z
+[2025-09-17 19:54:20,349] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,349] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 19:54:20,350] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,350] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 19:54:20,367] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,370] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,370] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,370] Combined stream has 3 total traces
+[2025-09-17 19:54:20,379] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,381] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,381] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,382] Combined stream has 3 total traces
+[2025-09-17 19:54:20,382] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 19:54:20,382] Channel mapping for TA.U44A: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 19:54:20,382] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,382] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,382] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,382] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,382] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,382] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 19:54:20,382] Keeping st1 trace 0: pick time 2012-01-01T12:00:01.800000Z is within trace range 2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z
+[2025-09-17 19:54:20,382] Keeping st2 trace 0: pick time 2012-01-01T12:01:01.750000Z is within trace range 2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z
+[2025-09-17 19:54:20,382] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,382] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z, 190 samples), trace_2 (2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z, 188 samples)
+[2025-09-17 19:54:20,382] Pick times: pick_1=2012-01-01T12:00:01.800000Z, pick_2=2012-01-01T12:01:01.750000Z
+[2025-09-17 19:54:20,382] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 19:54:20,383] Error during cross-correlation for station TA.U44A, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 19:54:20,383] No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 19:54:20,383] Error cross-correlating picks for event pair (1, 2), station TA.U44A: No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 19:54:20,383] Cross-correlating station TA.U44A, phase S
+[2025-09-17 19:54:20,383] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 19:54:20,383] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 19:54:20,383] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,383] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,383] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,383] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,383] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 19:54:20,384] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 19:54:20,384] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 19:54:20,384] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 19:54:20,384] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 19:54:20,384] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 19:54:20,384] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 19:54:20,384] Loading 1 files for time range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.800000Z
+[2025-09-17 19:54:20,384] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,384] Loading 1 files for time range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.850000Z
+[2025-09-17 19:54:20,384] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 19:54:20,384] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,384] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 19:54:20,386] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,388] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,392] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,393] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 19:54:20,394] Combined stream has 3 total traces
+[2025-09-17 19:54:20,394] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,394] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 19:54:20,394] Combined stream has 3 total traces
+[2025-09-17 19:54:20,394] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 19:54:20,395] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,395] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,395] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 19:54:20,395] Selected 1 traces for channel HHZ
+[2025-09-17 19:54:20,395] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,395] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 19:54:20,395] Keeping st1 trace 0: pick time 2012-01-01T12:00:03.800000Z is within trace range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z
+[2025-09-17 19:54:20,395] Keeping st2 trace 0: pick time 2012-01-01T12:01:03.850000Z is within trace range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z
+[2025-09-17 19:54:20,395] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 19:54:20,395] Cross-correlating traces: trace_1 (2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z, 200 samples), trace_2 (2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z, 200 samples)
+[2025-09-17 19:54:20,395] Pick times: pick_1=2012-01-01T12:00:03.800000Z, pick_2=2012-01-01T12:01:03.850000Z
+[2025-09-17 19:54:20,395] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 19:54:20,396] Cross-correlation successful: time_correction=-0.049728876881975546, correlation_coeff=0.9778796358905831
+[2025-09-17 19:54:20,397] Finished calculating cross correlations.
+[2025-09-17 19:54:20,399] hypoDD.inp input file already exists.
+[2025-09-17 19:54:20,399] Running HypoDD...
+[2025-09-17 19:54:20,399] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:12:15,982] Adding 4 waveform files to processing queue
+[2025-09-17 20:12:15,982] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:12:15,982] Successfully added 4 waveform files total
+[2025-09-17 20:12:15,982] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:12:15,982] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:12:15,982] Starting relocator...
+[2025-09-17 20:12:15,982] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:12:15,983] station.dat input file already exists.
+[2025-09-17 20:12:15,983] Events already parsed. Will load the serialized information.
+[2025-09-17 20:12:15,984] Reading serialized event file successful.
+[2025-09-17 20:12:15,985] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:12:15,985] ph2dt.inp input file already exists.
+[2025-09-17 20:12:15,985] phase.dat input file already exists.
+[2025-09-17 20:12:15,985] ph2dt output files already existant.
+[2025-09-17 20:12:15,985] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:12:15,986] Cross correlating arrival times for 1 event pairs using up to 40 threads...
+[2025-09-17 20:12:15,986] Cross-correlating station NM.PENM, phase P
+[2025-09-17 20:12:15,986] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:12:15,986] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:12:15,986] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,986] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,986] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:12:15,987] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:12:15,987] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:12:15,987] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:15,987] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:12:15,987] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:12:15,987] Loading 1 files for time range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.500000Z
+[2025-09-17 20:12:15,987] Loading 1 files for time range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.480000Z
+[2025-09-17 20:12:15,987] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:15,987] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:15,987] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:12:15,987] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:12:16,052] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,052] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,063] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,063] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,063] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,063] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,063] Combined stream has 3 total traces
+[2025-09-17 20:12:16,063] Combined stream has 3 total traces
+[2025-09-17 20:12:16,063] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:12:16,063] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:12:16,063] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,064] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,064] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,064] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,064] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,064] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:12:16,064] Keeping st1 trace 0: pick time 2012-01-01T12:00:02.500000Z is within trace range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z
+[2025-09-17 20:12:16,064] Keeping st2 trace 0: pick time 2012-01-01T12:01:02.480000Z is within trace range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z
+[2025-09-17 20:12:16,064] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,064] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z, 200 samples), trace_2 (2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z, 200 samples)
+[2025-09-17 20:12:16,064] Pick times: pick_1=2012-01-01T12:00:02.500000Z, pick_2=2012-01-01T12:01:02.480000Z
+[2025-09-17 20:12:16,064] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:12:16,066] Error during cross-correlation for station NM.PENM, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:12:16,066] No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:12:16,066] Error cross-correlating picks for event pair (1, 2), station NM.PENM: No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:12:16,066] Cross-correlating station NM.PENM, phase S
+[2025-09-17 20:12:16,066] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:12:16,066] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:12:16,066] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,066] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:12:16,067] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:12:16,067] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:12:16,067] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:12:16,067] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:12:16,067] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:12:16,067] Loading 1 files for time range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.500000Z
+[2025-09-17 20:12:16,068] Loading 1 files for time range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.520000Z
+[2025-09-17 20:12:16,068] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,068] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,068] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:12:16,068] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:12:16,070] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,071] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,077] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,077] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,077] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,077] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,077] Combined stream has 3 total traces
+[2025-09-17 20:12:16,077] Combined stream has 3 total traces
+[2025-09-17 20:12:16,078] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:12:16,078] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,078] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,078] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,078] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,078] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,078] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:12:16,078] Keeping st1 trace 0: pick time 2012-01-01T12:00:04.500000Z is within trace range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z
+[2025-09-17 20:12:16,078] Keeping st2 trace 0: pick time 2012-01-01T12:01:04.520000Z is within trace range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z
+[2025-09-17 20:12:16,078] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,078] Cross-correlating traces: trace_1 (2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z, 200 samples), trace_2 (2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z, 200 samples)
+[2025-09-17 20:12:16,078] Pick times: pick_1=2012-01-01T12:00:04.500000Z, pick_2=2012-01-01T12:01:04.520000Z
+[2025-09-17 20:12:16,078] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:12:16,079] Cross-correlation successful: time_correction=-0.019903655372244727, correlation_coeff=0.9777964868198943
+[2025-09-17 20:12:16,079] Cross-correlating station TA.U44A, phase P
+[2025-09-17 20:12:16,079] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:12:16,079] _find_data called with station_id='TA.U44A', starttime=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:12:16,079] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,079] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:12:16,079] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:12:16,079] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:12:16,079] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:12:16,079] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,080] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:12:16,080] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:12:16,080] Loading 1 files for time range 2012-01-01T11:59:59.800000Z to 2012-01-01T12:00:03.800000Z
+[2025-09-17 20:12:16,080] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,080] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:12:16,080] Loading 1 files for time range 2012-01-01T12:00:59.750000Z to 2012-01-01T12:01:03.750000Z
+[2025-09-17 20:12:16,080] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,080] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:12:16,083] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,085] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,090] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,090] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,090] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,090] Combined stream has 3 total traces
+[2025-09-17 20:12:16,090] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,091] Combined stream has 3 total traces
+[2025-09-17 20:12:16,091] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:12:16,091] Channel mapping for TA.U44A: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:12:16,091] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,091] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,091] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,091] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,091] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,091] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:12:16,091] Keeping st1 trace 0: pick time 2012-01-01T12:00:01.800000Z is within trace range 2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z
+[2025-09-17 20:12:16,091] Keeping st2 trace 0: pick time 2012-01-01T12:01:01.750000Z is within trace range 2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z
+[2025-09-17 20:12:16,091] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,092] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z, 190 samples), trace_2 (2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z, 188 samples)
+[2025-09-17 20:12:16,092] Pick times: pick_1=2012-01-01T12:00:01.800000Z, pick_2=2012-01-01T12:01:01.750000Z
+[2025-09-17 20:12:16,092] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:12:16,092] Error during cross-correlation for station TA.U44A, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:12:16,092] No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:12:16,092] Error cross-correlating picks for event pair (1, 2), station TA.U44A: No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:12:16,092] Cross-correlating station TA.U44A, phase S
+[2025-09-17 20:12:16,092] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:12:16,092] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:12:16,092] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,092] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,092] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,092] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,092] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,092] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:12:16,093] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:12:16,093] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:12:16,093] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:12:16,093] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:12:16,093] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:12:16,093] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:12:16,093] Loading 1 files for time range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.800000Z
+[2025-09-17 20:12:16,093] Loading 1 files for time range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.850000Z
+[2025-09-17 20:12:16,093] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,093] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,093] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:12:16,093] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:12:16,096] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,096] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,101] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,102] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,102] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:12:16,102] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:12:16,102] Combined stream has 3 total traces
+[2025-09-17 20:12:16,102] Combined stream has 3 total traces
+[2025-09-17 20:12:16,102] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:12:16,102] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,102] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,102] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:12:16,102] Selected 1 traces for channel HHZ
+[2025-09-17 20:12:16,102] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,103] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:12:16,103] Keeping st1 trace 0: pick time 2012-01-01T12:00:03.800000Z is within trace range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z
+[2025-09-17 20:12:16,103] Keeping st2 trace 0: pick time 2012-01-01T12:01:03.850000Z is within trace range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z
+[2025-09-17 20:12:16,103] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:12:16,103] Cross-correlating traces: trace_1 (2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z, 200 samples), trace_2 (2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z, 200 samples)
+[2025-09-17 20:12:16,103] Pick times: pick_1=2012-01-01T12:00:03.800000Z, pick_2=2012-01-01T12:01:03.850000Z
+[2025-09-17 20:12:16,103] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:12:16,103] Cross-correlation successful: time_correction=-0.049728876881975546, correlation_coeff=0.9778796358905831
+[2025-09-17 20:12:16,104] Finished calculating cross correlations.
+[2025-09-17 20:12:16,105] hypoDD.inp input file already exists.
+[2025-09-17 20:12:16,105] Running HypoDD...
+[2025-09-17 20:12:16,105] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:13:01,890] Adding 4 waveform files to processing queue
+[2025-09-17 20:13:01,890] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:13:01,890] Successfully added 4 waveform files total
+[2025-09-17 20:13:01,890] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:13:01,890] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:13:01,890] Starting relocator...
+[2025-09-17 20:13:01,890] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:13:01,891] station.dat input file already exists.
+[2025-09-17 20:13:01,891] Events already parsed. Will load the serialized information.
+[2025-09-17 20:13:01,897] Reading serialized event file successful.
+[2025-09-17 20:13:01,897] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:13:01,897] ph2dt.inp input file already exists.
+[2025-09-17 20:13:01,897] phase.dat input file already exists.
+[2025-09-17 20:13:01,897] ph2dt output files already existant.
+[2025-09-17 20:13:01,897] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:13:01,900] ct.cc input file already exists
+[2025-09-17 20:13:01,900] hypoDD.inp input file already exists.
+[2025-09-17 20:13:01,900] Running HypoDD...
+[2025-09-17 20:13:01,901] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:13:29,521] Adding 4 waveform files to processing queue
+[2025-09-17 20:13:29,521] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:13:29,521] Successfully added 4 waveform files total
+[2025-09-17 20:13:29,521] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:13:29,521] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:13:29,521] Starting relocator...
+[2025-09-17 20:13:29,521] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:13:29,522] station.dat input file already exists.
+[2025-09-17 20:13:29,522] Events already parsed. Will load the serialized information.
+[2025-09-17 20:13:29,525] Reading serialized event file successful.
+[2025-09-17 20:13:29,525] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:13:29,525] ph2dt.inp input file already exists.
+[2025-09-17 20:13:29,525] phase.dat input file already exists.
+[2025-09-17 20:13:29,525] ph2dt output files already existant.
+[2025-09-17 20:13:29,525] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:13:29,526] ct.cc input file already exists
+[2025-09-17 20:13:29,526] hypoDD.inp input file already exists.
+[2025-09-17 20:13:29,526] Running HypoDD...
+[2025-09-17 20:13:29,526] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:14:04,833] Adding 4 waveform files to processing queue
+[2025-09-17 20:14:04,833] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:14:04,833] Successfully added 4 waveform files total
+[2025-09-17 20:14:04,833] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:14:04,833] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:14:04,833] Starting relocator...
+[2025-09-17 20:14:04,833] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:14:04,833] station.dat input file already exists.
+[2025-09-17 20:14:04,833] Events already parsed. Will load the serialized information.
+[2025-09-17 20:14:04,839] Reading serialized event file successful.
+[2025-09-17 20:14:04,839] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:14:04,839] ph2dt.inp input file already exists.
+[2025-09-17 20:14:04,839] phase.dat input file already exists.
+[2025-09-17 20:14:04,839] ph2dt output files already existant.
+[2025-09-17 20:14:04,839] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:14:04,841] Cross correlating arrival times for 1 event pairs using up to 40 threads...
+[2025-09-17 20:14:04,841] Cross-correlating station NM.PENM, phase S
+[2025-09-17 20:14:04,841] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:14:04,841] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:14:04,841] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,841] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,841] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:14:04,842] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:14:04,842] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:14:04,842] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,842] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:14:04,842] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:14:04,842] Loading 1 files for time range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.500000Z
+[2025-09-17 20:14:04,842] Loading 1 files for time range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.520000Z
+[2025-09-17 20:14:04,842] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,842] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,842] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:14:04,842] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:14:04,897] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,897] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,905] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,905] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,905] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,905] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,905] Combined stream has 3 total traces
+[2025-09-17 20:14:04,905] Combined stream has 3 total traces
+[2025-09-17 20:14:04,905] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:14:04,905] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:14:04,905] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,905] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,906] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,906] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,906] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,906] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:14:04,906] Keeping st1 trace 0: pick time 2012-01-01T12:00:04.500000Z is within trace range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z
+[2025-09-17 20:14:04,906] Keeping st2 trace 0: pick time 2012-01-01T12:01:04.520000Z is within trace range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z
+[2025-09-17 20:14:04,906] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,906] Cross-correlating traces: trace_1 (2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z, 200 samples), trace_2 (2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z, 200 samples)
+[2025-09-17 20:14:04,906] Pick times: pick_1=2012-01-01T12:00:04.500000Z, pick_2=2012-01-01T12:01:04.520000Z
+[2025-09-17 20:14:04,906] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:14:04,906] Cross-correlation successful: time_correction=-0.019903655372244727, correlation_coeff=0.9777964868198943
+[2025-09-17 20:14:04,907] Cross-correlating station TA.U44A, phase P
+[2025-09-17 20:14:04,907] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:14:04,907] _find_data called with station_id='TA.U44A', starttime=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:14:04,907] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:14:04,907] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:14:04,907] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,907] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:14:04,907] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:14:04,907] Loading 1 files for time range 2012-01-01T11:59:59.800000Z to 2012-01-01T12:00:03.800000Z
+[2025-09-17 20:14:04,907] Loading 1 files for time range 2012-01-01T12:00:59.750000Z to 2012-01-01T12:01:03.750000Z
+[2025-09-17 20:14:04,908] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,908] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,908] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:14:04,908] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:14:04,910] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,911] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,916] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,916] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,916] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,916] Combined stream has 3 total traces
+[2025-09-17 20:14:04,916] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,916] Combined stream has 3 total traces
+[2025-09-17 20:14:04,917] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:14:04,917] Channel mapping for TA.U44A: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:14:04,917] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,917] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,917] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,917] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,917] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,917] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:14:04,917] Keeping st1 trace 0: pick time 2012-01-01T12:00:01.800000Z is within trace range 2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z
+[2025-09-17 20:14:04,917] Keeping st2 trace 0: pick time 2012-01-01T12:01:01.750000Z is within trace range 2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z
+[2025-09-17 20:14:04,917] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,917] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z, 190 samples), trace_2 (2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z, 188 samples)
+[2025-09-17 20:14:04,917] Pick times: pick_1=2012-01-01T12:00:01.800000Z, pick_2=2012-01-01T12:01:01.750000Z
+[2025-09-17 20:14:04,917] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:14:04,924] Error during cross-correlation for station TA.U44A, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:14:04,924] No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:14:04,924] Error cross-correlating picks for event pair (1, 2), station TA.U44A: No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:14:04,924] Cross-correlating station TA.U44A, phase S
+[2025-09-17 20:14:04,924] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:14:04,924] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:14:04,924] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,924] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,924] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,924] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,924] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:14:04,925] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:14:04,925] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:14:04,925] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:14:04,925] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:14:04,925] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:14:04,925] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:14:04,925] Loading 1 files for time range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.800000Z
+[2025-09-17 20:14:04,925] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,925] Loading 1 files for time range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.850000Z
+[2025-09-17 20:14:04,925] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:14:04,925] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,925] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:14:04,927] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,931] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,937] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,937] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,937] Combined stream has 3 total traces
+[2025-09-17 20:14:04,937] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,937] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,937] Combined stream has 3 total traces
+[2025-09-17 20:14:04,939] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:14:04,939] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,939] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,939] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,939] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,939] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,940] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:14:04,940] Keeping st1 trace 0: pick time 2012-01-01T12:00:03.800000Z is within trace range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z
+[2025-09-17 20:14:04,940] Keeping st2 trace 0: pick time 2012-01-01T12:01:03.850000Z is within trace range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z
+[2025-09-17 20:14:04,941] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,941] Cross-correlating traces: trace_1 (2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z, 200 samples), trace_2 (2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z, 200 samples)
+[2025-09-17 20:14:04,941] Pick times: pick_1=2012-01-01T12:00:03.800000Z, pick_2=2012-01-01T12:01:03.850000Z
+[2025-09-17 20:14:04,941] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:14:04,942] Cross-correlation successful: time_correction=-0.049728876881975546, correlation_coeff=0.9778796358905831
+[2025-09-17 20:14:04,943] Cross-correlating station NM.PENM, phase P
+[2025-09-17 20:14:04,943] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:14:04,943] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:14:04,943] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,943] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,943] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,943] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:14:04,944] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:14:04,944] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:14:04,944] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:14:04,944] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:14:04,944] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:14:04,945] Loading 1 files for time range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.500000Z
+[2025-09-17 20:14:04,945] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,945] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:14:04,945] Loading 1 files for time range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.480000Z
+[2025-09-17 20:14:04,945] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,945] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:14:04,947] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,950] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,950] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:14:04,950] Combined stream has 3 total traces
+[2025-09-17 20:14:04,951] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,954] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,954] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:14:04,954] Combined stream has 3 total traces
+[2025-09-17 20:14:04,954] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:14:04,954] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,954] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,954] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:14:04,954] Selected 1 traces for channel HHZ
+[2025-09-17 20:14:04,954] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,954] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:14:04,954] Keeping st1 trace 0: pick time 2012-01-01T12:00:02.500000Z is within trace range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z
+[2025-09-17 20:14:04,954] Keeping st2 trace 0: pick time 2012-01-01T12:01:02.480000Z is within trace range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z
+[2025-09-17 20:14:04,954] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:14:04,955] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z, 200 samples), trace_2 (2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z, 200 samples)
+[2025-09-17 20:14:04,955] Pick times: pick_1=2012-01-01T12:00:02.500000Z, pick_2=2012-01-01T12:01:02.480000Z
+[2025-09-17 20:14:04,955] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:14:04,955] Error during cross-correlation for station NM.PENM, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:14:04,955] No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:14:04,955] Error cross-correlating picks for event pair (1, 2), station NM.PENM: No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:14:04,956] Finished calculating cross correlations.
+[2025-09-17 20:14:04,957] hypoDD.inp input file already exists.
+[2025-09-17 20:14:04,957] Running HypoDD...
+[2025-09-17 20:14:04,957] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:15:43,465] Adding 4 waveform files to processing queue
+[2025-09-17 20:15:43,465] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:15:43,465] Successfully added 4 waveform files total
+[2025-09-17 20:15:43,465] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:15:43,465] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:15:43,465] Starting relocator...
+[2025-09-17 20:15:43,465] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:15:43,467] station.dat input file already exists.
+[2025-09-17 20:15:43,467] Events already parsed. Will load the serialized information.
+[2025-09-17 20:15:43,469] Reading serialized event file successful.
+[2025-09-17 20:15:43,469] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:15:43,469] ph2dt.inp input file already exists.
+[2025-09-17 20:15:43,469] phase.dat input file already exists.
+[2025-09-17 20:15:43,469] ph2dt output files already existant.
+[2025-09-17 20:15:43,469] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:15:43,472] Cross correlating arrival times for 1 event pairs using up to 40 threads...
+[2025-09-17 20:15:43,472] Cross-correlating station NM.PENM, phase S
+[2025-09-17 20:15:43,472] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:15:43,472] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:15:43,472] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:15:43,473] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:15:43,473] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:15:43,473] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,473] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:15:43,473] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:15:43,474] Loading 1 files for time range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.500000Z
+[2025-09-17 20:15:43,474] Loading 1 files for time range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.520000Z
+[2025-09-17 20:15:43,474] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,474] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:15:43,474] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,475] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:15:43,540] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,542] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,549] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,549] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,549] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,549] Combined stream has 3 total traces
+[2025-09-17 20:15:43,549] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,549] Combined stream has 3 total traces
+[2025-09-17 20:15:43,549] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:15:43,549] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:15:43,549] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,549] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,549] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,549] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,549] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,550] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:15:43,550] Keeping st1 trace 0: pick time 2012-01-01T12:00:04.500000Z is within trace range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z
+[2025-09-17 20:15:43,550] Keeping st2 trace 0: pick time 2012-01-01T12:01:04.520000Z is within trace range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z
+[2025-09-17 20:15:43,550] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,550] Cross-correlating traces: trace_1 (2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z, 200 samples), trace_2 (2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z, 200 samples)
+[2025-09-17 20:15:43,550] Pick times: pick_1=2012-01-01T12:00:04.500000Z, pick_2=2012-01-01T12:01:04.520000Z
+[2025-09-17 20:15:43,550] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:15:43,550] Cross-correlation successful: time_correction=-0.019903655372244727, correlation_coeff=0.9777964868198943
+[2025-09-17 20:15:43,550] Cross-correlating station TA.U44A, phase P
+[2025-09-17 20:15:43,550] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:15:43,550] _find_data called with station_id='TA.U44A', starttime=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:15:43,551] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:15:43,551] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:15:43,551] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,551] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:15:43,551] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:15:43,552] Loading 1 files for time range 2012-01-01T11:59:59.800000Z to 2012-01-01T12:00:03.800000Z
+[2025-09-17 20:15:43,552] Loading 1 files for time range 2012-01-01T12:00:59.750000Z to 2012-01-01T12:01:03.750000Z
+[2025-09-17 20:15:43,552] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,552] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,552] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:15:43,552] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:15:43,554] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,555] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,561] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,562] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,562] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,562] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,562] Combined stream has 3 total traces
+[2025-09-17 20:15:43,562] Combined stream has 3 total traces
+[2025-09-17 20:15:43,562] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:15:43,562] Channel mapping for TA.U44A: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:15:43,562] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,562] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,563] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,563] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,563] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,563] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:15:43,563] Keeping st1 trace 0: pick time 2012-01-01T12:00:01.800000Z is within trace range 2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z
+[2025-09-17 20:15:43,563] Keeping st2 trace 0: pick time 2012-01-01T12:01:01.750000Z is within trace range 2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z
+[2025-09-17 20:15:43,563] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,563] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z, 190 samples), trace_2 (2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z, 188 samples)
+[2025-09-17 20:15:43,563] Pick times: pick_1=2012-01-01T12:00:01.800000Z, pick_2=2012-01-01T12:01:01.750000Z
+[2025-09-17 20:15:43,563] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:15:43,566] Error during cross-correlation for station TA.U44A, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:15:43,566] No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:15:43,566] Error cross-correlating picks for event pair (1, 2), station TA.U44A: No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:15:43,566] Cross-correlating station TA.U44A, phase S
+[2025-09-17 20:15:43,566] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:15:43,566] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:15:43,566] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,566] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,566] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,566] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,566] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,566] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:15:43,567] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:15:43,567] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:15:43,567] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:15:43,567] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:15:43,567] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:15:43,567] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:15:43,567] Loading 1 files for time range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.800000Z
+[2025-09-17 20:15:43,567] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,567] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:15:43,567] Loading 1 files for time range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.850000Z
+[2025-09-17 20:15:43,567] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,567] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:15:43,570] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,574] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,574] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,574] Combined stream has 3 total traces
+[2025-09-17 20:15:43,576] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,578] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,578] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,578] Combined stream has 3 total traces
+[2025-09-17 20:15:43,579] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:15:43,579] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,579] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,579] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,579] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,579] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,580] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:15:43,580] Keeping st1 trace 0: pick time 2012-01-01T12:00:03.800000Z is within trace range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z
+[2025-09-17 20:15:43,580] Keeping st2 trace 0: pick time 2012-01-01T12:01:03.850000Z is within trace range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z
+[2025-09-17 20:15:43,580] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,580] Cross-correlating traces: trace_1 (2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z, 200 samples), trace_2 (2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z, 200 samples)
+[2025-09-17 20:15:43,580] Pick times: pick_1=2012-01-01T12:00:03.800000Z, pick_2=2012-01-01T12:01:03.850000Z
+[2025-09-17 20:15:43,580] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:15:43,581] Cross-correlation successful: time_correction=-0.049728876881975546, correlation_coeff=0.9778796358905831
+[2025-09-17 20:15:43,581] Cross-correlating station NM.PENM, phase P
+[2025-09-17 20:15:43,581] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:15:43,581] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:15:43,581] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,582] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,582] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,584] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,584] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,584] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,584] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:15:43,584] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:15:43,585] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:15:43,585] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:15:43,585] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:15:43,585] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:15:43,585] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:15:43,585] Loading 1 files for time range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.500000Z
+[2025-09-17 20:15:43,585] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,585] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:15:43,585] Loading 1 files for time range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.480000Z
+[2025-09-17 20:15:43,586] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,586] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:15:43,588] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,591] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,591] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:15:43,591] Combined stream has 3 total traces
+[2025-09-17 20:15:43,592] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,595] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,595] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:15:43,595] Combined stream has 3 total traces
+[2025-09-17 20:15:43,595] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:15:43,595] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,595] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,595] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:15:43,595] Selected 1 traces for channel HHZ
+[2025-09-17 20:15:43,595] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,595] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:15:43,595] Keeping st1 trace 0: pick time 2012-01-01T12:00:02.500000Z is within trace range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z
+[2025-09-17 20:15:43,595] Keeping st2 trace 0: pick time 2012-01-01T12:01:02.480000Z is within trace range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z
+[2025-09-17 20:15:43,596] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:15:43,596] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z, 200 samples), trace_2 (2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z, 200 samples)
+[2025-09-17 20:15:43,596] Pick times: pick_1=2012-01-01T12:00:02.500000Z, pick_2=2012-01-01T12:01:02.480000Z
+[2025-09-17 20:15:43,596] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:15:43,596] Error during cross-correlation for station NM.PENM, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:15:43,596] No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:15:43,596] Error cross-correlating picks for event pair (1, 2), station NM.PENM: No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:15:43,597] Finished calculating cross correlations.
+[2025-09-17 20:15:43,598] hypoDD.inp input file already exists.
+[2025-09-17 20:15:43,598] Running HypoDD...
+[2025-09-17 20:15:43,598] Using user hypoDD binary: /Users/jwalter/bin/hypoDD
+[2025-09-17 20:18:32,124] Adding 4 waveform files to processing queue
+[2025-09-17 20:18:32,124] Sample files: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:18:32,125] Successfully added 4 waveform files total
+[2025-09-17 20:18:32,125] Starting optimized relocation with performance enhancements...
+[2025-09-17 20:18:32,125] Cache size adjusted from 200 to 50 items
+[2025-09-17 20:18:32,125] Starting relocator...
+[2025-09-17 20:18:32,125] Stations already parsed. Will load the serialized information.
+[2025-09-17 20:18:32,125] station.dat input file already exists.
+[2025-09-17 20:18:32,125] Events already parsed. Will load the serialized information.
+[2025-09-17 20:18:32,139] Reading serialized event file successful.
+[2025-09-17 20:18:32,139] MAXDIST for ph2dt.inp calculated to 5.
+[2025-09-17 20:18:32,139] ph2dt.inp input file already exists.
+[2025-09-17 20:18:32,139] phase.dat input file already exists.
+[2025-09-17 20:18:32,139] ph2dt output files already existant.
+[2025-09-17 20:18:32,139] Waveforms already parsed. Will load the serialized information.
+[2025-09-17 20:18:32,141] Cross correlating arrival times for 1 event pairs using up to 40 threads...
+[2025-09-17 20:18:32,141] Cross-correlating station NM.PENM, phase S
+[2025-09-17 20:18:32,141] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:18:32,141] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:02.500000Z, duration=4.0
+[2025-09-17 20:18:32,141] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,141] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:18:32,142] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:18:32,142] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:18:32,142] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:02.520000Z, duration=4.0
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,142] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:18:32,142] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:18:32,142] Loading 1 files for time range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.500000Z
+[2025-09-17 20:18:32,142] Loading 1 files for time range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.520000Z
+[2025-09-17 20:18:32,142] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,142] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,143] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:18:32,143] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:18:32,199] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,201] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,207] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,208] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,208] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,208] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,208] Combined stream has 3 total traces
+[2025-09-17 20:18:32,208] Combined stream has 3 total traces
+[2025-09-17 20:18:32,208] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:18:32,208] Channel mapping for NM.PENM: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:18:32,208] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,208] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,208] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,208] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,208] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,208] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:18:32,208] Keeping st1 trace 0: pick time 2012-01-01T12:00:04.500000Z is within trace range 2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z
+[2025-09-17 20:18:32,208] Keeping st2 trace 0: pick time 2012-01-01T12:01:04.520000Z is within trace range 2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z
+[2025-09-17 20:18:32,208] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,209] Cross-correlating traces: trace_1 (2012-01-01T12:00:02.500000Z to 2012-01-01T12:00:06.480000Z, 200 samples), trace_2 (2012-01-01T12:01:02.520000Z to 2012-01-01T12:01:06.500000Z, 200 samples)
+[2025-09-17 20:18:32,209] Pick times: pick_1=2012-01-01T12:00:04.500000Z, pick_2=2012-01-01T12:01:04.520000Z
+[2025-09-17 20:18:32,209] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:18:32,209] Cross-correlation successful: time_correction=-0.019903655372244727, correlation_coeff=0.9777964868198943
+[2025-09-17 20:18:32,209] Cross-correlating station TA.U44A, phase P
+[2025-09-17 20:18:32,209] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:18:32,209] _find_data called with station_id='TA.U44A', starttime=2012-01-01T11:59:59.800000Z, duration=4.0
+[2025-09-17 20:18:32,209] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,209] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:18:32,210] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:18:32,210] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:18:32,210] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:59.750000Z, duration=4.0
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,210] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:18:32,210] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:18:32,210] Loading 1 files for time range 2012-01-01T11:59:59.800000Z to 2012-01-01T12:00:03.800000Z
+[2025-09-17 20:18:32,210] Loading 1 files for time range 2012-01-01T12:00:59.750000Z to 2012-01-01T12:01:03.750000Z
+[2025-09-17 20:18:32,210] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,210] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,210] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:18:32,210] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:18:32,213] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,214] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,219] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,219] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,219] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,219] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,219] Combined stream has 3 total traces
+[2025-09-17 20:18:32,219] Combined stream has 3 total traces
+[2025-09-17 20:18:32,220] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:18:32,220] Channel mapping for TA.U44A: {'Z': 'HHZ', 'E': 'HHE', 'N': 'HHN', '1': 'HHE', '2': 'HHN'}
+[2025-09-17 20:18:32,220] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,220] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,220] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,220] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,220] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,220] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:18:32,220] Keeping st1 trace 0: pick time 2012-01-01T12:00:01.800000Z is within trace range 2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z
+[2025-09-17 20:18:32,220] Keeping st2 trace 0: pick time 2012-01-01T12:01:01.750000Z is within trace range 2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z
+[2025-09-17 20:18:32,220] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,220] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.000000Z to 2012-01-01T12:00:03.780000Z, 190 samples), trace_2 (2012-01-01T12:01:00.000000Z to 2012-01-01T12:01:03.740000Z, 188 samples)
+[2025-09-17 20:18:32,220] Pick times: pick_1=2012-01-01T12:00:01.800000Z, pick_2=2012-01-01T12:01:01.750000Z
+[2025-09-17 20:18:32,220] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:18:32,222] Error during cross-correlation for station TA.U44A, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:18:32,222] No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:18:32,222] Error cross-correlating picks for event pair (1, 2), station TA.U44A: No valid cross-correlation found for station TA.U44A with any channel
+[2025-09-17 20:18:32,222] Cross-correlating station TA.U44A, phase S
+[2025-09-17 20:18:32,222] Loading waveform files for event 1: station=TA.U44A, time=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:18:32,222] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:00:01.800000Z, duration=4.0
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:18:32,222] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:18:32,222] Loading waveform files for event 2: station=TA.U44A, time=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:18:32,222] _find_data called with station_id='TA.U44A', starttime=2012-01-01T12:01:01.850000Z, duration=4.0
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern '*.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern '*.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] Pattern 'TA.U44A.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['TA.U44A.00.HHZ', 'TA.U44A.00.HHE', 'TA.U44A.00.HHN']
+[2025-09-17 20:18:32,222] _find_data: Found 3 files for station TA.U44A: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:18:32,222] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:18:32,223] Loading 1 files for time range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.800000Z
+[2025-09-17 20:18:32,223] Loading 1 files for time range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.850000Z
+[2025-09-17 20:18:32,223] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,223] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,223] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:18:32,223] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:18:32,225] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,226] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,231] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,231] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,231] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,231] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/TA.U44A.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,231] Combined stream has 3 total traces
+[2025-09-17 20:18:32,231] Combined stream has 3 total traces
+[2025-09-17 20:18:32,231] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:18:32,232] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,232] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,232] Channel mapping for TA.U44A: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,232] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,232] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,232] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:18:32,232] Keeping st1 trace 0: pick time 2012-01-01T12:00:03.800000Z is within trace range 2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z
+[2025-09-17 20:18:32,232] Keeping st2 trace 0: pick time 2012-01-01T12:01:03.850000Z is within trace range 2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z
+[2025-09-17 20:18:32,232] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,232] Cross-correlating traces: trace_1 (2012-01-01T12:00:01.800000Z to 2012-01-01T12:00:05.780000Z, 200 samples), trace_2 (2012-01-01T12:01:01.850000Z to 2012-01-01T12:01:05.830000Z, 200 samples)
+[2025-09-17 20:18:32,232] Pick times: pick_1=2012-01-01T12:00:03.800000Z, pick_2=2012-01-01T12:01:03.850000Z
+[2025-09-17 20:18:32,232] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:18:32,233] Cross-correlation successful: time_correction=-0.049728876881975546, correlation_coeff=0.9778796358905831
+[2025-09-17 20:18:32,233] Cross-correlating station NM.PENM, phase P
+[2025-09-17 20:18:32,233] Loading waveform files for event 1: station=NM.PENM, time=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:18:32,233] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:00:00.500000Z, duration=4.0
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']...
+[2025-09-17 20:18:32,233] Found 1 waveform files for event 1: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed']
+[2025-09-17 20:18:32,233] Loading waveform files for event 2: station=NM.PENM, time=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:18:32,233] _find_data called with station_id='NM.PENM', starttime=2012-01-01T12:01:00.480000Z, duration=4.0
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern '*.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern '*.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] Pattern 'NM.PENM.*.*[E,N,Z,1,2,3,B,H]' matched 3 keys: ['NM.PENM.00.HHZ', 'NM.PENM.00.HHE', 'NM.PENM.00.HHN']
+[2025-09-17 20:18:32,233] _find_data: Found 3 files for station NM.PENM: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed', '/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']...
+[2025-09-17 20:18:32,233] Found 1 waveform files for event 2: ['/Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed']
+[2025-09-17 20:18:32,233] Loading 1 files for time range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.500000Z
+[2025-09-17 20:18:32,233] Loading 1 files for time range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.480000Z
+[2025-09-17 20:18:32,233] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,233] Loading file: /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,234] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed, loading from disk
+[2025-09-17 20:18:32,234] Cache miss for /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed, loading from disk
+[2025-09-17 20:18:32,235] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,238] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,238] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120100Z__20120101T120100Z.mseed
+[2025-09-17 20:18:32,238] Combined stream has 3 total traces
+[2025-09-17 20:18:32,238] Successfully loaded 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,240] Cached and returning 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,241] Added 3 traces from /Users/jwalter/seis/hypoDDpy/test_working_dir/input_files/waveforms/NM.PENM.00.HHZ__20120101T120000Z__20120101T120000Z.mseed
+[2025-09-17 20:18:32,241] Combined stream has 3 total traces
+[2025-09-17 20:18:32,241] Parallel loading complete: st1 has 3 traces, st2 has 3 traces
+[2025-09-17 20:18:32,241] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,241] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,241] Channel mapping for NM.PENM: requested=Z, mapped=HHZ, available=['HHZ', 'HHE', 'HHN']
+[2025-09-17 20:18:32,241] Selected 1 traces for channel HHZ
+[2025-09-17 20:18:32,241] After channel selection for Z: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,241] Time filtering: st1 has 1 traces before time filter
+[2025-09-17 20:18:32,241] Keeping st1 trace 0: pick time 2012-01-01T12:00:02.500000Z is within trace range 2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z
+[2025-09-17 20:18:32,241] Keeping st2 trace 0: pick time 2012-01-01T12:01:02.480000Z is within trace range 2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z
+[2025-09-17 20:18:32,241] After time filtering: st1 has 1 traces, st2 has 1 traces
+[2025-09-17 20:18:32,241] Cross-correlating traces: trace_1 (2012-01-01T12:00:00.500000Z to 2012-01-01T12:00:04.480000Z, 200 samples), trace_2 (2012-01-01T12:01:00.480000Z to 2012-01-01T12:01:04.460000Z, 200 samples)
+[2025-09-17 20:18:32,242] Pick times: pick_1=2012-01-01T12:00:02.500000Z, pick_2=2012-01-01T12:01:02.480000Z
+[2025-09-17 20:18:32,242] Cross-correlation parameters: t_before=0.5, t_after=1.0, cc_maxlag=0.2
+[2025-09-17 20:18:32,242] Error during cross-correlation for station NM.PENM, channel Z: The truth value of an empty array is ambiguous. Use `array.size > 0` to check that an array is not empty.
+[2025-09-17 20:18:32,242] No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:18:32,242] Error cross-correlating picks for event pair (1, 2), station NM.PENM: No valid cross-correlation found for station NM.PENM with any channel
+[2025-09-17 20:18:32,243] Finished calculating cross correlations.
+[2025-09-17 20:18:32,244] hypoDD.inp input file already exists.
+[2025-09-17 20:18:32,244] Running HypoDD...
+[2025-09-17 20:18:32,244] Using user hypoDD binary: /Users/jwalter/bin/hypoDD

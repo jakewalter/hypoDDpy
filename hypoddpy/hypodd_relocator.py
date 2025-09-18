@@ -1713,33 +1713,82 @@ class HypoDDRelocator(object):
         # Write the leading string in the dt.cc file
         current_pair_strings.append(f"# {event_1}  {event_2} 0.0")
 
-        # Cross-correlate picks
-        for pick_1 in event_1_dict["picks"]:
-            pick_1_station_id = pick_1["station_id"]
-            pick_1_phase = pick_1["phase"]
+        # Read dt.ct to get the exact order of picks for this event pair
+        dt_ct_path = os.path.join(self.paths["input_files"], "dt.ct")
+        pair_picks = []
+        
+        with open(dt_ct_path, "r") as f:
+            lines = f.readlines()
+            
+        # Find the section for this event pair
+        in_pair_section = False
+        for line in lines:
+            line = line.strip()
+            if line.startswith("#"):
+                # Check if this is our event pair header
+                parts = line[1:].strip().split()
+                if len(parts) >= 2:
+                    try:
+                        header_event_1 = int(parts[0])
+                        header_event_2 = int(parts[1])
+                        if header_event_1 == event_1 and header_event_2 == event_2:
+                            in_pair_section = True
+                        elif in_pair_section:
+                            # We've moved to the next pair
+                            break
+                    except ValueError:
+                        continue
+            elif in_pair_section and line:
+                # This is a pick line: station time1 time2 weight phase
+                parts = line.split()
+                if len(parts) >= 5:
+                    station = parts[0]
+                    phase = parts[4]
+                    pair_picks.append((station, phase))
 
-            # Find corresponding pick for the second event
-            pick_2 = next(
-                (pick for pick in event_2_dict["picks"] if pick["station_id"] == pick_1_station_id and pick["phase"] == pick_1_phase),
+        # Now process each pick in the exact order from dt.ct
+        for station, phase in pair_picks:
+            # Find pick_1 (from event_1)
+            pick_1 = next(
+                (pick for pick in event_1_dict["picks"] 
+                 if pick["station_id"] == station and pick["phase"] == phase),
                 None,
             )
-            if pick_2 is None:
+            
+            # Find pick_2 (from event_2)
+            pick_2 = next(
+                (pick for pick in event_2_dict["picks"] 
+                 if pick["station_id"] == station and pick["phase"] == phase),
+                None,
+            )
+            
+            if pick_1 is None or pick_2 is None:
+                # Missing pick - skip this entry
                 continue
 
-            # Perform cross-correlation (simplified for brevity)
+            # Perform cross-correlation
             try:
                 pick2_corr, cross_corr_coeff = self._perform_cross_correlation(pick_1, pick_2)
+
+                # Validate correlation coefficient (should be between -1 and 1)
+                if abs(cross_corr_coeff) > 1.0:
+                    self.log(f"Warning: Invalid correlation coefficient {cross_corr_coeff} for station {station}, phase {phase}. Clamping to valid range.", level="warning")
+                    cross_corr_coeff = max(-1.0, min(1.0, cross_corr_coeff))
+
                 if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
+                    # Correlation too low - skip this entry
                     continue
 
                 diff_travel_time = (
                     (pick_1["pick_time"] - event_1_dict["origin_time"])
                     - (pick_2["pick_time"] + pick2_corr - event_2_dict["origin_time"])
                 )
-                string = f"{pick_1_station_id} {diff_travel_time:.6f} {cross_corr_coeff:.4f} {pick_1_phase}"
+                string = f"{station} {diff_travel_time:.6f} {cross_corr_coeff:.4f} {phase}"
                 current_pair_strings.append(string)
             except Exception as exc:
-                self.log(f"Error cross-correlating picks for event pair ({event_1}, {event_2}), station {pick_1_station_id}: {exc}", level="warning")
+                # Cross-correlation failed - skip this entry
+                self.log(f"Error cross-correlating picks for event pair ({event_1}, {event_2}), station {station}: {exc}", level="warning")
+                continue
 
         # Write the file
         with open(event_pair_file, "w") as open_file:
