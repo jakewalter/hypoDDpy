@@ -78,6 +78,7 @@ import numpy as np
 import os
 import progressbar
 import shutil
+import traceback
 import subprocess
 import signal
 import sys
@@ -1280,12 +1281,21 @@ class HypoDDRelocator(object):
             return
         # Otherwise just run it.
         self.log("Running HypoDD...")
+        
+        # Try user's hypoDD binary first
+        user_hypodd_path = "/Users/jwalter/bin/hypoDD"
         hypodd_path = os.path.abspath(
             os.path.join(self.paths["bin"], "hypoDD")
         )
-        if not os.path.exists(hypodd_path):
+        
+        if os.path.exists(user_hypodd_path):
+            hypodd_path = user_hypodd_path
+            self.log(f"Using user hypoDD binary: {hypodd_path}")
+        elif not os.path.exists(hypodd_path):
             msg = "hypodd could not be found. Did the compilation succeed?"
             raise HypoDDException(msg)
+        else:
+            self.log(f"Using compiled hypoDD binary: {hypodd_path}")
         # Create directory to run ph2dt in.
         hypodd_dir = os.path.join(self.working_dir, "hypodd_temp_dir")
         if os.path.exists(hypodd_dir):
@@ -1358,10 +1368,19 @@ class HypoDDRelocator(object):
             return
         # Otherwise just run it.
         self.log("Running ph2dt...")
+        
+        # Try user's ph2dt binary first
+        user_ph2dt_path = "/Users/jwalter/bin/ph2dt"
         ph2dt_path = os.path.abspath(os.path.join(self.paths["bin"], "ph2dt"))
-        if not os.path.exists(ph2dt_path):
+        
+        if os.path.exists(user_ph2dt_path):
+            ph2dt_path = user_ph2dt_path
+            self.log(f"Using user ph2dt binary: {ph2dt_path}")
+        elif not os.path.exists(ph2dt_path):
             msg = "ph2dt could not be found. Did the compilation succeed?"
             raise HypoDDException(msg)
+        else:
+            self.log(f"Using compiled ph2dt binary: {ph2dt_path}")
         # Create directory to run ph2dt in.
         ph2dt_dir = os.path.join(self.working_dir, "ph2dt_temp_dir")
         if os.path.exists(ph2dt_dir):
@@ -1720,7 +1739,7 @@ class HypoDDRelocator(object):
                 string = f"{pick_1_station_id} {diff_travel_time:.6f} {cross_corr_coeff:.4f} {pick_1_phase}"
                 current_pair_strings.append(string)
             except Exception as exc:
-                self.log(f"Error cross-correlating picks for event pair ({event_1}, {event_2}): {exc}", level="warning")
+                self.log(f"Error cross-correlating picks for event pair ({event_1}, {event_2}), station {pick_1_station_id}: {exc}", level="warning")
 
         # Write the file
         with open(event_pair_file, "w") as open_file:
@@ -1954,12 +1973,20 @@ class HypoDDRelocator(object):
         """
         def load_and_process(files, starttime, duration):
             combined_stream = Stream()
-            self.log(f"Loading {len(files)} files for time range {starttime} to {starttime + duration}", level="debug")
+            if starttime is not None and duration is not None:
+                self.log(f"Loading {len(files)} files for time range {starttime} to {starttime + duration}", level="debug")
+            else:
+                self.log(f"Loading {len(files)} files (full traces)", level="debug")
             for filename in files:
                 try:
                     self.log(f"Loading file: {filename}", level="debug")
-                    st = self._get_cached_waveform(filename, starttime, starttime + duration,
-                                                 freqmin, freqmax, target_sampling_rate)
+                    if starttime is not None and duration is not None:
+                        st = self._get_cached_waveform(filename, starttime, starttime + duration,
+                                                     freqmin, freqmax, target_sampling_rate)
+                    else:
+                        # Load full trace
+                        st = self._get_cached_waveform(filename, None, None,
+                                                     freqmin, freqmax, target_sampling_rate)
                     if len(st) > 0:  # Only add non-empty streams
                         combined_stream += st
                         self.log(f"Added {len(st)} traces from {filename}", level="debug")
@@ -2163,16 +2190,20 @@ class HypoDDRelocator(object):
         phase = pick_1["phase"]
         self.log(f"Cross-correlating station {station_id}, phase {phase}", level="debug")
 
-        # Find waveform data for the station
-        starttime1 = pick_1["pick_time"] - self.cc_param["cc_time_before"]
-        duration1 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
-        self.log(f"Looking for waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
+        # Find waveform data for the station - use broader time windows for loading
+        # Load more data than needed to ensure xcorr_pick_correction has sufficient context
+        load_time_before = max(self.cc_param["cc_time_before"] * 2, 2.0)  # At least 2 seconds or 2x the cc window
+        load_time_after = max(self.cc_param["cc_time_after"] * 2, 2.0)    # At least 2 seconds or 2x the cc window
+        
+        starttime1 = pick_1["pick_time"] - load_time_before
+        duration1 = load_time_before + load_time_after
+        self.log(f"Loading waveform files for event 1: station={station_id}, time={starttime1}, duration={duration1}", level="debug")
         waveform_files1 = self._find_data(station_id, starttime1, duration1)
         self.log(f"Found {len(waveform_files1) if waveform_files1 else 0} waveform files for event 1: {waveform_files1}", level="debug")
         
-        starttime2 = pick_2["pick_time"] - self.cc_param["cc_time_before"]
-        duration2 = self.cc_param["cc_time_before"] + self.cc_param["cc_time_after"]
-        self.log(f"Looking for waveform files for event 2: station={station_id}, time={starttime2}, duration={duration2}", level="debug")
+        starttime2 = pick_2["pick_time"] - load_time_before
+        duration2 = load_time_before + load_time_after
+        self.log(f"Loading waveform files for event 2: station={station_id}, time={starttime2}, duration={duration2}", level="debug")
         waveform_files2 = self._find_data(station_id, starttime2, duration2)
         self.log(f"Found {len(waveform_files2) if waveform_files2 else 0} waveform files for event 2: {waveform_files2}", level="debug")
 
@@ -2241,19 +2272,21 @@ class HypoDDRelocator(object):
             # Attempt to find the correct trace by time filtering
             self.log(f"Time filtering: st1 has {len(st1)} traces before time filter", level="debug")
 
-            # Remove traces that don't sufficiently overlap with the expected time window
+            # For cross-correlation, we just need traces that contain the pick time
+            # Be much more permissive with time filtering
             traces_to_remove = []
             for i, trace in enumerate(st1):
-                # Allow for small timing differences (up to 1% of the time window or 0.01 seconds, whichever is larger)
-                time_tolerance = max(0.01, (min_endtime_st_1 - max_starttime_st_1) * 0.01)
-                effective_start = max_starttime_st_1 - time_tolerance
-                effective_end = min_endtime_st_1 + time_tolerance
-
-                # Remove traces that don't overlap with the effective time window
-                if (trace.stats.endtime <= effective_start or
-                    trace.stats.starttime >= effective_end):
+                # Check if trace contains the pick time with some margin
+                pick_time = pick_1["pick_time"]
+                margin = 0.5  # 0.5 second margin around pick time
+                pick_start = pick_time - margin
+                pick_end = pick_time + margin
+                
+                if not (trace.stats.starttime <= pick_start and trace.stats.endtime >= pick_end):
                     traces_to_remove.append(i)
-                    self.log(f"Removing st1 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_1} to {min_endtime_st_1}, tolerance: {time_tolerance})", level="debug")
+                    self.log(f"Removing st1 trace {i}: pick time {pick_time} not within trace range {trace.stats.starttime} to {trace.stats.endtime}", level="debug")
+                else:
+                    self.log(f"Keeping st1 trace {i}: pick time {pick_time} is within trace range {trace.stats.starttime} to {trace.stats.endtime}", level="debug")
 
             # Remove traces in reverse order to maintain indices
             for i in reversed(traces_to_remove):
@@ -2261,16 +2294,17 @@ class HypoDDRelocator(object):
 
             traces_to_remove = []
             for i, trace in enumerate(st2):
-                # Allow for small timing differences (up to 1% of the time window or 0.01 seconds, whichever is larger)
-                time_tolerance = max(0.01, (min_endtime_st_2 - max_starttime_st_2) * 0.01)
-                effective_start = max_starttime_st_2 - time_tolerance
-                effective_end = min_endtime_st_2 + time_tolerance
-
-                # Remove traces that don't overlap with the effective time window
-                if (trace.stats.endtime <= effective_start or
-                    trace.stats.starttime >= effective_end):
+                # Check if trace contains the pick time with some margin
+                pick_time = pick_2["pick_time"]
+                margin = 0.5  # 0.5 second margin around pick time
+                pick_start = pick_time - margin
+                pick_end = pick_time + margin
+                
+                if not (trace.stats.starttime <= pick_start and trace.stats.endtime >= pick_end):
                     traces_to_remove.append(i)
-                    self.log(f"Removing st2 trace {i}: {trace.stats.starttime} to {trace.stats.endtime} (expected: {max_starttime_st_2} to {min_endtime_st_2}, tolerance: {time_tolerance})", level="debug")
+                    self.log(f"Removing st2 trace {i}: pick time {pick_time} not within trace range {trace.stats.starttime} to {trace.stats.endtime}", level="debug")
+                else:
+                    self.log(f"Keeping st2 trace {i}: pick time {pick_time} is within trace range {trace.stats.starttime} to {trace.stats.endtime}", level="debug")
 
             for i in reversed(traces_to_remove):
                 st2.remove(st2[i])
@@ -2319,6 +2353,10 @@ class HypoDDRelocator(object):
 
             # Perform cross-correlation for this channel
             try:
+                self.log(f"Cross-correlating traces: trace_1 ({trace_1.stats.starttime} to {trace_1.stats.endtime}, {len(trace_1.data)} samples), trace_2 ({trace_2.stats.starttime} to {trace_2.stats.endtime}, {len(trace_2.data)} samples)", level="debug")
+                self.log(f"Pick times: pick_1={pick_1['pick_time']}, pick_2={pick_2['pick_time']}", level="debug")
+                self.log(f"Cross-correlation parameters: t_before={self.cc_param['cc_time_before']}, t_after={self.cc_param['cc_time_after']}, cc_maxlag={self.cc_param['cc_maxlag']}", level="debug")
+                
                 pick2_corr, cross_corr_coeff = xcorr_pick_correction(
                     pick_1["pick_time"],
                     trace_1,
@@ -2329,6 +2367,8 @@ class HypoDDRelocator(object):
                     cc_maxlag=self.cc_param["cc_maxlag"],
                     plot=False,
                 )
+                
+                self.log(f"Cross-correlation successful: time_correction={pick2_corr}, correlation_coeff={cross_corr_coeff}", level="debug")
                 
                 # Check correlation coefficient threshold
                 if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:

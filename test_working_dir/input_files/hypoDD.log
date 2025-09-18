@@ -1,0 +1,39 @@
+starting hypoDD (v2.1beta - 06/15/2016)...   Wed Sep 17 19:16:56 2025¹
+Input parameters: hypoDD.inp (hypoDD2.0 format)
+INPUT FILES:
+ cross dtime data: dt.cc
+ catalog dtime data: dt.ct
+ events: event.sel
+ stations: station.sel
+OUTPUT FILES:
+ initial locations: hypoDD.loc
+ relocated events: hypoDD.reloc
+ event pair residuals: hypoDD.res
+ station residuals: hypoDD.sta
+ source parameters: hypoDD.src
+
+  IDATA=  3  IPHASE=  3  MAXDIST (from cluster)=        5.
+  MINOBS_CC=   8  MINOBS_CT=   0
+  MINDIST (from pair)=  -999.  MAXDIST (from pair)=     -999.  MAXGAP=  -999.
+  ISTART= 2  ISOLV= 2  IAQ= 2
+  ITER   1- 50: DAMP=    10.0
+    WT_CCP=    1.00  WT_CCS=    0.50  MAXR_CC=    0.10  MAXD_CC=    0.05
+    WT_CTP= -999.00  WT_CTS= -999.00  MAXR_CT= -999.00  MAXD_CT= -999.00
+  ITER  51-100: DAMP=    10.0
+    WT_CCP=    1.00  WT_CCS=    0.50  MAXR_CC=    0.10  MAXD_CC=    0.05
+    WT_CTP=    0.50  WT_CTS=    0.25  MAXR_CT=    0.50  MAXD_CT=    0.25
+Use local layered 1D model.
+  MOD_NL=  4
+    MOD_TOP    MOD_VP   MOD_VS   MOD_RATIO
+      0.000    3.500    2.023    1.730
+      2.000    5.000    2.890    1.730
+     15.000    6.500    3.757    1.730
+     30.000    8.000    4.624    1.730
+Relocate all clusters
+Relocate all events
+Remove air quakes.
+
+~ Reading data ...   Wed Sep 17 19:16:56 2025 
+# stations total =      2
+# stations < maxdist =      2
+# stations w/ neg. elevation (set to 0) =    0

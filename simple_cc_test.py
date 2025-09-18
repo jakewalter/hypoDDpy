@@ -19,9 +19,9 @@ def create_simple_test():
     # Create relocator with lowered threshold
     relocator = HypoDDRelocator(
         working_dir="/Users/jwalter/seis/hypoDDpy/test_working_dir",
-        cc_time_before=0.05,
-        cc_time_after=0.2,
-        cc_maxlag=0.1,
+        cc_time_before=0.5,   # Increased for better overlap
+        cc_time_after=1.0,    # Increased for better overlap
+        cc_maxlag=0.2,        # Increased to allow more lag
         cc_filter_min_freq=1,
         cc_filter_max_freq=20,
         cc_p_phase_weighting={"Z": 1.0},
@@ -106,9 +106,9 @@ def create_simple_test():
 
     # Create the cross-correlation parameters
     cc_param = {
-        'cc_time_before': 0.05,
-        'cc_time_after': 0.2,
-        'cc_maxlag': 0.1,
+        'cc_time_before': 0.5,   # Increased for better overlap
+        'cc_time_after': 1.0,    # Increased for better overlap
+        'cc_maxlag': 0.2,        # Increased to allow more lag
         'cc_min_allowed_cross_corr_coeff': 0.3  # LOWERED THRESHOLD
     }
 

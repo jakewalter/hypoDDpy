@@ -26,15 +26,15 @@ from hypoddpy import HypoDDRelocator
 # Configuration values with optimized parameters for maximum performance
 relocator = HypoDDRelocator(
     working_dir="relocator_working_dir",
-    cc_time_before=0.03,  # Optimized: reduced from 0.05 (40% faster)
-    cc_time_after=0.12,   # Optimized: reduced from 0.2 (40% faster)
-    cc_maxlag=0.05,       # Optimized: reduced from 0.1 (50% faster)
-    cc_filter_min_freq=2, # Optimized: increased from 1 (narrower band)
-    cc_filter_max_freq=15, # Optimized: reduced from 20 (faster processing)
+    cc_time_before=0.5,   # Increased from 0.03 for better overlap with real data
+    cc_time_after=1.0,   # Increased from 0.12 for better overlap with real data
+    cc_maxlag=0.2,       # Increased from 0.05 to allow more lag
+    cc_filter_min_freq=1, # Reduced from 2 for broader frequency band
+    cc_filter_max_freq=20, # Increased from 15 for broader frequency band
     cc_p_phase_weighting={"Z": 1.0},  # P-waves: vertical component only
     cc_s_phase_weighting={"Z": 1.0, "E": 1.0, "N": 1.0},  # S-waves: all components
     # Note: Smart channel mapping will automatically handle E/N vs 1/2 conversions
-    cc_min_allowed_cross_corr_coeff=0.6, # Optimized: increased from 0.4 (higher quality)
+    cc_min_allowed_cross_corr_coeff=0.3, # Reduced from 0.6 for real data
     
     # NEW: Custom channel equivalencies for networks where "1"=East, "2"=North
     custom_channel_equivalencies={"1": "E", "2": "N"},
