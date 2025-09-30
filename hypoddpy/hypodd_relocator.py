@@ -749,6 +749,17 @@ class HypoDDRelocator(object):
                 self.log(f"Warning: Using first available origin for event {event.resource_id} (no preferred origin)", level="warning")
             elif origin is None:
                 raise HypoDDException(f"No origin found for event {event.resource_id}")
+            
+            # Validate that origin has required attributes
+            if not hasattr(origin, 'time') or origin.time is None:
+                raise HypoDDException(f"Origin for event {event.resource_id} missing time attribute")
+            if not hasattr(origin, 'latitude') or origin.latitude is None:
+                raise HypoDDException(f"Origin for event {event.resource_id} missing latitude attribute")
+            if not hasattr(origin, 'longitude') or origin.longitude is None:
+                raise HypoDDException(f"Origin for event {event.resource_id} missing longitude attribute")
+            if not hasattr(origin, 'depth') or origin.depth is None:
+                raise HypoDDException(f"Origin for event {event.resource_id} missing depth attribute")
+                
             current_event["origin_time"] = origin.time
             # Origin time error.
             if origin.time_errors.uncertainty is not None:
@@ -792,14 +803,21 @@ class HypoDDRelocator(object):
                 # Skip picks that don't have required waveform_id
                 if not hasattr(pick, 'waveform_id') or pick.waveform_id is None:
                     discarded_picks += 1
+                    self.log(f"Warning: Pick missing waveform_id, skipping", level="debug")
                     continue
                     
                 # Skip picks that don't have network_code or station_code
                 if (not hasattr(pick.waveform_id, 'network_code') or 
-                    not hasattr(pick.waveform_id, 'station_code') or
-                    pick.waveform_id.network_code is None or 
-                    pick.waveform_id.station_code is None):
+                    not hasattr(pick.waveform_id, 'station_code')):
                     discarded_picks += 1
+                    self.log(f"Warning: Pick waveform_id missing network_code or station_code attributes, skipping", level="debug")
+                    continue
+                    
+                # Skip picks with None or empty station codes
+                if (pick.waveform_id.station_code is None or 
+                    str(pick.waveform_id.station_code).strip() == ""):
+                    discarded_picks += 1
+                    self.log(f"Warning: Pick has None or empty station_code, skipping", level="debug")
                     continue
                     
                 current_pick = {}
@@ -832,12 +850,29 @@ class HypoDDRelocator(object):
                 else:
                     current_pick["phase"] = "P"  # Default to P phase
                     
-                # Assert that information for the station of the pick is
-                # available.
-                if not current_pick["station_id"] in list(
-                    self.stations.keys()
-                ):
-                    discarded_picks += 0
+                # Improved station matching logic to handle empty network codes
+                station_found = False
+                station_keys = list(self.stations.keys())
+                
+                # First try the constructed station_id
+                if current_pick["station_id"] in station_keys:
+                    station_found = True
+                # If network code is empty or station_id starts with ".", try just station code
+                elif not pick.waveform_id.network_code or current_pick["station_id"].startswith("."):
+                    station_only = pick.waveform_id.station_code
+                    if station_only in station_keys:
+                        current_pick["station_id"] = station_only
+                        station_found = True
+                    else:
+                        # Try to find stations that end with the station code (handles network.station format)
+                        matching_stations = [s for s in station_keys if s.endswith(f".{station_only}")]
+                        if matching_stations:
+                            current_pick["station_id"] = matching_stations[0]  # Use first match
+                            station_found = True
+                
+                if not station_found:
+                    discarded_picks += 1
+                    self.log(f"Warning: Station '{current_pick['station_id']}' not found in station list. Available stations: {station_keys[:5]}{'...' if len(station_keys) > 5 else ''}", level="warning")
                     continue
                 current_event["picks"].append(current_pick)
         # Sort events by origin time
