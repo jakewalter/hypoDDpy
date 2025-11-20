@@ -716,11 +716,45 @@ class HypoDDRelocator(object):
             )
             with open(serialized_event_file, "r") as open_file:
                 self.events = json.load(open_file)
+            
+            # Check for duplicates in cached events and remove them
+            seen_event_ids = set()
+            duplicate_event_ids = []
+            deduplicated_events = []
+            
+            for event in self.events:
+                event_id = event["event_id"]
+                if event_id in seen_event_ids:
+                    duplicate_event_ids.append(event_id)
+                    self.log(f"Warning: Duplicate event ID in cached file: {event_id}. Removing duplicate.", level="warning")
+                    continue
+                seen_event_ids.add(event_id)
+                deduplicated_events.append(event)
+            
+            self.events = deduplicated_events
+            
             # Loop and convert all time values to UTCDateTime.
             for event in self.events:
                 event["origin_time"] = UTCDateTime(event["origin_time"])
                 for pick in event["picks"]:
                     pick["pick_time"] = UTCDateTime(pick["pick_time"])
+            
+            if duplicate_event_ids:
+                self.log(
+                    f"WARNING: Removed {len(duplicate_event_ids)} duplicate event IDs from cached file. "
+                    + f"First few duplicates: {duplicate_event_ids[:5]}",
+                    level="warning"
+                )
+                # Regenerate the cache file with deduplicated events
+                events_copy = copy.deepcopy(self.events)
+                for event in events_copy:
+                    event["origin_time"] = str(event["origin_time"])
+                    for pick in event["picks"]:
+                        pick["pick_time"] = str(pick["pick_time"])
+                with open(serialized_event_file, "w") as open_file:
+                    json.dump(events_copy, open_file)
+                self.log("Regenerated events.json with duplicates removed.")
+            
             self.log("Reading serialized event file successful.")
             return
         self.log("Reading all events...")
@@ -1569,6 +1603,7 @@ class HypoDDRelocator(object):
         from threading import Lock
         progress_lock = Lock()
         processed_count = [0]  # Use list to make it mutable in nested function
+        failed_files = []  # Track files that failed to process
         
         def process_single_waveform_file(waveform_file):
             """Process a single waveform file and return trace information."""
@@ -1578,6 +1613,8 @@ class HypoDDRelocator(object):
                 st = self._safe_read_mseed(waveform_file)
                 if st is None:
                     self.log(f"Failed to safely read waveform file {waveform_file}, skipping", level="warning")
+                    with progress_lock:
+                        failed_files.append((waveform_file, "Safe read returned None"))
                     return []
                 
                 trace_info = []
@@ -1601,8 +1638,21 @@ class HypoDDRelocator(object):
                 
                 self.log(f"Successfully processed {len(trace_info)} traces from {waveform_file}", level="debug")
                 return trace_info
+            except RuntimeError as exc:
+                # Catch segmentation fault errors specifically
+                if "Segmentation fault" in str(exc):
+                    self.log(f"Segmentation fault reading {waveform_file} (likely corrupted), skipping", level="warning")
+                    with progress_lock:
+                        failed_files.append((waveform_file, "Segmentation fault (corrupted file)"))
+                else:
+                    self.log(f"RuntimeError reading waveform file {waveform_file}: {exc}", level="warning")
+                    with progress_lock:
+                        failed_files.append((waveform_file, str(exc)))
+                return []
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
+                with progress_lock:
+                    failed_files.append((waveform_file, str(exc)))
                 return []
         
         def update_progress():
@@ -1639,9 +1689,21 @@ class HypoDDRelocator(object):
                                 "filename": trace_info["filename"],
                             })
                             self.log(f"Added trace {trace_id} from {trace_info['filename']} ({trace_info['starttime']} to {trace_info['endtime']})", level="debug")
+                    except RuntimeError as exc:
+                        wf_file = future_to_file[future]
+                        if "Segmentation fault" in str(exc):
+                            self.log(f"Segmentation fault processing {wf_file} (likely corrupted), skipping", level="warning")
+                            with progress_lock:
+                                failed_files.append((wf_file, "Segmentation fault (corrupted file)"))
+                        else:
+                            self.log(f"RuntimeError processing {wf_file}: {exc}", level="warning")
+                            with progress_lock:
+                                failed_files.append((wf_file, str(exc)))
                     except Exception as exc:
                         wf_file = future_to_file[future]
                         self.log(f"Failed to process waveform file {wf_file}: {exc}", level="warning")
+                        with progress_lock:
+                            failed_files.append((wf_file, str(exc)))
                         # Continue processing other files
                     
                     update_progress()
@@ -1654,9 +1716,21 @@ class HypoDDRelocator(object):
         self.log(f"Parallel waveform parsing completed in {parsing_time:.2f} seconds")
         self.log(f"Average speed: {file_count/parsing_time:.1f} files/second")
         
+        # Report failed files
+        if failed_files:
+            self.log(
+                f"WARNING: {len(failed_files)} waveform files failed to process and were skipped.",
+                level="warning"
+            )
+            # Show first few failed files with reasons
+            for wf_file, reason in failed_files[:10]:
+                self.log(f"  Failed: {wf_file} - Reason: {reason}", level="warning")
+            if len(failed_files) > 10:
+                self.log(f"  ... and {len(failed_files) - 10} more failed files", level="warning")
+        
         # Log summary of parsed data
         total_traces = sum(len(traces) for traces in self.waveform_information.values())
-        self.log(f"Parsed {len(self.waveform_information)} unique trace IDs with {total_traces} total waveforms")
+        self.log(f"Successfully parsed {len(self.waveform_information)} unique trace IDs with {total_traces} total waveforms")
         self.log(f"Sample trace IDs: {list(self.waveform_information.keys())[:5]}", level="debug")
 
     def save_cross_correlation_results(self, filename):
