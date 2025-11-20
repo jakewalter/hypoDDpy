@@ -697,6 +697,34 @@ class HypoDDRelocator(object):
             open_file.write(event_string)
         self.log("Created phase.dat input file.")
 
+        # Diagnostic: ensure there are no duplicate numeric IDs in the
+        # written phase.dat (shouldn't happen but helps debug the
+        # 'duplicate event IDs' problem). Parse the numeric id at the
+        # end of all header lines beginning with '#'.
+        numeric_ids = []
+        for line in event_string.splitlines():
+            if line.strip().startswith("#"):
+                parts = line.strip()[1:].strip().split()
+                if not parts:
+                    continue
+                try:
+                    num = int(parts[-1])
+                    numeric_ids.append(num)
+                except ValueError:
+                    # Not an integer in the final position; skip
+                    continue
+        duplicates = [x for x in set(numeric_ids) if numeric_ids.count(x) > 1]
+        if duplicates:
+            self.log(
+                "ERROR: Duplicate numeric event IDs found in phase.dat: "
+                + ", ".join(map(str, duplicates)),
+                level="error",
+            )
+            # Dump some useful diagnostics to help resolve the issue
+            sample_events = [e["event_id"] for e in self.events if self.event_map.get(e["event_id"]) in duplicates][:10]
+            self.log(f"Problematic event string IDs: {sample_events}", level="error")
+            raise HypoDDException("Duplicate numeric event IDs detected in phase.dat")
+
     def _read_event_information(self, max_threads=None):
         """
         Read all event files and extract the needed information and serialize
@@ -1190,17 +1218,27 @@ class HypoDDRelocator(object):
                 event["event_id"] = new_eid
             else:
                 event_id_counts[eid] = 0
-        
+
         # Just create this every time as it is very fast.
         for _i, event in enumerate(self.events):
             event_id = event["event_id"]
             self.event_map[event_id] = _i + 1
             self.event_map[_i + 1] = event_id
-        
+
         # Log if we have any renamed duplicates
         renamed_count = sum(1 for e in self.events if "_" in e["event_id"] and e.get("original_event_id"))
         if renamed_count > 0:
             self.log(f"Event ID map created with {renamed_count} renamed duplicate events", level="info")
+
+        # Diagnostic check: ensure number-to-string mapping is one-to-one
+        numeric_keys = [k for k in self.event_map.keys() if isinstance(k, int)]
+        if len(numeric_keys) != len(set(numeric_keys)):
+            # This should never happen; log and raise for diagnostics
+            self.log(
+                "ERROR: Duplicate numeric keys in event_map detected.",
+                level="error",
+            )
+            raise HypoDDException("Duplicate numeric keys in event_map")
 
     def _write_ph2dt_inp_file(self):
         """
