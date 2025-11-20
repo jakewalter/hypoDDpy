@@ -731,11 +731,23 @@ class HypoDDRelocator(object):
         self.events = []
         # Keep track of the number of discarded picks.
         discarded_picks = 0
+        # Track seen event IDs to detect duplicates
+        seen_event_ids = set()
+        duplicate_event_ids = []
         # Loop over all events.
         for event in catalog:
+            event_id = str(event.resource_id)
+            
+            # Check for duplicate event IDs
+            if event_id in seen_event_ids:
+                duplicate_event_ids.append(event_id)
+                self.log(f"Warning: Duplicate event ID found: {event_id}. Skipping duplicate event.", level="warning")
+                continue
+            
+            seen_event_ids.add(event_id)
             current_event = {}
             self.events.append(current_event)
-            current_event["event_id"] = str(event.resource_id)
+            current_event["event_id"] = event_id
             # Take the value from the first event.
             if event.preferred_magnitude() is not None:
                 current_event["magnitude"] = event.preferred_magnitude().mag
@@ -887,6 +899,12 @@ class HypoDDRelocator(object):
         with open(serialized_event_file, "w") as open_file:
             json.dump(events, open_file)
         self.log("Reading all events successful.")
+        if duplicate_event_ids:
+            self.log(
+                f"WARNING: {len(duplicate_event_ids)} duplicate event IDs were found and skipped. "
+                + f"First few duplicates: {duplicate_event_ids[:5]}",
+                level="warning"
+            )
         self.log(
             ("%i picks discarded because of " % discarded_picks)
             + "unavailable station information."
@@ -1140,11 +1158,29 @@ class HypoDDRelocator(object):
         self.event_map[number] = "event_id_string"
         """
         self.event_map = {}
+        # Track event IDs to detect duplicates (shouldn't happen after deduplication in _read_event_information)
+        seen_ids = set()
+        duplicates = []
+        
         # Just create this every time as it is very fast.
         for _i, event in enumerate(self.events):
             event_id = event["event_id"]
+            
+            # Check for duplicates as a safety measure
+            if event_id in seen_ids:
+                duplicates.append(event_id)
+            seen_ids.add(event_id)
+            
             self.event_map[event_id] = _i + 1
             self.event_map[_i + 1] = event_id
+        
+        # Log warning if duplicates found (this should not happen after deduplication)
+        if duplicates:
+            self.log(
+                f"ERROR: Found {len(duplicates)} duplicate event IDs in event_map creation. "
+                + f"This should not happen after deduplication. Duplicates: {duplicates[:10]}",
+                level="error"
+            )
 
     def _write_ph2dt_inp_file(self):
         """
