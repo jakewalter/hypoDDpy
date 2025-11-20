@@ -717,43 +717,11 @@ class HypoDDRelocator(object):
             with open(serialized_event_file, "r") as open_file:
                 self.events = json.load(open_file)
             
-            # Check for duplicates in cached events and remove them
-            seen_event_ids = set()
-            duplicate_event_ids = []
-            deduplicated_events = []
-            
-            for event in self.events:
-                event_id = event["event_id"]
-                if event_id in seen_event_ids:
-                    duplicate_event_ids.append(event_id)
-                    self.log(f"Warning: Duplicate event ID in cached file: {event_id}. Removing duplicate.", level="warning")
-                    continue
-                seen_event_ids.add(event_id)
-                deduplicated_events.append(event)
-            
-            self.events = deduplicated_events
-            
             # Loop and convert all time values to UTCDateTime.
             for event in self.events:
                 event["origin_time"] = UTCDateTime(event["origin_time"])
                 for pick in event["picks"]:
                     pick["pick_time"] = UTCDateTime(pick["pick_time"])
-            
-            if duplicate_event_ids:
-                self.log(
-                    f"WARNING: Removed {len(duplicate_event_ids)} duplicate event IDs from cached file. "
-                    + f"First few duplicates: {duplicate_event_ids[:5]}",
-                    level="warning"
-                )
-                # Regenerate the cache file with deduplicated events
-                events_copy = copy.deepcopy(self.events)
-                for event in events_copy:
-                    event["origin_time"] = str(event["origin_time"])
-                    for pick in event["picks"]:
-                        pick["pick_time"] = str(pick["pick_time"])
-                with open(serialized_event_file, "w") as open_file:
-                    json.dump(events_copy, open_file)
-                self.log("Regenerated events.json with duplicates removed.")
             
             self.log("Reading serialized event file successful.")
             return
@@ -765,20 +733,9 @@ class HypoDDRelocator(object):
         self.events = []
         # Keep track of the number of discarded picks.
         discarded_picks = 0
-        # Track seen event IDs to detect duplicates
-        seen_event_ids = set()
-        duplicate_event_ids = []
         # Loop over all events.
         for event in catalog:
             event_id = str(event.resource_id)
-            
-            # Check for duplicate event IDs
-            if event_id in seen_event_ids:
-                duplicate_event_ids.append(event_id)
-                self.log(f"Warning: Duplicate event ID found: {event_id}. Skipping duplicate event.", level="warning")
-                continue
-            
-            seen_event_ids.add(event_id)
             current_event = {}
             self.events.append(current_event)
             current_event["event_id"] = event_id
@@ -933,12 +890,6 @@ class HypoDDRelocator(object):
         with open(serialized_event_file, "w") as open_file:
             json.dump(events, open_file)
         self.log("Reading all events successful.")
-        if duplicate_event_ids:
-            self.log(
-                f"WARNING: {len(duplicate_event_ids)} duplicate event IDs were found and skipped. "
-                + f"First few duplicates: {duplicate_event_ids[:5]}",
-                level="warning"
-            )
         self.log(
             ("%i picks discarded because of " % discarded_picks)
             + "unavailable station information."
@@ -1190,31 +1141,17 @@ class HypoDDRelocator(object):
 
         self.event_map["event_id_string"] = number
         self.event_map[number] = "event_id_string"
+        
+        Note: If the catalog has duplicate resource_ids, they will each get 
+        unique sequential numbers for HypoDD processing.
         """
         self.event_map = {}
-        # Track event IDs to detect duplicates (shouldn't happen after deduplication in _read_event_information)
-        seen_ids = set()
-        duplicates = []
         
         # Just create this every time as it is very fast.
         for _i, event in enumerate(self.events):
             event_id = event["event_id"]
-            
-            # Check for duplicates as a safety measure
-            if event_id in seen_ids:
-                duplicates.append(event_id)
-            seen_ids.add(event_id)
-            
             self.event_map[event_id] = _i + 1
             self.event_map[_i + 1] = event_id
-        
-        # Log warning if duplicates found (this should not happen after deduplication)
-        if duplicates:
-            self.log(
-                f"ERROR: Found {len(duplicates)} duplicate event IDs in event_map creation. "
-                + f"This should not happen after deduplication. Duplicates: {duplicates[:10]}",
-                level="error"
-            )
 
     def _write_ph2dt_inp_file(self):
         """
@@ -1553,12 +1490,31 @@ class HypoDDRelocator(object):
             )
             with open(serialized_waveform_information_file, "r") as open_file:
                 self.waveform_information = json.load(open_file)
-                # Convert all times to UTCDateTimes.
-                for value in list(self.waveform_information.values()):
-                    for item in value:
-                        item["starttime"] = UTCDateTime(item["starttime"])
-                        item["endtime"] = UTCDateTime(item["endtime"])
-                return
+                
+                # Validate loaded data - if empty, regenerate
+                if not self.waveform_information:
+                    self.log(
+                        "WARNING: Cached waveform_information.json is empty. "
+                        "Deleting cache and regenerating...",
+                        level="warning"
+                    )
+                    os.remove(serialized_waveform_information_file)
+                    # Fall through to regenerate
+                else:
+                    # Convert all times to UTCDateTimes.
+                    for value in list(self.waveform_information.values()):
+                        for item in value:
+                            item["starttime"] = UTCDateTime(item["starttime"])
+                            item["endtime"] = UTCDateTime(item["endtime"])
+                    
+                    # Log cache summary
+                    total_traces = sum(len(traces) for traces in self.waveform_information.values())
+                    self.log(
+                        f"Loaded {len(self.waveform_information)} trace IDs with "
+                        f"{total_traces} total waveforms from cache"
+                    )
+                    self.log(f"Sample trace IDs: {list(self.waveform_information.keys())[:5]}", level="debug")
+                    return
         file_count = len(self.waveform_files)
         self.log("Parsing %i waveform files..." % file_count)
         self.log(f"Waveform files to parse: {self.waveform_files[:5]}{'...' if len(self.waveform_files) > 5 else ''}", level="debug")
@@ -1566,7 +1522,21 @@ class HypoDDRelocator(object):
         
         # Use parallel processing for waveform parsing
         self._parse_waveform_files_parallel(file_count)
-        # Serialze it as a json object.
+        
+        # Validate that we actually parsed some waveforms
+        if not self.waveform_information:
+            error_msg = (
+                "ERROR: No waveforms were successfully parsed from any waveform file. "
+                "This could be due to:\n"
+                "  1. All waveform files are corrupted\n"
+                "  2. Waveform files are in an unsupported format\n"
+                "  3. File paths are incorrect\n"
+                "Please check your waveform files and try again."
+            )
+            self.log(error_msg, level="error")
+            raise RuntimeError(error_msg)
+        
+        # Serialize it as a json object.
         waveform_information = copy.deepcopy(self.waveform_information)
         for value in list(waveform_information.values()):
             for item in value:
