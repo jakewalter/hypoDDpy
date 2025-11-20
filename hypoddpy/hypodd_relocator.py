@@ -733,12 +733,25 @@ class HypoDDRelocator(object):
         self.events = []
         # Keep track of the number of discarded picks.
         discarded_picks = 0
+        # Track duplicate event IDs and make them unique
+        event_id_counts = {}
         # Loop over all events.
         for event in catalog:
-            event_id = str(event.resource_id)
+            original_event_id = str(event.resource_id)
+            
+            # Handle duplicates by appending a counter
+            if original_event_id in event_id_counts:
+                event_id_counts[original_event_id] += 1
+                event_id = f"{original_event_id}_{event_id_counts[original_event_id]}"
+                self.log(f"Duplicate event ID found: {original_event_id}. Renaming to {event_id}", level="debug")
+            else:
+                event_id_counts[original_event_id] = 0
+                event_id = original_event_id
+            
             current_event = {}
             self.events.append(current_event)
             current_event["event_id"] = event_id
+            current_event["original_event_id"] = original_event_id  # Keep track of original for reference
             # Take the value from the first event.
             if event.preferred_magnitude() is not None:
                 current_event["magnitude"] = event.preferred_magnitude().mag
@@ -1142,8 +1155,9 @@ class HypoDDRelocator(object):
         self.event_map["event_id_string"] = number
         self.event_map[number] = "event_id_string"
         
-        Note: If the catalog has duplicate resource_ids, they will each get 
-        unique sequential numbers for HypoDD processing.
+        Note: If the catalog has duplicate resource_ids, they will have been
+        renamed with suffixes (_1, _2, etc.) during loading, so each event
+        has a unique ID for HypoDD processing.
         """
         self.event_map = {}
         
@@ -1152,6 +1166,11 @@ class HypoDDRelocator(object):
             event_id = event["event_id"]
             self.event_map[event_id] = _i + 1
             self.event_map[_i + 1] = event_id
+        
+        # Log if we have any renamed duplicates
+        renamed_count = sum(1 for e in self.events if "_" in e["event_id"] and e.get("original_event_id"))
+        if renamed_count > 0:
+            self.log(f"Event ID map created with {renamed_count} renamed duplicate events", level="info")
 
     def _write_ph2dt_inp_file(self):
         """
@@ -1518,6 +1537,19 @@ class HypoDDRelocator(object):
         file_count = len(self.waveform_files)
         self.log("Parsing %i waveform files..." % file_count)
         self.log(f"Waveform files to parse: {self.waveform_files[:5]}{'...' if len(self.waveform_files) > 5 else ''}", level="debug")
+        
+        # Check if any waveform files were added
+        if file_count == 0:
+            error_msg = (
+                "ERROR: No waveform files to parse. "
+                "Did you forget to call add_waveform_files() before start_relocation()?\n"
+                "Example usage:\n"
+                "  relocator.add_waveform_files('/path/to/waveforms/*.mseed')\n"
+                "  relocator.start_relocation('output.xml')"
+            )
+            self.log(error_msg, level="error")
+            raise RuntimeError(error_msg)
+        
         self.waveform_information = {}
         
         # Use parallel processing for waveform parsing
@@ -1528,9 +1560,10 @@ class HypoDDRelocator(object):
             error_msg = (
                 "ERROR: No waveforms were successfully parsed from any waveform file. "
                 "This could be due to:\n"
-                "  1. All waveform files are corrupted\n"
+                f"  1. All {file_count} waveform files are corrupted\n"
                 "  2. Waveform files are in an unsupported format\n"
                 "  3. File paths are incorrect\n"
+                f"Sample files attempted: {self.waveform_files[:3]}\n"
                 "Please check your waveform files and try again."
             )
             self.log(error_msg, level="error")
