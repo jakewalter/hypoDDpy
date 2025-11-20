@@ -612,6 +612,24 @@ class HypoDDRelocator(object):
             self.log("phase.dat input file already exists.")
             return
         event_strings = []
+        # Validate that mapping produces unique numeric ids for all events
+        numeric_ids_from_events = [self.event_map[event["event_id"]] for event in self.events]
+        if len(set(numeric_ids_from_events)) != len(self.events):
+            # Duplicate numeric IDs were produced despite renaming — fatal.
+            duplicates = [x for x in set(numeric_ids_from_events) if numeric_ids_from_events.count(x) > 1]
+            self.log(
+                f"ERROR: Duplicate numeric ids detected before writing phase.dat: {duplicates}",
+                level="error",
+            )
+            # Provide mapping diagnostics
+            dup_events = [
+                (event["event_id"], self.event_map[event["event_id"]])
+                for event in self.events
+                if self.event_map[event["event_id"]] in duplicates
+            ]
+            self.log(f"Problematic event entries: {dup_events[:10]}", level="error")
+            raise HypoDDException("Duplicate numeric ids detected when creating phase.dat")
+
         for event in self.events:
             string = (
                 "# {year} {month} {day} {hour} {minute} "
@@ -754,20 +772,33 @@ class HypoDDRelocator(object):
                     # No event_id present in cached data - this is invalid
                     raise HypoDDException("Cached event missing 'event_id' key")
 
-                if orig_id in event_id_counts:
-                    event_id_counts[orig_id] += 1
-                    new_id = f"{orig_id}_{event_id_counts[orig_id]}"
+                    if orig_id in event_id_counts:
+                        event_id_counts[orig_id] += 1
+                        new_id = f"{orig_id}__{event_id_counts[orig_id]:06d}"
                     self.log(f"Duplicate event ID in cache: {orig_id}. Renaming to {new_id}", level="debug")
                     event["original_event_id"] = orig_id
                     event["event_id"] = new_id
                 else:
                     event_id_counts[orig_id] = 0
 
+            # Track whether we renamed any cached IDs
+            renamed_cached = any("original_event_id" in e for e in self.events)
+
             # Loop and convert all time values to UTCDateTime.
             for event in self.events:
                 event["origin_time"] = UTCDateTime(event["origin_time"])
                 for pick in event["picks"]:
                     pick["pick_time"] = UTCDateTime(pick["pick_time"])
+            if renamed_cached:
+                # Write the cache back out with updated IDs
+                events_copy = copy.deepcopy(self.events)
+                for event in events_copy:
+                    event["origin_time"] = str(event["origin_time"])
+                    for pick in event["picks"]:
+                        pick["pick_time"] = str(pick["pick_time"])
+                with open(serialized_event_file, "w") as open_file:
+                    json.dump(events_copy, open_file)
+                self.log("Updated cached events.json with renamed duplicate IDs.", level="info")
             
             self.log("Reading serialized event file successful.")
             return
@@ -788,7 +819,10 @@ class HypoDDRelocator(object):
             # Handle duplicates by appending a counter
             if original_event_id in event_id_counts:
                 event_id_counts[original_event_id] += 1
-                event_id = f"{original_event_id}_{event_id_counts[original_event_id]}"
+                # Use a less ambiguous renaming scheme with a double underscore
+                # and fixed width integer for sorting/readability. This avoids
+                # accidental collisions with existing resource IDs.
+                event_id = f"{original_event_id}__{event_id_counts[original_event_id]:06d}"
                 self.log(f"Duplicate event ID found: {original_event_id}. Renaming to {event_id}", level="debug")
             else:
                 event_id_counts[original_event_id] = 0
@@ -1212,7 +1246,7 @@ class HypoDDRelocator(object):
             eid = event["event_id"]
             if eid in event_id_counts:
                 event_id_counts[eid] += 1
-                new_eid = f"{eid}_{event_id_counts[eid]}"
+                new_eid = f"{eid}__{event_id_counts[eid]:06d}"
                 self.log(f"Event ID collision detected during event_map creation: {eid} -> {new_eid}", level="debug")
                 event["original_event_id"] = eid if "original_event_id" not in event else event["original_event_id"]
                 event["event_id"] = new_eid
@@ -1228,7 +1262,9 @@ class HypoDDRelocator(object):
         # Log if we have any renamed duplicates
         renamed_count = sum(1 for e in self.events if "_" in e["event_id"] and e.get("original_event_id"))
         if renamed_count > 0:
-            self.log(f"Event ID map created with {renamed_count} renamed duplicate events", level="info")
+            self.log(
+                f"Event ID map created with {renamed_count} renamed duplicate events", level="info"
+            )
 
         # Diagnostic check: ensure number-to-string mapping is one-to-one
         numeric_keys = [k for k in self.event_map.keys() if isinstance(k, int)]
@@ -1239,6 +1275,38 @@ class HypoDDRelocator(object):
                 level="error",
             )
             raise HypoDDException("Duplicate numeric keys in event_map")
+
+        # Validate numeric ids are a contiguous range from 1..n
+        expected_set = set(range(1, len(self.events) + 1))
+        actual_numeric_set = set([k for k in self.event_map.keys() if isinstance(k, int)])
+        if actual_numeric_set != expected_set:
+            missing = sorted(list(expected_set - actual_numeric_set))
+            extra = sorted(list(actual_numeric_set - expected_set))
+            self.log(
+                f"ERROR: Numeric event id set mismatch. Missing: {missing[:10]}, Extra: {extra[:10]}",
+                level="error",
+            )
+            # Provide a sample of problematic mapping for debugging
+            sample_conflicts = [
+                (num, self.event_map.get(num)) for num in sorted(actual_numeric_set)[:10]
+            ]
+            self.log(f"Sample mapping: {sample_conflicts}", level="error")
+            raise HypoDDException("Invalid numeric event id mapping (not contiguous)")
+
+        # Dump a debug file showing the mapping so users can inspect duplicates
+        mapping_dbg_file = os.path.join(self.paths["working_files"], "event_mapping_debug.txt")
+        try:
+            with open(mapping_dbg_file, "w") as f:
+                f.write("# original_event_id,event_id,numeric_id\n")
+                for i in range(1, len(self.events) + 1):
+                    eid = self.event_map[i]
+                    evt = next(e for e in self.events if e["event_id"] == eid)
+                    orig = evt.get("original_event_id", "")
+                    f.write(f"{orig},{eid},{i}\n")
+            self.log(f"Wrote event mapping debug file: {mapping_dbg_file}", level="debug")
+        except Exception:
+            # Best effort only
+            self.log("Could not write event mapping debug file", level="debug")
 
     def _write_ph2dt_inp_file(self):
         """
