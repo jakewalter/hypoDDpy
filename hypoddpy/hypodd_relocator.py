@@ -716,7 +716,25 @@ class HypoDDRelocator(object):
             )
             with open(serialized_event_file, "r") as open_file:
                 self.events = json.load(open_file)
-            
+
+            # Detect duplicate event IDs in cached file and rename duplicates
+            event_id_counts = {}
+            for event in self.events:
+                orig_id = event.get("event_id", None)
+                # Ensure we always have an event_id
+                if orig_id is None:
+                    # No event_id present in cached data - this is invalid
+                    raise HypoDDException("Cached event missing 'event_id' key")
+
+                if orig_id in event_id_counts:
+                    event_id_counts[orig_id] += 1
+                    new_id = f"{orig_id}_{event_id_counts[orig_id]}"
+                    self.log(f"Duplicate event ID in cache: {orig_id}. Renaming to {new_id}", level="debug")
+                    event["original_event_id"] = orig_id
+                    event["event_id"] = new_id
+                else:
+                    event_id_counts[orig_id] = 0
+
             # Loop and convert all time values to UTCDateTime.
             for event in self.events:
                 event["origin_time"] = UTCDateTime(event["origin_time"])
@@ -1160,6 +1178,18 @@ class HypoDDRelocator(object):
         has a unique ID for HypoDD processing.
         """
         self.event_map = {}
+        # Ensure event IDs are unique (defensive: rename any duplicates left over)
+        event_id_counts = {}
+        for event in self.events:
+            eid = event["event_id"]
+            if eid in event_id_counts:
+                event_id_counts[eid] += 1
+                new_eid = f"{eid}_{event_id_counts[eid]}"
+                self.log(f"Event ID collision detected during event_map creation: {eid} -> {new_eid}", level="debug")
+                event["original_event_id"] = eid if "original_event_id" not in event else event["original_event_id"]
+                event["event_id"] = new_eid
+            else:
+                event_id_counts[eid] = 0
         
         # Just create this every time as it is very fast.
         for _i, event in enumerate(self.events):
