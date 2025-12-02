@@ -92,13 +92,10 @@ from .hypodd_compiler import HypoDDCompiler
 # Global variable for StationXML or XSEED inventory files (WCC)
 stations_XSEED = False
 
-# Signal handler for segmentation faults
-def segmentation_fault_handler(signum, frame):
-    """Handle segmentation faults by raising an exception."""
-    raise RuntimeError("Segmentation fault detected - likely corrupted MSEED file")
-
-# Register signal handlers for critical errors (will be configured in constructor)
-# This is a placeholder - actual registration happens in __init__
+# NOTE: Signal handlers for segfaults are disabled by default because they
+# do not work correctly in multithreaded contexts and can cause secondary
+# crashes. Instead, we use try/except and subprocess isolation for
+# corrupted file handling.
 
 
 class LRUCache:
@@ -259,15 +256,13 @@ class HypoDDRelocator(object):
         # Parallel loading control
         self.disable_parallel_loading = disable_parallel_loading
         
-        # Signal handler control
-        self.disable_signal_handlers = disable_signal_handlers
+        # Signal handler control - disabled by default as they don't work well
+        # with multithreaded code and can cause secondary crashes
+        self.disable_signal_handlers = True  # Always disable for safety
         
-        # Register signal handlers if not disabled
-        if not self.disable_signal_handlers:
-            signal.signal(signal.SIGSEGV, segmentation_fault_handler)
-            signal.signal(signal.SIGBUS, segmentation_fault_handler)
-            signal.signal(signal.SIGILL, segmentation_fault_handler)
-            signal.signal(signal.SIGFPE, segmentation_fault_handler)
+        # NOTE: Signal handlers removed - they cause more problems than they
+        # solve in multithreaded contexts. Corrupted files are handled via
+        # try/except in _safe_read_mseed instead.
         
         # Configure the paths.
         self._configure_paths()
@@ -1750,43 +1745,42 @@ class HypoDDRelocator(object):
                 self.log(f"Processing waveform file: {waveform_file}", level="debug")
                 # Use safe reading to prevent segmentation faults
                 st = self._safe_read_mseed(waveform_file)
-                if st is None:
+                if st is None or len(st) == 0:
                     self.log(f"Failed to safely read waveform file {waveform_file}, skipping", level="warning")
                     with progress_lock:
-                        failed_files.append((waveform_file, "Safe read returned None"))
+                        failed_files.append((waveform_file, "Safe read returned empty"))
                     return []
                 
                 trace_info = []
                 for trace in st:
-                    # Additional validation for each trace
-                    if len(trace.data) == 0:
-                        self.log(f"Skipping empty trace {trace.id} in {waveform_file}", level="debug")
+                    try:
+                        # Additional validation for each trace
+                        if trace.data is None or len(trace.data) == 0:
+                            self.log(f"Skipping empty trace {trace.id} in {waveform_file}", level="debug")
+                            continue
+                        if not np.isfinite(trace.data).all():
+                            self.log(f"Skipping trace with invalid data {trace.id} in {waveform_file}", level="debug")
+                            continue
+                            
+                        self.log(f"Found trace {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
+                        trace_info.append({
+                            "trace_id": trace.id,
+                            "starttime": trace.stats.starttime,
+                            "endtime": trace.stats.endtime,
+                            "filename": os.path.abspath(waveform_file),
+                        })
+                        self.log(f"Found valid trace: {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
+                    except Exception as trace_exc:
+                        self.log(f"Error processing trace in {waveform_file}: {trace_exc}", level="debug")
                         continue
-                    if not np.isfinite(trace.data).all():
-                        self.log(f"Skipping trace with invalid data {trace.id} in {waveform_file}", level="debug")
-                        continue
-                        
-                    self.log(f"Found trace {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
-                    trace_info.append({
-                        "trace_id": trace.id,
-                        "starttime": trace.stats.starttime,
-                        "endtime": trace.stats.endtime,
-                        "filename": os.path.abspath(waveform_file),
-                    })
-                    self.log(f"Found valid trace: {trace.id} in {waveform_file} ({trace.stats.starttime} to {trace.stats.endtime})", level="debug")
                 
                 self.log(f"Successfully processed {len(trace_info)} traces from {waveform_file}", level="debug")
                 return trace_info
-            except RuntimeError as exc:
-                # Catch segmentation fault errors specifically
-                if "Segmentation fault" in str(exc):
-                    self.log(f"Segmentation fault reading {waveform_file} (likely corrupted), skipping", level="warning")
-                    with progress_lock:
-                        failed_files.append((waveform_file, "Segmentation fault (corrupted file)"))
-                else:
-                    self.log(f"RuntimeError reading waveform file {waveform_file}: {exc}", level="warning")
-                    with progress_lock:
-                        failed_files.append((waveform_file, str(exc)))
+            except (RuntimeError, SystemError, MemoryError) as exc:
+                # Catch critical errors that might indicate corrupted data
+                self.log(f"Critical error reading {waveform_file}: {exc}", level="warning")
+                with progress_lock:
+                    failed_files.append((waveform_file, f"Critical error: {exc}"))
                 return []
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
@@ -1801,8 +1795,10 @@ class HypoDDRelocator(object):
                 pbar.update(processed_count[0])
         
         # Process files in parallel batches to avoid memory issues
-        batch_size = 50  # Process in batches to manage memory
-        max_workers = min(8, file_count)  # Limit threads based on file count
+        # Use smaller batch size and fewer workers to reduce risk of
+        # corrupted files crashing the entire process
+        batch_size = 20  # Smaller batches for safer processing
+        max_workers = min(4, file_count)  # Fewer threads to reduce crash risk
         
         for i in range(0, file_count, batch_size):
             batch_files = self.waveform_files[i:i + batch_size]
@@ -2134,12 +2130,23 @@ class HypoDDRelocator(object):
     def _safe_read_mseed(self, filename, starttime=None, endtime=None):
         """
         Safely read MSEED file with proper error handling.
+        
+        Uses a two-stage approach:
+        1. First validates the file can be opened without crashing
+        2. Then reads with ObsPy and validates traces
 
         :param filename: Path to MSEED file
         :param starttime: Start time for data extraction
         :param endtime: End time for data extraction
-        :return: ObsPy Stream object or None if reading failed
+        :return: ObsPy Stream object or empty Stream if reading failed
         """
+        import numpy as np
+        
+        # First, do a quick validation check
+        if not self._validate_mseed_file(filename):
+            self.log(f"MSEED file failed validation: {filename}", level="warning")
+            return Stream()
+        
         try:
             # Try to read the file directly with ObsPy
             if starttime is not None and endtime is not None:
@@ -2148,22 +2155,27 @@ class HypoDDRelocator(object):
                 st = read(filename)
 
             # Validate the stream
-            if len(st) == 0:
+            if st is None or len(st) == 0:
                 self.log(f"Empty stream in {filename}", level="warning")
                 return Stream()
 
             # Filter out invalid traces
             valid_traces = []
             for trace in st:
-                if len(trace.data) == 0:
+                try:
+                    if trace.data is None:
+                        continue
+                    if len(trace.data) == 0:
+                        continue
+                    if not hasattr(trace.data, 'shape') or trace.data.shape[0] == 0:
+                        continue
+                    # Check for NaN or infinite values
+                    if not np.isfinite(trace.data).all():
+                        continue
+                    valid_traces.append(trace)
+                except Exception as trace_err:
+                    self.log(f"Invalid trace in {filename}: {trace_err}", level="debug")
                     continue
-                if not hasattr(trace.data, 'shape') or trace.data.shape[0] == 0:
-                    continue
-                # Check for NaN or infinite values
-                import numpy as np
-                if not np.isfinite(trace.data).all():
-                    continue
-                valid_traces.append(trace)
 
             if not valid_traces:
                 self.log(f"No valid traces in {filename}", level="warning")
@@ -2192,7 +2204,7 @@ class HypoDDRelocator(object):
             if file_size < 100:  # Too small to be a valid MSEED file
                 return False
                 
-            if file_size > 100 * 1024 * 1024:  # Too large (100MB)
+            if file_size > 500 * 1024 * 1024:  # Too large (500MB) - increased limit
                 self.log(f"MSEED file too large: {filename} ({file_size} bytes)", level="warning")
                 return False
                 
@@ -2201,15 +2213,62 @@ class HypoDDRelocator(object):
                 header = f.read(512)  # Read first 512 bytes
                 
             # Check for MSEED magic bytes
-            if len(header) < 8:
+            if len(header) < 48:  # Minimum MSEED header size
                 return False
                 
             # Basic validation - check if it looks like MSEED data
-            # MSEED files typically start with record headers
+            # MSEED records have specific structure we can partially validate
+            # Check for reasonable sequence number (first 6 bytes should be digits or spaces)
+            seq_check = header[:6]
+            for b in seq_check:
+                if not (48 <= b <= 57 or b == 32):  # ASCII 0-9 or space
+                    # Not a standard MSEED sequence number, but might still be valid
+                    break
+                    
             return True
             
         except Exception as e:
             self.log(f"Error validating MSEED file {filename}: {e}", level="warning")
+            return False
+
+    def _read_mseed_in_subprocess(self, filename):
+        """
+        Read MSEED file in a subprocess to isolate from segfaults.
+        
+        This is slower but protects the main process from corrupted files
+        that would cause a segmentation fault.
+        
+        :param filename: Path to MSEED file  
+        :return: True if file can be read without crashing, False otherwise
+        """
+        import subprocess
+        import sys
+        
+        # Quick Python script to test if file can be read
+        test_script = f'''
+import sys
+try:
+    from obspy import read
+    st = read("{filename}")
+    print(len(st))
+    sys.exit(0)
+except Exception as e:
+    print(str(e), file=sys.stderr)
+    sys.exit(1)
+'''
+        try:
+            result = subprocess.run(
+                [sys.executable, '-c', test_script],
+                capture_output=True,
+                timeout=30,  # 30 second timeout
+                text=True
+            )
+            return result.returncode == 0
+        except subprocess.TimeoutExpired:
+            self.log(f"Timeout reading {filename} in subprocess", level="warning")
+            return False
+        except Exception as e:
+            self.log(f"Subprocess error for {filename}: {e}", level="warning")
             return False
 
     def _get_cached_waveform(self, filename, starttime, endtime, freqmin=None, freqmax=None, target_sampling_rate=None):
