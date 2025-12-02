@@ -2279,29 +2279,36 @@ class HypoDDRelocator(object):
         # Python script to extract trace metadata safely in a child process
         # It will print a JSON array of objects with id/starttime/endtime
         # so the parent process can reconstruct minimal trace objects.
-        start_arg = f'"{starttime}"' if starttime is not None else 'None'
-        end_arg = f'"{endtime}"' if endtime is not None else 'None'
-        test_script = f'''
-import sys, json
-from obspy import read
-from obspy import UTCDateTime
-try:
-    st = read(r"{filename}"{', starttime=UTCDateTime(' + start_arg + ')' if starttime is not None else ''}{', endtime=UTCDateTime(' + end_arg + ')' if endtime is not None else ''})
-    out = []
-    for tr in st:
-        out.append({
-            'id': tr.id,
-            'starttime': str(tr.stats.starttime),
-            'endtime': str(tr.stats.endtime),
-            'npts': int(getattr(tr.stats, 'npts', 1)),
-            'sampling_rate': float(getattr(tr.stats, 'sampling_rate', 1.0)),
-        })
-    print(json.dumps(out))
-    sys.exit(0)
-except Exception as e:
-    sys.stderr.write(str(e))
-    sys.exit(1)
-'''
+        # Build a safe Python expression for the read() args (use repr to
+        # escape strings). Avoid f-strings for the whole script to prevent
+        # accidental interpolation of inner braces.
+        read_args = repr(filename)
+        if starttime is not None:
+            read_args += ", starttime=UTCDateTime(%r)" % str(starttime)
+        if endtime is not None:
+            read_args += ", endtime=UTCDateTime(%r)" % str(endtime)
+
+        test_script = (
+            "import sys, json\n"
+            "from obspy import read\n"
+            "from obspy import UTCDateTime\n"
+            "try:\n"
+            "    st = read(%s)\n" % read_args
+            "    out = []\n"
+            "    for tr in st:\n"
+            "        out.append({\n"
+            "            'id': tr.id,\n"
+            "            'starttime': str(tr.stats.starttime),\n"
+            "            'endtime': str(tr.stats.endtime),\n"
+            "            'npts': int(getattr(tr.stats, 'npts', 1)),\n"
+            "            'sampling_rate': float(getattr(tr.stats, 'sampling_rate', 1.0)),\n"
+            "        })\n"
+            "    print(json.dumps(out))\n"
+            "    sys.exit(0)\n"
+            "except Exception as e:\n"
+            "    sys.stderr.write(str(e))\n"
+            "    sys.exit(1)\n"
+        )
         try:
             result = subprocess.run(
                 [sys.executable, '-c', test_script],
