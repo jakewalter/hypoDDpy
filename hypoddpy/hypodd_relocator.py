@@ -144,6 +144,7 @@ class HypoDDRelocator(object):
         ph2dt_parameters=None,
         disable_parallel_loading=False,
         disable_signal_handlers=False,
+        use_subprocess_safe_reads=False,
     ):
         """
         :param working_dir: The working directory where all temporary and final
@@ -255,6 +256,10 @@ class HypoDDRelocator(object):
         
         # Parallel loading control
         self.disable_parallel_loading = disable_parallel_loading
+
+        # When True, all MSEED reads use a subprocess to avoid segfaults in
+        # the main process. This is slower but isolates corrupted files.
+        self.use_subprocess_safe_reads = use_subprocess_safe_reads
         
         # Signal handler control - disabled by default as they don't work well
         # with multithreaded code and can cause secondary crashes
@@ -2147,6 +2152,33 @@ class HypoDDRelocator(object):
             self.log(f"MSEED file failed validation: {filename}", level="warning")
             return Stream()
         
+        # If configured to use subprocess-isolated reads, use that path
+        if getattr(self, "use_subprocess_safe_reads", False):
+            metadata = self._read_mseed_in_subprocess(filename, starttime, endtime)
+            if not metadata:
+                self.log(f"Subprocess read failed or produced no metadata for {filename}", level="warning")
+                return Stream()
+            # Build minimal Trace objects from metadata (no real samples)
+            traces = []
+            from obspy.core.trace import Trace as ObsTrace
+            from obspy import UTCDateTime
+            for md in metadata:
+                try:
+                    data = np.array([0.0], dtype=float)
+                    tr = ObsTrace(data=data)
+                    tr.stats.starttime = UTCDateTime(md.get("starttime"))
+                    # set endtime explicitly for downstream checks
+                    tr.stats.endtime = UTCDateTime(md.get("endtime"))
+                    tr.id = md.get("id")
+                    # keep minimal stats
+                    tr.stats.npts = 1
+                    tr.stats.sampling_rate = md.get("sampling_rate", 1.0)
+                    traces.append(tr)
+                except Exception as e:
+                    self.log(f"Failed creating proxy trace for {filename}: {e}", level="debug")
+                    continue
+            return Stream(traces)
+
         try:
             # Try to read the file directly with ObsPy
             if starttime is not None and endtime is not None:
@@ -2231,7 +2263,7 @@ class HypoDDRelocator(object):
             self.log(f"Error validating MSEED file {filename}: {e}", level="warning")
             return False
 
-    def _read_mseed_in_subprocess(self, filename):
+    def _read_mseed_in_subprocess(self, filename, starttime=None, endtime=None, timeout=30):
         """
         Read MSEED file in a subprocess to isolate from segfaults.
         
@@ -2244,26 +2276,50 @@ class HypoDDRelocator(object):
         import subprocess
         import sys
         
-        # Quick Python script to test if file can be read
+        # Python script to extract trace metadata safely in a child process
+        # It will print a JSON array of objects with id/starttime/endtime
+        # so the parent process can reconstruct minimal trace objects.
+        start_arg = f'"{starttime}"' if starttime is not None else 'None'
+        end_arg = f'"{endtime}"' if endtime is not None else 'None'
         test_script = f'''
-import sys
+import sys, json
+from obspy import read
+from obspy import UTCDateTime
 try:
-    from obspy import read
-    st = read("{filename}")
-    print(len(st))
+    st = read(r"{filename}"{', starttime=UTCDateTime(' + start_arg + ')' if starttime is not None else ''}{', endtime=UTCDateTime(' + end_arg + ')' if endtime is not None else ''})
+    out = []
+    for tr in st:
+        out.append({
+            'id': tr.id,
+            'starttime': str(tr.stats.starttime),
+            'endtime': str(tr.stats.endtime),
+            'npts': int(getattr(tr.stats, 'npts', 1)),
+            'sampling_rate': float(getattr(tr.stats, 'sampling_rate', 1.0)),
+        })
+    print(json.dumps(out))
     sys.exit(0)
 except Exception as e:
-    print(str(e), file=sys.stderr)
+    sys.stderr.write(str(e))
     sys.exit(1)
 '''
         try:
             result = subprocess.run(
                 [sys.executable, '-c', test_script],
                 capture_output=True,
-                timeout=30,  # 30 second timeout
-                text=True
+                timeout=timeout,  # timeout seconds
+                text=True,
             )
-            return result.returncode == 0
+            if result.returncode != 0:
+                # Log stderr and return None to indicate failure
+                self.log(f"Subprocess read failed for {filename}: {result.stderr.strip()}", level="debug")
+                return None
+            # Parse JSON metadata
+            try:
+                metadata = json.loads(result.stdout)
+                return metadata
+            except Exception as e:
+                self.log(f"Failed to parse subprocess JSON output for {filename}: {e}", level="debug")
+                return None
         except subprocess.TimeoutExpired:
             self.log(f"Timeout reading {filename} in subprocess", level="warning")
             return False
