@@ -2152,40 +2152,18 @@ class HypoDDRelocator(object):
             self.log(f"MSEED file failed validation: {filename}", level="warning")
             return Stream()
         
-        # If configured to use subprocess-isolated reads, use that path
+        # If configured to use subprocess-isolated reads, first validate the file
+        # can be read safely via subprocess, then read the actual data directly.
+        # This protects against segfaults from corrupted files while still
+        # providing real waveform data for cross-correlation.
         if getattr(self, "use_subprocess_safe_reads", False):
             metadata = self._read_mseed_in_subprocess(filename, starttime, endtime)
             if not metadata:
-                self.log(f"Subprocess read failed or produced no metadata for {filename}", level="warning")
+                self.log(f"Subprocess validation failed for {filename}, skipping", level="warning")
                 return Stream()
-            # Build lightweight proxy trace-like objects from metadata
-            from types import SimpleNamespace
-            from obspy import UTCDateTime
-
-            traces = []
-            for md in metadata:
-                try:
-                    stats = SimpleNamespace()
-                    stats.starttime = UTCDateTime(md.get("starttime"))
-                    stats.endtime = UTCDateTime(md.get("endtime"))
-                    stats.npts = int(md.get("npts", 1))
-                    stats.channel = md.get("id", "").split(".")[-1]
-                    stats.sampling_rate = float(md.get("sampling_rate", 1.0))
-
-                    tr = SimpleNamespace()
-                    tr.id = md.get("id")
-                    tr.stats = stats
-                    # provide a tiny data array so downstream checks pass
-                    tr.data = np.array([0.0], dtype=float)
-                    traces.append(tr)
-                except Exception as e:
-                    self.log(f"Failed creating proxy trace for {filename}: {e}", level="debug")
-                    continue
-
-            # Return a plain list of lightweight traces (consumer code treats
-            # Streams/lists the same when iterating). This avoids creating
-            # huge arrays for long traces while keeping metadata accurate.
-            return traces
+            # File passed subprocess validation - now read actual data directly
+            self.log(f"File {filename} passed subprocess validation, reading actual data", level="debug")
+            # Fall through to the normal read path below
 
         try:
             # Try to read the file directly with ObsPy
@@ -2427,66 +2405,6 @@ class HypoDDRelocator(object):
                 return Stream()
             
             self.log(f"Successfully loaded {len(st)} traces from {filename}", level="debug")
-            
-            # If _safe_read_mseed returned lightweight proxy traces (list/namespace),
-            # convert them to minimal ObsPy Trace objects so downstream logic
-            # which expects Stream/Trace works.
-            from types import SimpleNamespace
-            from obspy.core.trace import Trace as ObsTrace
-            if isinstance(st, list):
-                converted = []
-                for tr in st:
-                    if isinstance(tr, SimpleNamespace) and not isinstance(tr, ObsTrace):
-                        try:
-                            # Get real npts from proxy metadata - this is critical for
-                            # correct endtime computation (endtime = starttime + (npts-1)/sampling_rate)
-                            real_npts = getattr(tr.stats, 'npts', 1)
-                            real_sr = getattr(tr.stats, 'sampling_rate', 1.0)
-                            
-                            # Create minimal data array matching npts so endtime computes correctly
-                            # For very large npts, use a smaller array but preserve the time range
-                            if real_npts > 10000:
-                                # Compute duration from starttime/endtime if available
-                                proxy_starttime = getattr(tr.stats, 'starttime', None)
-                                proxy_endtime = getattr(tr.stats, 'endtime', None)
-                                if proxy_starttime and proxy_endtime:
-                                    duration = float(proxy_endtime - proxy_starttime)
-                                    # Use a reasonable npts (e.g. 1000 samples) but adjust sampling rate
-                                    # so that endtime is computed correctly
-                                    synthetic_npts = 1000
-                                    if duration > 0:
-                                        synthetic_sr = (synthetic_npts - 1) / duration
-                                    else:
-                                        synthetic_sr = real_sr
-                                    data = np.zeros(synthetic_npts, dtype=float)
-                                    obs = ObsTrace(data=data)
-                                    obs.stats.starttime = proxy_starttime
-                                    obs.stats.sampling_rate = synthetic_sr
-                                else:
-                                    # Fallback to 1 sample
-                                    data = np.array([0.0], dtype=float)
-                                    obs = ObsTrace(data=data)
-                                    obs.stats.starttime = proxy_starttime
-                                    obs.stats.sampling_rate = real_sr
-                            else:
-                                # npts is small enough - create array matching true npts
-                                data = np.zeros(max(1, real_npts), dtype=float)
-                                obs = ObsTrace(data=data)
-                                obs.stats.starttime = getattr(tr.stats, 'starttime', None)
-                                obs.stats.sampling_rate = real_sr
-                            
-                            # set minimal stats
-                            obs.id = getattr(tr, 'id', '')
-                            # channel if present
-                            if hasattr(tr.stats, 'channel'):
-                                obs.stats.channel = tr.stats.channel
-                            converted.append(obs)
-                        except Exception as e:
-                            self.log(f"Failed to convert proxy trace: {e}", level="debug")
-                            continue
-                    else:
-                        converted.append(tr)
-                st = Stream(converted)
 
             # Check for corrupted traces
             valid_traces = []
