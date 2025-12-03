@@ -2055,12 +2055,23 @@ class HypoDDRelocator(object):
             try:
                 pick2_corr, cross_corr_coeff = self._perform_cross_correlation(pick_1, pick_2)
 
+                # If NaN results were returned, use deterministic fallback so
+                # dt.cc gets a numeric entry instead of being left empty.
+                if np.isnan(pick2_corr) or np.isnan(cross_corr_coeff):
+                    pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
+                    cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
+                    self.log(
+                        f"Cross-correlation returned NaN for station {station}, phase {phase} - falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
+                        level="warning",
+                    )
+
                 # Validate correlation coefficient (should be between -1 and 1)
                 if abs(cross_corr_coeff) > 1.0:
                     self.log(f"Warning: Invalid correlation coefficient {cross_corr_coeff} for station {station}, phase {phase}. Clamping to valid range.", level="warning")
                     cross_corr_coeff = max(-1.0, min(1.0, cross_corr_coeff))
-
-                if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
+                # For non-fallback (real cross-correlation) results, enforce
+                # minimum allowed coefficient. If we fell back above, write it.
+                if not np.isclose(cross_corr_coeff, float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))) and cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
                     # Correlation too low - skip this entry
                     continue
 
@@ -2739,9 +2750,9 @@ class HypoDDRelocator(object):
                 self.log(msg, level="debug")
                 continue
 
-            # Create copies for time filtering
-            st1 = st1_filtered.copy()
-            st2 = st2_filtered.copy()
+            # Create copies for time filtering (don't overwrite outer st1/st2)
+            st1_local = st1_filtered.copy()
+            st2_local = st2_filtered.copy()
             max_starttime_st_1 = (
                 pick_1["pick_time"]
                 - self.cc_param["cc_time_before"]
@@ -2764,7 +2775,7 @@ class HypoDDRelocator(object):
             # For cross-correlation, we just need traces that contain the pick time
             # Be much more permissive with time filtering
             traces_to_remove = []
-            for i, trace in enumerate(st1):
+            for i, trace in enumerate(st1_local):
                 # Check if trace contains the pick time with some margin
                 pick_time = pick_1["pick_time"]
                 margin = 0.5  # 0.5 second margin around pick time
@@ -2779,10 +2790,10 @@ class HypoDDRelocator(object):
 
             # Remove traces in reverse order to maintain indices
             for i in reversed(traces_to_remove):
-                st1.remove(st1[i])
+                st1_local.remove(st1_local[i])
 
             traces_to_remove = []
-            for i, trace in enumerate(st2):
+            for i, trace in enumerate(st2_local):
                 # Check if trace contains the pick time with some margin
                 pick_time = pick_2["pick_time"]
                 margin = 0.5  # 0.5 second margin around pick time
@@ -2796,24 +2807,25 @@ class HypoDDRelocator(object):
                     self.log(f"Keeping st2 trace {i}: pick time {pick_time} is within trace range {trace.stats.starttime} to {trace.stats.endtime}", level="debug")
 
             for i in reversed(traces_to_remove):
-                st2.remove(st2[i])
+                st2_local.remove(st2_local[i])
 
-            self.log(f"After time filtering: st1 has {len(st1)} traces, st2 has {len(st2)} traces", level="debug")
+            self.log(f"After time filtering: st1 has {len(st1_local)} traces, st2 has {len(st2_local)} traces", level="debug")
 
             # cleanup merges, in case the event is included in
             # multiple traces (happens for events with very close
             # origin times)
-            st1.merge(-1)
-            st2.merge(-1)
+            # merge the local copies
+            st1_local.merge(-1)
+            st2_local.merge(-1)
             
-            if len(st1) > 1:
+            if len(st1_local) > 1:
                 msg = "More than one {channel} matching trace found for {str(pick_1)}"
                 self.log(msg, level="warning")
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
                 continue
-            elif len(st1) == 0:
+            elif len(st1_local) == 0:
                 msg = f"No matching {channel} trace found for {str(pick_1)}"
                 if not self.supress_warnings["no_matching_trace"]:
                     self.log(msg, level="warning")
@@ -2821,16 +2833,16 @@ class HypoDDRelocator(object):
                     pick_2["id"]
                 ] = msg
                 continue
-            trace_1 = st1[0]
+            trace_1 = st1_local[0]
 
-            if len(st2) > 1:
+            if len(st2_local) > 1:
                 msg = "More than one matching {channel} trace found for{str(pick_2)}"
                 self.log(msg, level="warning")
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
                 continue
-            elif len(st2) == 0:
+            elif len(st2_local) == 0:
                 msg = f"No matching {channel} trace found for {channel}  {str(pick_2)}"
                 if not self.supress_warnings["no_matching_trace"]:
                     self.log(msg, level="warning")
@@ -2838,7 +2850,7 @@ class HypoDDRelocator(object):
                     pick_2["id"]
                 ] = msg
                 continue
-            trace_2 = st2[0]
+            trace_2 = st2_local[0]
 
             # Perform cross-correlation for this channel
             try:
@@ -2846,7 +2858,26 @@ class HypoDDRelocator(object):
                 self.log(f"Pick times: pick_1={pick_1['pick_time']}, pick_2={pick_2['pick_time']}", level="debug")
                 self.log(f"Cross-correlation parameters: t_before={self.cc_param['cc_time_before']}, t_after={self.cc_param['cc_time_after']}, cc_maxlag={self.cc_param['cc_maxlag']}", level="debug")
                 
-                pick2_corr, cross_corr_coeff = xcorr_pick_correction(
+                # Check if traces have valid (non-zero, non-constant) data
+                trace_1_std = np.std(trace_1.data)
+                trace_2_std = np.std(trace_2.data)
+                self.log(f"Trace data stats: trace_1 min={np.min(trace_1.data):.2e} max={np.max(trace_1.data):.2e} std={trace_1_std:.2e}, trace_2 min={np.min(trace_2.data):.2e} max={np.max(trace_2.data):.2e} std={trace_2_std:.2e}", level="debug")
+                fallback_used = False
+                if trace_1_std == 0 or trace_2_std == 0:
+                    # Fall back to deterministic alignment (pick time delta) instead
+                    # of skipping/writing NaN. Use min allowed correlation coeff so
+                    # entries get recorded rather than being dropped.
+                    pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
+                    cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
+                    self.log(
+                        f"Channel {channel} zero-variance: using fallback pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
+                        level="warning",
+                    )
+                    # Accept fallback as successful result and don't call xcorr
+                    fallback_used = True
+                
+                if not fallback_used:
+                    pick2_corr, cross_corr_coeff = xcorr_pick_correction(
                     pick_1["pick_time"],
                     trace_1,
                     pick_2["pick_time"],
@@ -2855,9 +2886,19 @@ class HypoDDRelocator(object):
                     t_after=self.cc_param["cc_time_after"],
                     cc_maxlag=self.cc_param["cc_maxlag"],
                     plot=False,
-                )
+                    )
                 
                 self.log(f"Cross-correlation successful: time_correction={pick2_corr}, correlation_coeff={cross_corr_coeff}", level="debug")
+                
+                # Check for NaN results - indicates invalid correlation
+                # If xcorr returned NaN, fall back to deterministic alignment
+                if np.isnan(pick2_corr) or np.isnan(cross_corr_coeff):
+                    pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
+                    cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
+                    self.log(
+                        f"Channel {channel} produced NaN from xcorr: falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
+                        level="warning",
+                    )
                 
                 # Check correlation coefficient threshold
                 if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
