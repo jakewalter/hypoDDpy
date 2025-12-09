@@ -145,6 +145,7 @@ class HypoDDRelocator(object):
         disable_parallel_loading=False,
         disable_signal_handlers=False,
         use_subprocess_safe_reads=False,
+        use_fdsn_station_lookup=False,
     ):
         """
         :param working_dir: The working directory where all temporary and final
@@ -260,6 +261,11 @@ class HypoDDRelocator(object):
         # When True, all MSEED reads use a subprocess to avoid segfaults in
         # the main process. This is slower but isolates corrupted files.
         self.use_subprocess_safe_reads = use_subprocess_safe_reads
+        # When True, if a station referenced by a pick is not found in
+        # supplied station files, attempt to query FDSN (ObsPy client) for
+        # station metadata and add it to the station list. Disabled by
+        # default because it makes external network requests.
+        self.use_fdsn_station_lookup = use_fdsn_station_lookup
         
         # Signal handler control - disabled by default as they don't work well
         # with multithreaded code and can cause secondary crashes
@@ -271,6 +277,9 @@ class HypoDDRelocator(object):
         
         # Configure the paths.
         self._configure_paths()
+
+        # Small cache for FDSN lookups so we don't hit the service repeatedly
+        self._fdsn_station_cache = {}
 
     def start_relocation(
         self,
@@ -556,6 +565,80 @@ class HypoDDRelocator(object):
         self.log(f"Parallel station parsing completed in {parsing_time:.2f} seconds")
         self.log(f"Average speed: {file_count/parsing_time:.1f} files/second")
         self.log(f"Total stations parsed: {len(self.stations)}")
+
+    def _fetch_station_metadata_from_fdsn(self, network_code, station_code):
+        """
+        Try to fetch station metadata from an FDSN web service using ObsPy.
+
+        :param network_code: Network code string or None/empty
+        :param station_code: Station code string (required)
+        :return: dict with station_id -> metadata if successful, otherwise None
+        """
+        # Avoid repeated lookups for same key
+        cache_key = (network_code or "", station_code)
+        if cache_key in self._fdsn_station_cache:
+            return self._fdsn_station_cache[cache_key]
+
+        try:
+            from obspy.clients.fdsn import Client
+            from obspy import UTCDateTime
+        except Exception as e:
+            self.log(f"FDSN lookup requested but ObsPy client not available: {e}", level="warning")
+            self._fdsn_station_cache[cache_key] = None
+            return None
+
+        # Try default provider (IRIS), more providers may be supported later
+        client = Client("IRIS")
+
+        try:
+            # If network_code is provided, restrict search
+            if network_code:
+                inv = client.get_stations(network=network_code, station=station_code, level="station")
+            else:
+                # No network code - search across all networks for this station
+                inv = client.get_stations(station=station_code, level="station")
+
+            if inv is None or len(inv) == 0:
+                self.log(f"FDSN returned no inventory for {network_code or '*'}.{station_code}", level="debug")
+                self._fdsn_station_cache[cache_key] = None
+                return None
+
+            station_data = {}
+            # Use the first network/station match; if multiple found we simply add them
+            for net in inv:
+                for sta in net:
+                    station_id = f"{net.code}.{sta.code}"
+                    if len(station_id) > 7:
+                        short_id = sta.code
+                    else:
+                        short_id = station_id
+
+                    latitude = getattr(sta, 'latitude', None)
+                    longitude = getattr(sta, 'longitude', None)
+                    elevation = getattr(sta, 'elevation', None)
+                    try:
+                        elevation = int(round(elevation)) if elevation is not None else 0
+                    except Exception:
+                        elevation = 0
+
+                    station_data[station_id] = {
+                        "latitude": latitude if latitude is not None else 0.0,
+                        "longitude": longitude if longitude is not None else 0.0,
+                        "elevation": elevation,
+                    }
+
+                    # Also add short form (station-only) for compatibility
+                    if short_id != station_id:
+                        station_data.setdefault(short_id, station_data[station_id])
+
+            self._fdsn_station_cache[cache_key] = station_data
+            self.log(f"FDSN lookup succeeded for {network_code or '*'}.{station_code}: added {len(station_data)} station entries", level="info")
+            return station_data
+
+        except Exception as e:
+            self.log(f"Error during FDSN station lookup for {network_code or '*'}.{station_code}: {e}", level="warning")
+            self._fdsn_station_cache[cache_key] = None
+            return None
 
     def _write_station_input_file(self):
         """
@@ -967,9 +1050,37 @@ class HypoDDRelocator(object):
                             station_found = True
                 
                 if not station_found:
-                    discarded_picks += 1
-                    self.log(f"Warning: Station '{current_pick['station_id']}' not found in station list. Available stations: {station_keys[:5]}{'...' if len(station_keys) > 5 else ''}", level="warning")
-                    continue
+                    # Attempt to query FDSN for missing station metadata if enabled
+                    if self.use_fdsn_station_lookup:
+                        try:
+                            net_code = pick.waveform_id.network_code if hasattr(pick.waveform_id, 'network_code') else None
+                            sta_code = pick.waveform_id.station_code
+                            self.log(f"Station {current_pick['station_id']} not found locally - attempting FDSN lookup for {net_code or '*'}.{sta_code}", level="info")
+                            fetched = self._fetch_station_metadata_from_fdsn(net_code, sta_code)
+                            if fetched:
+                                # Merge fetched stations into local list and mark as found
+                                self.stations.update(fetched)
+                                station_keys = list(self.stations.keys())
+                                # Choose most specific id if available
+                                candidate_full = f"{net_code}.{sta_code}" if net_code else None
+                                if candidate_full and candidate_full in fetched:
+                                    current_pick['station_id'] = candidate_full
+                                    station_found = True
+                                elif sta_code in fetched:
+                                    current_pick['station_id'] = sta_code
+                                    station_found = True
+                                else:
+                                    # If fetched entries exist but keys differ, pick the first
+                                    curkey = next(iter(fetched.keys()))
+                                    current_pick['station_id'] = curkey
+                                    station_found = True
+                        except Exception as e:
+                            self.log(f"FDSN lookup failed for {current_pick['station_id']}: {e}", level="warning")
+
+                    if not station_found:
+                        discarded_picks += 1
+                        self.log(f"Warning: Station '{current_pick['station_id']}' not found in station list. Available stations: {station_keys[:5]}{'...' if len(station_keys) > 5 else ''}", level="warning")
+                        continue
                 current_event["picks"].append(current_pick)
         # Sort events by origin time
         self.events.sort(key=lambda event: event["origin_time"])
@@ -1802,8 +1913,8 @@ class HypoDDRelocator(object):
         # Process files in parallel batches to avoid memory issues
         # Use smaller batch size and fewer workers to reduce risk of
         # corrupted files crashing the entire process
-        batch_size = 20  # Smaller batches for safer processing
-        max_workers = min(4, file_count)  # Fewer threads to reduce crash risk
+        batch_size = 5  # Very small batches for safer processing
+        max_workers = min(2, file_count)  # Even fewer threads to reduce crash risk and contention
         
         for i in range(0, file_count, batch_size):
             batch_files = self.waveform_files[i:i + batch_size]
@@ -1815,10 +1926,12 @@ class HypoDDRelocator(object):
                     for wf_file in batch_files
                 }
                 
-                # Collect results as they complete
-                for future in as_completed(future_to_file):
+                # Collect results as they complete with timeout protection
+                # Each file should complete within 300 seconds; if not, mark as failed
+                for future in as_completed(future_to_file, timeout=300):
+                    wf_file = future_to_file[future]
                     try:
-                        trace_info_list = future.result()
+                        trace_info_list = future.result(timeout=10)  # Get result with timeout
                         for trace_info in trace_info_list:
                             trace_id = trace_info["trace_id"]
                             if trace_id not in self.waveform_information:
@@ -1829,8 +1942,11 @@ class HypoDDRelocator(object):
                                 "filename": trace_info["filename"],
                             })
                             self.log(f"Added trace {trace_id} from {trace_info['filename']} ({trace_info['starttime']} to {trace_info['endtime']})", level="debug")
+                    except TimeoutError:
+                        self.log(f"Timeout reading {wf_file} (likely stuck in I/O), skipping", level="warning")
+                        with progress_lock:
+                            failed_files.append((wf_file, "Timeout (stuck reading)"))
                     except RuntimeError as exc:
-                        wf_file = future_to_file[future]
                         if "Segmentation fault" in str(exc):
                             self.log(f"Segmentation fault processing {wf_file} (likely corrupted), skipping", level="warning")
                             with progress_lock:
@@ -1840,7 +1956,6 @@ class HypoDDRelocator(object):
                             with progress_lock:
                                 failed_files.append((wf_file, str(exc)))
                     except Exception as exc:
-                        wf_file = future_to_file[future]
                         self.log(f"Failed to process waveform file {wf_file}: {exc}", level="warning")
                         with progress_lock:
                             failed_files.append((wf_file, str(exc)))
@@ -1848,7 +1963,12 @@ class HypoDDRelocator(object):
                     
                     update_progress()
         
+        # Explicitly log before finishing progress bar
+        self.log(f"All {file_count} waveform files processed, finalizing progress bar...", level="debug")
+        
         pbar.finish()
+        
+        self.log(f"Progress bar finished successfully", level="debug")
         
         # Log performance
         end_time = time.time()
