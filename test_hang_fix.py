@@ -40,6 +40,9 @@ def test_waveform_parsing_no_hang():
                 cc_maxlag=0.1,
                 cc_filter_min_freq=1,
                 cc_filter_max_freq=20,
+                cc_p_phase_weighting={"Z": 1.0},
+                cc_s_phase_weighting={"Z": 1.0, "E": 1.0, "N": 1.0},
+                cc_min_allowed_cross_corr_coeff=0.6,
                 use_fdsn_station_lookup=False,
             )
             
