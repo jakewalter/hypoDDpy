@@ -222,6 +222,9 @@ class HypoDDRelocator(object):
             "cc_p_phase_weighting": cc_p_phase_weighting,
             "cc_s_phase_weighting": cc_s_phase_weighting,
             "cc_min_allowed_cross_corr_coeff": cc_min_allowed_cross_corr_coeff,
+            "cc_accept_fallback": False,
+            # When enabled, collect per-event-pair debug reasons for failed correlations
+            "cc_debug_mode": False,
         }
         self.cc_results = {}
         self.supress_warnings = {"no_matching_trace": supress_warning_traces}
@@ -248,6 +251,8 @@ class HypoDDRelocator(object):
         # Initialize smart channel mapping system
         self.channel_mapping_cache = {}
         self.station_channel_inventory = {}
+        # Detailed cross-correlation debug info: {(pick1_id,pick2_id): [reasons]}
+        self.cc_debug_info = {}
         
         # Custom channel equivalencies (user can override)
         self.custom_channel_equivalencies = custom_channel_equivalencies or {}
@@ -2175,15 +2180,18 @@ class HypoDDRelocator(object):
             try:
                 pick2_corr, cross_corr_coeff = self._perform_cross_correlation(pick_1, pick_2)
 
-                # If NaN results were returned, use deterministic fallback so
-                # dt.cc gets a numeric entry instead of being left empty.
+                # If NaN results were returned, fall back only if explicitly allowed
                 if np.isnan(pick2_corr) or np.isnan(cross_corr_coeff):
-                    pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
-                    cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
-                    self.log(
-                        f"Cross-correlation returned NaN for station {station}, phase {phase} - falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
-                        level="warning",
-                    )
+                    if self.cc_param.get("cc_accept_fallback", False):
+                        pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
+                        cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
+                        self.log(
+                            f"Cross-correlation returned NaN for station {station}, phase {phase} - falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
+                            level="warning",
+                        )
+                    else:
+                        self.log(f"Cross-correlation returned NaN for station {station}, phase {phase} and cc_accept_fallback disabled - skipping", level="warning")
+                        continue
 
                 # Validate correlation coefficient (should be between -1 and 1)
                 if abs(cross_corr_coeff) > 1.0:
@@ -2688,6 +2696,13 @@ class HypoDDRelocator(object):
         self.waveform_cache = LRUCache(self.waveform_cache.capacity)
         self.log("Waveform cache cleared.")
 
+    def get_cc_debug_info(self, pick1_id, pick2_id):
+        """Return debug information (list of failure reasons) for a pair of picks.
+
+        Returns None if no debug info is available.
+        """
+        return self.cc_debug_info.get((pick1_id, pick2_id))
+
     def get_cache_stats(self):
         """Get cache statistics for monitoring."""
         return {
@@ -2851,6 +2866,9 @@ class HypoDDRelocator(object):
         phase = pick_1["phase"]
         self.log(f"Cross-correlating station {station_id}, phase {phase}", level="debug")
 
+        # Collect reasons for failures to make debugging easier
+        failure_reasons = []
+
         # Find waveform data for the station - use broader time windows for loading
         # Load more data than needed to ensure xcorr_pick_correction has sufficient context
         load_time_before = max(self.cc_param["cc_time_before"] * 2, 2.0)  # At least 2 seconds or 2x the cc window
@@ -2871,6 +2889,15 @@ class HypoDDRelocator(object):
         if not waveform_files1 or not waveform_files2:
             msg = f"No waveform data found for both events for station {station_id}."
             self.log(msg, level="warning")
+            failure_reasons.append(msg)
+            if self.cc_param.get("cc_debug_mode", False):
+                self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
+                # Add helpful info about available keys (limited to a few)
+                try:
+                    sample_keys = list(self.waveform_information.keys())[:6]
+                    self.log(f"cc_debug: available waveform keys (first 6): {sample_keys}", level="debug")
+                except Exception:
+                    pass
             raise HypoDDException(msg)
 
         # Load waveform data using optimized methods
@@ -2907,8 +2934,9 @@ class HypoDDRelocator(object):
             self.log(f"After channel selection for {channel}: st1 has {len(st1_filtered)} traces, st2 has {len(st2_filtered)} traces", level="debug")
 
             if len(st1_filtered) == 0 or len(st2_filtered) == 0:
-                msg = f"No traces found for channel {channel} after filtering"
+                msg = f"No traces found for channel {channel} after filtering (st1={len(st1_filtered)}, st2={len(st2_filtered)})"
                 self.log(msg, level="debug")
+                failure_reasons.append(msg)
                 continue
 
             # Create copies for time filtering (don't overwrite outer st1/st2)
@@ -2980,8 +3008,9 @@ class HypoDDRelocator(object):
             st2_local.merge(-1)
             
             if len(st1_local) > 1:
-                msg = "More than one {channel} matching trace found for {str(pick_1)}"
+                msg = f"More than one {channel} matching trace found for {str(pick_1)}"
                 self.log(msg, level="warning")
+                failure_reasons.append(msg)
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
@@ -2990,6 +3019,7 @@ class HypoDDRelocator(object):
                 msg = f"No matching {channel} trace found for {str(pick_1)}"
                 if not self.supress_warnings["no_matching_trace"]:
                     self.log(msg, level="warning")
+                failure_reasons.append(msg)
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
@@ -2997,8 +3027,9 @@ class HypoDDRelocator(object):
             trace_1 = st1_local[0]
 
             if len(st2_local) > 1:
-                msg = "More than one matching {channel} trace found for{str(pick_2)}"
+                msg = f"More than one matching {channel} trace found for {str(pick_2)}"
                 self.log(msg, level="warning")
+                failure_reasons.append(msg)
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
@@ -3007,6 +3038,7 @@ class HypoDDRelocator(object):
                 msg = f"No matching {channel} trace found for {channel}  {str(pick_2)}"
                 if not self.supress_warnings["no_matching_trace"]:
                     self.log(msg, level="warning")
+                failure_reasons.append(msg)
                 self.cc_results.setdefault(pick_1["id"], {})[
                     pick_2["id"]
                 ] = msg
@@ -3036,6 +3068,21 @@ class HypoDDRelocator(object):
                     )
                     # Accept fallback as successful result and don't call xcorr
                     fallback_used = True
+                    # If fallbacks are not enabled, treat this as a failed correlation
+                    if not self.cc_param.get("cc_accept_fallback", False):
+                        detail = {
+                            'reason': 'zero_variance',
+                            'trace1_std': float(trace_1_std),
+                            'trace2_std': float(trace_2_std),
+                            'trace1_npts': int(len(trace_1.data)),
+                            'trace2_npts': int(len(trace_2.data)),
+                        }
+                        msg = f"Fallback alignment used for station {station_id}, channel {channel} due to zero-variance: {detail}"
+                        self.log(msg, level="debug")
+                        failure_reasons.append(msg)
+                        if self.cc_param.get("cc_debug_mode", False):
+                            self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
+                        raise HypoDDException(msg)
                 
                 if not fallback_used:
                     pick2_corr, cross_corr_coeff = xcorr_pick_correction(
@@ -3054,15 +3101,35 @@ class HypoDDRelocator(object):
                 # Check for NaN results - indicates invalid correlation
                 # If xcorr returned NaN, fall back to deterministic alignment
                 if np.isnan(pick2_corr) or np.isnan(cross_corr_coeff):
-                    pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
-                    cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
-                    self.log(
-                        f"Channel {channel} produced NaN from xcorr: falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
-                        level="warning",
-                    )
+                    # Handle NaN results from xcorr. Only accept deterministic fallback
+                    # if configuration explicitly allows it. Otherwise raise to signal
+                    # that this channel/station should be skipped.
+                    if self.cc_param.get("cc_accept_fallback", False):
+                        pick2_corr = float(pick_1["pick_time"] - pick_2["pick_time"])
+                        cross_corr_coeff = float(self.cc_param.get("cc_min_allowed_cross_corr_coeff", 0.0))
+                        self.log(
+                            f"Channel {channel} produced NaN from xcorr: falling back pick2_corr={pick2_corr}, corr_coeff={cross_corr_coeff}",
+                            level="warning",
+                        )
+                        fallback_used = True
+                    else:
+                        detail = {
+                            'reason': 'nan_from_xcorr',
+                            'trace1_std': float(trace_1_std),
+                            'trace2_std': float(trace_2_std),
+                        }
+                        msg = f"Channel {channel} produced NaN from xcorr and cc_accept_fallback is False; details: {detail}"
+                        self.log(msg, level="debug")
+                        failure_reasons.append(msg)
+                        if self.cc_param.get("cc_debug_mode", False):
+                            self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
+                        raise HypoDDException(msg)
                 
                 # Check correlation coefficient threshold
                 if cross_corr_coeff < self.cc_param["cc_min_allowed_cross_corr_coeff"]:
+                    msg = f"Channel {channel} correlation too low: {cross_corr_coeff} < {self.cc_param['cc_min_allowed_cross_corr_coeff']}"
+                    self.log(msg, level="debug")
+                    failure_reasons.append(msg)
                     continue  # Try next channel
                 
                 # Found good correlation, return result
@@ -3071,12 +3138,19 @@ class HypoDDRelocator(object):
             except Exception as exc:
                 msg = f"Error during cross-correlation for station {station_id}, channel {channel}: {exc}"
                 self.log(msg, level="warning")
+                failure_reasons.append(msg)
+                # Store reasons if debug mode enabled
+                if self.cc_param.get("cc_debug_mode", False):
+                    self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
                 continue  # Try next channel
         
         # If we get here, no channels produced valid cross-correlations
         msg = f"No valid cross-correlation found for station {station_id} with any channel"
-        self.log(msg, level="warning")
-        raise HypoDDException(msg)
+        detailed = msg + "; reasons: " + "; ".join(failure_reasons)
+        self.log(detailed, level="warning")
+        if self.cc_param.get("cc_debug_mode", False):
+            self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
+        raise HypoDDException(detailed)
     
     def _find_data(self, station_id, starttime, duration):
         """"
