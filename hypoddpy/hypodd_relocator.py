@@ -253,6 +253,8 @@ class HypoDDRelocator(object):
         self.station_channel_inventory = {}
         # Detailed cross-correlation debug info: {(pick1_id,pick2_id): [reasons]}
         self.cc_debug_info = {}
+        # Track waveform files that failed to be read during parsing
+        self.failed_files = []
         
         # Custom channel equivalencies (user can override)
         self.custom_channel_equivalencies = custom_channel_equivalencies or {}
@@ -1870,6 +1872,8 @@ class HypoDDRelocator(object):
                     self.log(f"Failed to safely read waveform file {waveform_file}, skipping", level="warning")
                     with progress_lock:
                         failed_files.append((waveform_file, "Safe read returned empty"))
+                        # Also track globally for debug reporting
+                        self.failed_files.append((waveform_file, "Safe read returned empty"))
                     return []
                 
                 trace_info = []
@@ -1902,11 +1906,13 @@ class HypoDDRelocator(object):
                 self.log(f"Critical error reading {waveform_file}: {exc}", level="warning")
                 with progress_lock:
                     failed_files.append((waveform_file, f"Critical error: {exc}"))
+                    self.failed_files.append((waveform_file, f"Critical error: {exc}"))
                 return []
             except Exception as exc:
                 self.log(f"Error reading waveform file {waveform_file}: {exc}", level="warning")
                 with progress_lock:
                     failed_files.append((waveform_file, str(exc)))
+                    self.failed_files.append((waveform_file, str(exc)))
                 return []
         
         def update_progress():
@@ -1951,15 +1957,18 @@ class HypoDDRelocator(object):
                         self.log(f"Timeout reading {wf_file} (likely stuck in I/O), skipping", level="warning")
                         with progress_lock:
                             failed_files.append((wf_file, "Timeout (stuck reading)"))
+                        self.failed_files.append((wf_file, "Timeout (stuck reading)"))
                     except RuntimeError as exc:
                         if "Segmentation fault" in str(exc):
                             self.log(f"Segmentation fault processing {wf_file} (likely corrupted), skipping", level="warning")
                             with progress_lock:
                                 failed_files.append((wf_file, "Segmentation fault (corrupted file)"))
+                                self.failed_files.append((wf_file, "Segmentation fault (corrupted file)"))
                         else:
                             self.log(f"RuntimeError processing {wf_file}: {exc}", level="warning")
                             with progress_lock:
                                 failed_files.append((wf_file, str(exc)))
+                                self.failed_files.append((wf_file, str(exc)))
                     except Exception as exc:
                         self.log(f"Failed to process waveform file {wf_file}: {exc}", level="warning")
                         with progress_lock:
@@ -2831,6 +2840,133 @@ class HypoDDRelocator(object):
         # For now, return empty list
         return []
 
+    def _get_station_windows(self, station_id):
+        """Return a list of (key, starttime, endtime, filename) for station windows."""
+        windows = []
+        if not self.waveform_information:
+            return windows
+        # Use fnmatch patterns similar to _find_data
+        patterns = [
+            f"{station_id}*.*[E,N,Z,1,2,3,B,H]",
+            f"*.{station_id}*.*[E,N,Z,1,2,3,B,H]",
+            f"*.{station_id}.*.*[E,N,Z,1,2,3,B,H]",
+            f"{station_id}.*.*[E,N,Z,1,2,3,B,H]",
+        ]
+        for key in list(self.waveform_information.keys()):
+            for p in patterns:
+                if fnmatch.fnmatch(key, p):
+                    for wf in self.waveform_information.get(key, []):
+                        windows.append((key, wf.get("starttime"), wf.get("endtime"), wf.get("filename")))
+                    break
+        return windows
+
+    def _compute_nearest_window(self, station_id, starttime, endtime):
+        """Compute the nearest gap in seconds between requested window and available station windows.
+
+        Returns a tuple (min_gap_seconds, nearest_window_tuple) where nearest_window_tuple is (key, start, end, filename).
+        If no windows exist, returns (None, None).
+        """
+        windows = self._get_station_windows(station_id)
+        if not windows:
+            return None, None
+        req_start = starttime
+        req_end = endtime
+        min_gap = None
+        min_item = None
+        for key, ws, we, fn in windows:
+            try:
+                ws_dt = UTCDateTime(ws)
+                we_dt = UTCDateTime(we)
+            except Exception:
+                continue
+            if we_dt < req_start:
+                gap = float(req_start - we_dt)
+            elif ws_dt > req_end:
+                gap = float(ws_dt - req_end)
+            else:
+                gap = 0.0
+            if min_gap is None or gap < min_gap:
+                min_gap = gap
+                min_item = (key, ws_dt, we_dt, fn)
+        return min_gap, min_item
+
+    def write_cc_debug_report(self, output_path=None):
+        """Write a comprehensive CC debug report to JSON.
+
+        The report includes:
+        - failed_files: list of (filename, reason)
+        - cc_debug_info: per-pair failure reasons
+        - station_coverage: per-station earliest/latest coverage and smallest gaps to event picks
+        The report is saved to self.paths['working_files'] / 'cc_debug_report.json' by default.
+        """
+        import json as _json
+        report = {}
+        report['failed_files'] = list(self.failed_files)
+        report['cc_debug_info'] = {f"{k[0]}__{k[1]}": v for k, v in self.cc_debug_info.items()}
+
+        # Station coverage diagnostics for stations referenced by events
+        station_list = set()
+        for ev in getattr(self, 'events', []) or []:
+            for p in ev.get('picks', []):
+                sid = p.get('station_id')
+                if sid:
+                    station_list.add(sid)
+        # Limit to stations we have data for or that were referenced by picks
+        station_report = {}
+        for station in sorted(list(station_list)):
+            windows = self._get_station_windows(station)
+            if not windows:
+                station_report[station] = {'coverage': None, 'closest_gap_to_any_pick_s': None}
+                continue
+            starts = []
+            ends = []
+            for k, s, e, fn in windows:
+                try:
+                    starts.append(UTCDateTime(s))
+                    ends.append(UTCDateTime(e))
+                except Exception:
+                    continue
+            if not starts:
+                station_report[station] = {'coverage': None, 'closest_gap_to_any_pick_s': None}
+                continue
+            earliest = min(starts)
+            latest = max(ends)
+            # compute closest gap to picks for this station
+            pick_times = []
+            for ev in getattr(self, 'events', []) or []:
+                for p in ev.get('picks', []):
+                    if p.get('station_id') == station:
+                        try:
+                            pick_times.append(UTCDateTime(p.get('pick_time')))
+                        except Exception:
+                            pass
+            min_gap = None
+            if pick_times:
+                for p in pick_times:
+                    gap, item = self._compute_nearest_window(station, p, p)
+                    if gap is None:
+                        continue
+                    if min_gap is None or gap < min_gap:
+                        min_gap = gap
+            station_report[station] = {
+                'coverage': {'earliest': str(earliest), 'latest': str(latest)},
+                'closest_gap_to_any_pick_s': float(min_gap) if min_gap is not None else None,
+            }
+        report['station_coverage'] = station_report
+
+        if output_path is None:
+            out_file = os.path.join(self.paths['working_files'], 'cc_debug_report.json')
+        else:
+            out_file = output_path
+        try:
+            with open(out_file, 'w') as of:
+                _json.dump(report, of, indent=2)
+            self.log(f"Wrote CC debug report to {out_file}", level="info")
+            return out_file
+        except Exception as e:
+            self.log(f"Failed to write CC debug report to {out_file}: {e}", level="warning")
+            raise
+
     def _perform_cross_correlation(self, pick_1, pick_2):
         """
         Perform cross-correlation between two picks.
@@ -2868,6 +3004,26 @@ class HypoDDRelocator(object):
             msg = f"No waveform data found for both events for station {station_id}."
             self.log(msg, level="warning")
             failure_reasons.append(msg)
+
+            # Add extra diagnostics: requested windows and nearest available windows
+            try:
+                req1 = (starttime1, starttime1 + duration1)
+                req2 = (starttime2, starttime2 + duration2)
+                gap1, nearest1 = self._compute_nearest_window(station_id, req1[0], req1[1])
+                gap2, nearest2 = self._compute_nearest_window(station_id, req2[0], req2[1])
+                diag = {
+                    'requested_window_event1': (str(req1[0]), str(req1[1])),
+                    'requested_window_event2': (str(req2[0]), str(req2[1])),
+                    'nearest_window_event1_gap_s': float(gap1) if gap1 is not None else None,
+                    'nearest_window_event1': (str(nearest1[1]), str(nearest1[2]), nearest1[3]) if nearest1 else None,
+                    'nearest_window_event2_gap_s': float(gap2) if gap2 is not None else None,
+                    'nearest_window_event2': (str(nearest2[1]), str(nearest2[2]), nearest2[3]) if nearest2 else None,
+                }
+                failure_reasons.append(f"Diagnostics: {diag}")
+                self.log(f"cc_debug diagnostics for station {station_id}: {diag}", level="debug")
+            except Exception as e:
+                self.log(f"Failed to compute cc diagnostics for station {station_id}: {e}", level="debug")
+
             if self.cc_param.get("cc_debug_mode", False):
                 self.cc_debug_info[(pick_1["id"], pick_2["id"])] = failure_reasons
                 # Add helpful info about available keys (limited to a few)
@@ -3206,8 +3362,43 @@ class HypoDDRelocator(object):
         # Debug logging for time filtering
         if len(filenames) == 0 and len(station_keys) > 0:
             self.log(f"No waveforms found for station {station_id} in time range {starttime} to {endtime}", level="warning")
+
+            # Compute diagnostic info: earliest start, latest end and closest gap
+            all_windows = []
+            for key in station_keys:
+                for waveform in self.waveform_information.get(key, [])[:5]:  # sample up to 5 per key
+                    try:
+                        ws = waveform['starttime']
+                        we = waveform['endtime']
+                        all_windows.append((key, ws, we))
+                    except Exception:
+                        continue
+
+            if all_windows:
+                earliest = min(w[1] for w in all_windows)
+                latest = max(w[2] for w in all_windows)
+                # Compute min gap in seconds between requested window and available windows
+                req_start = starttime
+                req_end = endtime
+                min_gap = None
+                min_gap_item = None
+                for key, ws, we in all_windows:
+                    if we < req_start:
+                        gap = (req_start - we)
+                    elif ws > req_end:
+                        gap = (ws - req_end)
+                    else:
+                        gap = 0
+                    gap_s = float(gap)
+                    if min_gap is None or gap_s < min_gap:
+                        min_gap = gap_s
+                        min_gap_item = (key, ws, we, gap_s)
+
+                self.log(f"  Available sample window summary: earliest={earliest}, latest={latest}; closest gap={min_gap} s -> {min_gap_item}", level="debug")
+
+            # Also show first few keys and their times for context
             for key in station_keys[:3]:  # Show first 3 matching keys
-                for waveform in self.waveform_information[key][:2]:  # Show first 2 waveforms per key
+                for waveform in self.waveform_information.get(key, [])[:2]:  # Show first 2 waveforms per key
                     self.log(f"  Available: {key} -> {waveform['starttime']} to {waveform['endtime']}", level="debug")
         
         if len(filenames) == 0:
