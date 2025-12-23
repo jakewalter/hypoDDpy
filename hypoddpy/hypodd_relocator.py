@@ -2300,50 +2300,28 @@ class HypoDDRelocator(object):
             if not metadata:
                 self.log(f"Subprocess validation failed for {filename}, skipping", level="warning")
                 return Stream()
-            # File passed subprocess validation. To avoid doing another
-            # ObsPy read in the main process (which can hang or segfault on
-            # corrupted files), construct a minimal Stream from the metadata
-            # returned by the subprocess. This gives us stable trace id,
-            # start/end times and a small placeholder data array so the
-            # caller can continue to operate (we don't need the full
-            # waveform record here, only metadata and valid trace stats).
+            # File passed subprocess validation. Now perform a direct ObsPy read
+            # for the requested time window. If the direct read fails, treat the
+            # file as unreadable and return an empty Stream (so callers will mark
+            # the file as failed). This avoids producing placeholder traces that
+            # can be mistaken for real waveform data.
             try:
-                from obspy import Trace, UTCDateTime
-                dummy_traces = []
-                for md in metadata:
-                    npts = int(md.get("npts", 1))
-                    # Limit allocation to a small number to avoid huge memory
-                    alloc_npts = max(1, min(npts, 8))
-                    data = np.zeros(alloc_npts, dtype=float)
-                    tr = Trace(data=data)
-                    # Populate stats based on subprocess metadata
-                    tr.id = md.get("id", tr.id)
-                    try:
-                        tr.stats.starttime = UTCDateTime(md.get("starttime"))
-                    except Exception:
-                        pass
-                    try:
-                        tr.stats.endtime = UTCDateTime(md.get("endtime"))
-                    except Exception:
-                        pass
-                    # optional sampling_rate
-                    try:
-                        sr = float(md.get("sampling_rate", 0.0))
-                        if sr > 0:
-                            tr.stats.sampling_rate = sr
-                    except Exception:
-                        pass
-                    dummy_traces.append(tr)
-
-                if not dummy_traces:
-                    self.log(f"Subprocess returned no trace metadata for {filename}", level="warning")
-                    return Stream()
-
-                self.log(f"File {filename} passed subprocess validation and returned metadata; using lightweight stream (placeholder traces)", level="debug")
-                return Stream(dummy_traces)
+                from obspy import read
+                if starttime is not None and endtime is not None:
+                    st = read(filename, starttime=starttime, endtime=endtime)
+                else:
+                    st = read(filename)
+                if st is not None and len(st) > 0:
+                    self.log(f"File {filename} passed subprocess validation and direct read succeeded; returning real stream", level="debug")
+                    return st
+                else:
+                    msg = f"Direct read returned no traces for {filename} despite subprocess validation; treating as unreadable"
+                    self.log(msg, level="warning")
+                    raise HypoDDException(msg)
             except Exception as e:
-                self.log(f"Failed to construct lightweight stream for {filename}: {e}", level="warning")
-                # Fall through to perform a direct read as a final attempt
+                msg = f"Direct read after subprocess validation failed for {filename}: {e}; treating file as unreadable"
+                self.log(msg, level="warning")
+                raise HypoDDException(msg)
 
         try:
             # Try to read the file directly with ObsPy
