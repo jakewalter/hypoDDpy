@@ -3011,6 +3011,19 @@ class HypoDDRelocator(object):
                 req2 = (starttime2, starttime2 + duration2)
                 gap1, nearest1 = self._compute_nearest_window(station_id, req1[0], req1[1])
                 gap2, nearest2 = self._compute_nearest_window(station_id, req2[0], req2[1])
+
+                # Include matched keys and a small sample of windows per key for better diagnostics
+                matched_keys = [k for k in list(self.waveform_information.keys()) if fnmatch.fnmatch(k, f"*.{station_id}*.*[E,N,Z,1,2,3,B,H]") or fnmatch.fnmatch(k, f"{station_id}*.*[E,N,Z,1,2,3,B,H]")]
+                matched_windows = {}
+                for k in matched_keys:
+                    windows = []
+                    for wf in self.waveform_information.get(k, [])[:5]:
+                        try:
+                            windows.append((str(wf.get('starttime')), str(wf.get('endtime')), wf.get('filename')))
+                        except Exception:
+                            continue
+                    matched_windows[k] = windows
+
                 diag = {
                     'requested_window_event1': (str(req1[0]), str(req1[1])),
                     'requested_window_event2': (str(req2[0]), str(req2[1])),
@@ -3018,6 +3031,8 @@ class HypoDDRelocator(object):
                     'nearest_window_event1': (str(nearest1[1]), str(nearest1[2]), nearest1[3]) if nearest1 else None,
                     'nearest_window_event2_gap_s': float(gap2) if gap2 is not None else None,
                     'nearest_window_event2': (str(nearest2[1]), str(nearest2[2]), nearest2[3]) if nearest2 else None,
+                    'matched_keys': matched_keys,
+                    'matched_windows_sample': matched_windows,
                 }
                 failure_reasons.append(f"Diagnostics: {diag}")
                 self.log(f"cc_debug diagnostics for station {station_id}: {diag}", level="debug")
