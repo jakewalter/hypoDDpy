@@ -13,7 +13,7 @@ def main():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Run full catalog Bridge Creek relocation')
     parser.add_argument('--catalog', type=str, 
-                       default='/scratch/bridge_creek/eqcorr3.xml',
+                       default='/scratch/bridge_creek/test_location.xml',
                        help='Path to event catalog XML file')
     parser.add_argument('--waveforms', type=str,
                        default='/data/okla/ContWaveform/2*/*mseed',

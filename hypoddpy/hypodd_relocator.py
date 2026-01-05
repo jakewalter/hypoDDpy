@@ -649,13 +649,32 @@ class HypoDDRelocator(object):
 
     def _parse_station_files_parallel(self):
         """
-        Parse station files in parallel for improved performance.
+        Parse station files in parallel with optimization to only parse unique stations.
+        Extracts unique network.station combinations and finds one XML file per station.
         """
         import time
+        import os
         
         start_time = time.time()
-        file_count = len(self.station_files)
-        self.log(f"Starting parallel station parsing with {min(4, file_count)} threads...")
+        
+        # Optimization: Build a map of network.station -> station XML file
+        # Instead of parsing all 46K files, we only parse unique stations
+        self.log("Building unique station map from file names...")
+        station_map = {}  # Maps "NET.STA" -> "/path/to/NET.STA.xml"
+        
+        for station_file in self.station_files:
+            # Extract network.station from filename (e.g., "AG.HHAR.xml" -> "AG.HHAR")
+            basename = os.path.basename(station_file)
+            if basename.endswith('.xml'):
+                station_id = basename[:-4]  # Remove .xml extension
+                # Keep first occurrence of each unique station
+                if station_id not in station_map:
+                    station_map[station_id] = station_file
+        
+        unique_count = len(station_map)
+        total_files = len(self.station_files)
+        self.log(f"Found {unique_count:,} unique stations from {total_files:,} files "
+                f"({100*unique_count/total_files:.1f}% reduction)")
         
         # Thread-safe counter for progress tracking
         from threading import Lock
@@ -705,14 +724,15 @@ class HypoDDRelocator(object):
             with progress_lock:
                 processed_count[0] += 1
         
-        # Process all station files in parallel
-        max_workers = min(4, file_count)  # Station files are usually smaller, use fewer threads
+        # Process only unique station files in parallel
+        self.log(f"Starting parallel station parsing with {min(8, unique_count)} threads...")
+        max_workers = min(8, unique_count)  # Use more threads since we have fewer files
         
         with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            # Submit all tasks
+            # Submit all tasks for unique stations only
             future_to_file = {
-                executor.submit(process_single_station_file, station_file): station_file 
-                for station_file in self.station_files
+                executor.submit(process_single_station_file, station_file): station_id
+                for station_id, station_file in station_map.items()
             }
             
             # Collect results as they complete
@@ -720,12 +740,21 @@ class HypoDDRelocator(object):
                 station_data = future.result()
                 self.stations.update(station_data)
                 update_progress()
+                
+                # Progress reporting every 100 files (more frequent since fewer files)
+                if processed_count[0] % 100 == 0:
+                    elapsed = time.time() - start_time
+                    rate = processed_count[0] / elapsed if elapsed > 0 else 0
+                    remaining = unique_count - processed_count[0]
+                    eta = remaining / rate if rate > 0 else 0
+                    self.log(f"Progress: {processed_count[0]}/{unique_count} stations ({100*processed_count[0]/unique_count:.1f}%), "
+                            f"Rate: {rate:.1f} stations/sec, ETA: {eta:.1f}s")
         
         # Log performance
         end_time = time.time()
         parsing_time = end_time - start_time
         self.log(f"Parallel station parsing completed in {parsing_time:.2f} seconds")
-        self.log(f"Average speed: {file_count/parsing_time:.1f} files/second")
+        self.log(f"Average speed: {unique_count/parsing_time:.1f} stations/second")
         self.log(f"Total stations parsed: {len(self.stations)}")
 
     def _fetch_station_metadata_from_fdsn(self, network_code, station_code):
