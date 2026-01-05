@@ -1,2 +1,26 @@
 *.egg-info
 hypoddpy/src/*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Build directories
+build/
+dist/
+
+# Test and output directories
+relocate_*/
+test_cc_subset_output/
+bridge_creek_test_output/
+test_working_dir/
+
+# Log files
+*.log
+bridge_creek_run.log
+
+# Temporary files
+*.tmp
+*.swp
+*~
